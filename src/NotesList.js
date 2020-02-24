@@ -5,15 +5,16 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    TextInput
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 
 export default class NotesList extends Component {
 
     constructor() {
         super()
         this.states = {
+            text: "",
             arr: [
                 { comment: "komal" },
                 { comment: "vansh" },
@@ -25,12 +26,11 @@ export default class NotesList extends Component {
     }
 
 
-    demo = (text) => {
-        if (this.text == "") {
-            alert("plese Enter comments")
+    addcomment = (text) => {
+        if (this.textInput == "") {
             return
         }
-
+        this.textInput = ""
         return {
             arr: this.states.arr.push({ comment: text })
         }
@@ -41,7 +41,15 @@ export default class NotesList extends Component {
             arr: this.states.arr.splice(index, 1)
         }
     }
-    text = ""
+
+    // textHander = (text) => {
+    //     // this.setState({ textInput: "vanshhhhh" })
+    //     return {
+    //         textInput: "snknkknn"
+    //     }
+    // }
+
+    textInput = ""
 
     render() {
 
@@ -50,11 +58,12 @@ export default class NotesList extends Component {
                 <View style={{ flex: 1 }}>
                     <FlatList
                         data={this.states.arr}
-                        renderItem={({ item, index }) => <Comment
-                            comment={item.comment}
-                            delete={() => this.setState(this.DeleteElement(index))}
-                            next={() => this.props.navigation.navigate("Display", { comment: this.states.arr.comment })}
-                        />}
+                        renderItem={({ item, index }) =>
+                            <Comment
+                                comment={item.comment}
+                                delete={() => this.setState(this.DeleteElement(index))}
+                                next={() => this.props.navigation.navigate("Display", { commentPass: "vansh" })}
+                            />}
                         keyExtractor={(index, item) => index + item}
                     >
                     </FlatList>
@@ -64,11 +73,12 @@ export default class NotesList extends Component {
                 {/*for add new comment  */}
 
                 <View>
+                    <Text>{this.states.textInput}</Text>
                     <View style={{ margin: 10 }}>
                         <View style={styles.commentContainer}>
                             <View style={{ flex: 4 }}>
                                 <TextInput
-                                    onChangeText={(value) => { this.text = value }}
+                                    onChangeText={(value) => { this.textInput = value }}
                                     placeholder={"Enter Your Comment Here"}
                                     style={styles.inputtext}
                                 >
@@ -80,7 +90,7 @@ export default class NotesList extends Component {
 
                                 <TouchableOpacity style={styles.btn}
                                     onPress={() => {
-                                        this.setState(states => this.demo(this.text)
+                                        this.setState(states => this.addcomment(this.textInput)
                                         )
                                     }}
                                 >

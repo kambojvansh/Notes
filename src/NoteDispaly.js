@@ -8,8 +8,9 @@ export default class NoteDisplay extends Component {
     constructor(props) {
         super(props)
         // const value = this.props.route
+        console.log(props.route.params, "props")
     }
-    text = this.props.route.Params.comment
+    text = this.props.route.params.commentPass
     render() {
         return (
             <View>
