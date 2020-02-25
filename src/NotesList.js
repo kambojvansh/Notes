@@ -6,20 +6,53 @@ import {
     Image,
     TouchableOpacity,
     FlatList,
-    TextInput
+    TextInput,
+    Modal
 } from 'react-native';
 
 export default class NotesList extends Component {
 
+    // static navigationOptions =
+    //     {
+    //         title: 'MainActivity',
+
+    //         // headerRight: <hearderImage />,
+    //         headerStyle: {
+
+    //             backgroundColor: '#FF9800'
+
+    //         },
+
+    //         headerTintColor: '0000000',
+
+    //     };
+
     constructor() {
         super()
-        this.states = {
-            text: "",
+        this.state = {
+            textInput: "",
+            modalVisible: false,
             arr: [
-                { comment: "komal" },
-                { comment: "vansh" },
-                { comment: "shivam" },
-                { comment: "mohit" }
+                {
+                    comment: "komal",
+                    likes: 25
+                },
+                {
+                    comment: "vansh",
+                    likes: 2
+                },
+                {
+                    comment: "shivam",
+                    likes: 252
+                },
+                {
+                    comment: "suraj",
+                    likes: 854
+                },
+                {
+                    comment: "mohit",
+                    likes: 425
+                },
             ],
 
         }
@@ -27,29 +60,35 @@ export default class NotesList extends Component {
 
 
     addcomment = (text) => {
-        if (this.textInput == "") {
+
+        if (text == "") {
             return
         }
-        this.textInput = ""
+        let newarray = this.state.arr
+        newarray.push({ comment: text, likes: 422 })
         return {
-            arr: this.states.arr.push({ comment: text })
+            arr: newarray,
+            textInput: "",
+            modalVisible: false,
         }
 
     }
     DeleteElement = (index) => {
+        let newarray = this.state.arr
+        newarray.splice(index, 1)
         return {
-            arr: this.states.arr.splice(index, 1)
+            arr: newarray
         }
     }
-
-    // textHander = (text) => {
-    //     // this.setState({ textInput: "vanshhhhh" })
+    // textInput = (value) => {
     //     return {
-    //         textInput: "snknkknn"
+    //         text: "bxjs"
     //     }
+
     // }
 
-    textInput = ""
+
+    // textInput = ""
 
     render() {
 
@@ -57,12 +96,13 @@ export default class NotesList extends Component {
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
                     <FlatList
-                        data={this.states.arr}
+                        data={this.state.arr}
                         renderItem={({ item, index }) =>
                             <Comment
                                 comment={item.comment}
+                                likes={item.likes}
                                 delete={() => this.setState(this.DeleteElement(index))}
-                                next={() => this.props.navigation.navigate("Display", { commentPass: "vansh" })}
+                                next={(likes) => this.props.navigation.navigate("Display", { commentPass: item.comment })}
                             />}
                         keyExtractor={(index, item) => index + item}
                     >
@@ -72,40 +112,72 @@ export default class NotesList extends Component {
 
                 {/*for add new comment  */}
 
-                <View>
-                    <Text>{this.states.textInput}</Text>
-                    <View style={{ margin: 10 }}>
-                        <View style={styles.commentContainer}>
-                            <View style={{ flex: 4 }}>
-                                <TextInput
-                                    onChangeText={(value) => { this.textInput = value }}
-                                    placeholder={"Enter Your Comment Here"}
-                                    style={styles.inputtext}
-                                >
+                <View >
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.modalVisible}
+                    // onRequestClose={() => {
+                    //     Alert.alert('Modal has been closed.');
+                    // }}
+                    >
 
-                                </TextInput>
+
+                        <View style={{ alignSelf: 'center', position: 'absolute', bottom: 15 }}>
+                            <View style={[styles.commentContainer
+                            ]}>
+                                <View style={{ width: 250 }}>
+                                    <TextInput
+                                        style={styles.inputtext}
+                                        onChangeText={text => this.setState({ textInput: text })}
+                                        placeholder={"Enter comment Here"}
+                                        value={this.state.textInput}
+                                    />
+                                    {/* style={styles.inputtext} */}
+                                </View>
+                                <View style={[styles.commentContainer]}>
+
+                                    <TouchableOpacity style={styles.btn}
+                                        onPress={() => {
+                                            this.setState(state => this.addcomment(this.state.textInput)
+                                            )
+                                        }}
+                                    >
+                                        <Image
+                                            style={[styles.img, {}]}
+                                            source={require('../images/add.png')}
+                                        ></Image>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.btn}
+                                        onPress={() => {
+                                            this.setState({ modalVisible: false })
+                                            // )
+                                        }}
+                                    >
+                                        <Image
+                                            style={[styles.img, {}]}
+                                            source={require('../images/down.png')}
+                                        ></Image>
+                                    </TouchableOpacity>
+
+                                </View>
+
+
 
                             </View>
-                            <View style={[styles.commentContainer, { flex: 1 }]}>
-
-                                <TouchableOpacity style={styles.btn}
-                                    onPress={() => {
-                                        this.setState(states => this.addcomment(this.textInput)
-                                        )
-                                    }}
-                                >
-                                    <Image
-                                        style={styles.img}
-                                        source={require('../images/add.png')}
-                                    ></Image>
-                                </TouchableOpacity>
-
-                            </View>
-
-
-
                         </View>
-                    </View>
+                    </Modal>
+                    <TouchableOpacity style={[styles.btn, { marginBottom: 20 }]}
+                        onPress={() => {
+                            // alert("skdnskn")
+                            this.setState({ modalVisible: true })
+                        }}
+                    >
+                        <Image
+                            style={[styles.img, { height: 50, width: 50 }]}
+                            source={require('../images/add.png')}
+                        ></Image>
+                    </TouchableOpacity>
                 </View>
             </View >
 
@@ -119,30 +191,37 @@ export class Comment extends Component {
     }
     state = {
         IconImg: require("../images/like.png"),
-        islike: 1
+        islike: 1,
+        likeCount: 0
     }
 
+
+
     handelLike = (state) => {
+        // const ee = like()
         if (this.state.islike) {
             return {
                 IconImg: require("../images/likeRed.png"),
                 islike: 0,
+                likeCount: this.state.likeCount + 1
             }
         }
         else {
             return {
                 IconImg: require("../images/like.png"),
-                islike: 1
+                islike: 1,
+                likeCount: this.state.likeCount - 1
             }
 
         }
     }
     render() {
+        const likeCount = parseInt(this.props.likes) + parseInt(this.state.likeCount)
         return (
             <TouchableOpacity
 
                 // onPress={() => this.props.navigation.navigate("NotesPage")}
-                onPress={() => this.props.next()}
+                onPress={() => this.props.next(this.state.likeCount)}
             >
                 <View style={{ margin: 10 }}>
                     <View style={styles.commentContainer}>
@@ -155,9 +234,9 @@ export class Comment extends Component {
                         <View style={[styles.commentContainer, { flex: 1 }]}>
                             <TouchableOpacity style={styles.btn}
                                 onPress={() => {
-                                    this.setState(state => this.handelLike(state))
+                                    this.setState(stateForLike => this.handelLike(stateForLike))
                                     // this.props.Change()
-
+                                    // this.props.setImage()
                                 }
                                 }
                             >
@@ -180,16 +259,48 @@ export class Comment extends Component {
 
 
                     </View>
+                    <View>
+                        <Text>Tota Likes <Text style={{ fontWeight: 'bold' }}>
+
+                            {likeCount}
+                        </Text></Text>
+                    </View>
                 </View>
             </TouchableOpacity>
         )
 
     }
 }
+
+// export class hearderImage extends React.Component {
+//     render() {
+//         return (
+//             <View style={{ flexDirection: 'row', }}>
+//                 <Image
+//                     source={require('../images/add.png')}
+//                 >
+//                     style={{
+//                         width: 40,
+//                         height: 40,
+//                         borderRadius: 40 / 2,
+//                         marginLeft: 15,
+//                     }}
+
+//                 </Image>
+
+//             </View>
+
+//         )
+
+//     }
+
+
+// }
+
 const styles = StyleSheet.create({
     commentContainer: {
         backgroundColor: 'white',
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         flexDirection: 'row',
         justifyContent: "flex-start",
         alignItems: 'center',
@@ -200,12 +311,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 10
     },
     img: {
-        height: 30,
-        width: 30,
+        height: 40,
+        width: 40,
         alignSelf: 'center'
     },
     btn: {
-        marginHorizontal: 10
+        marginHorizontal: 2
 
     },
     inputtext: {
@@ -213,7 +324,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#3498db',
         borderColor: "white",
         margin: 10
-    }
+    },
 
 })
 
