@@ -4,15 +4,25 @@ import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
 } from 'react-native';
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class LoginPage extends Component {
+
+    state = {
+        Email: '',
+        Password: ''
+    }
+
     render() {
         return (
+            // <KeyboardAwareScrollView style={styles.main_container}>
             <View style={styles.main_container}>
                 <View style={styles.TopView}>
-                    <Text style={styles.textHading}>Notes</Text>
+                    {/* <Text style={styles.textHading}>Notes</Text> */}
                 </View>
                 <View style={styles.bottumView}>
                     <Text style={styles.textHadinglogin}>Login</Text>
@@ -20,10 +30,14 @@ export default class LoginPage extends Component {
                         <Text style={styles.text}>Email</Text>
                         <TextInput placeholder={"example@gmail.com"}
                             style={styles.inputtext}
+                            onChangeText={(email) => this.setState({ Email: email })}
+                            value={this.state.Email}
                         ></TextInput>
                         <Text style={styles.text}>password</Text>
                         <TextInput placeholder={"*******"}
                             style={styles.inputtext}
+                            onChangeText={(email) => this.setState({ Password: email })}
+                            value={this.state.Password}
                         ></TextInput>
                         <TouchableOpacity>
                             <Text style={{
@@ -39,13 +53,31 @@ export default class LoginPage extends Component {
 
                     </View>
                     <TouchableOpacity style={styles.button}
-                        onPress={() => this.props.navigation.navigate("NotesPage")}
+                        onPress={() => {
+                            if (this.state.Email == "" && this.state.Password == "")
+                                return
+                            if (this.state.Email == "vansh" && this.state.Password == "123") {
+                                this.props.navigation.navigate("NotesPage")
+                                this.setState({ Email: "", Password: "" })
+                            }
+                            else {
+                                alert("Enter  User name and Password")
+                                this.setState({ Email: "", Password: "" })
+                            }
+
+                        }
+
+
+                        }
+
 
                     >
                         <Text style={styles.btntext}>Login</Text>
 
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate("user")}
+                    >
                         <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
                             Don't have an account? Sign up
                         </Text>
@@ -55,6 +87,7 @@ export default class LoginPage extends Component {
                 </View>
 
             </View>
+            // </KeyboardAwareScrollView>
         )
     }
 }
@@ -64,26 +97,27 @@ const styles = StyleSheet.create({
     },
     TopView: {
         backgroundColor: '#3498db',
-        flex: 0.3,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'absolute',
+        height: 200,
+        width: screenWidth
     },
     bottumView: {
         backgroundColor: 'white',
-        flex: 1,
-        borderWidth: 1,
-        borderColor: 'black',
+        flex: 0.9,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        position: 'absolute',
-        height: 550,
-        width: 380,
-        marginTop: 200,
-        alignSelf: 'center',
+        // height: 550,
+        // width: 380,
+        // marginTop: 200,
+        // alignSelf: 'center',
         justifyContent: 'center',
+        margin: 20,
+        marginTop: 150,
         paddingHorizontal: 30
     },
     textHading: {

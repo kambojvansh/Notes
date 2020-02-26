@@ -20,6 +20,7 @@ export default class NoteDisplay extends Component {
                     <Text style={styles.text}>
                         {this.text}
                     </Text>
+
                 </View>
 
 
