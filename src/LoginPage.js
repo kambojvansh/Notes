@@ -5,7 +5,9 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    Keyboard,
+    TouchableWithoutFeedback
 } from 'react-native';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -20,73 +22,78 @@ export default class LoginPage extends Component {
     render() {
         return (
             // <KeyboardAwareScrollView style={styles.main_container}>
-            <View style={styles.main_container}>
-                <View style={styles.TopView}>
-                    {/* <Text style={styles.textHading}>Notes</Text> */}
-                </View>
-                <View style={styles.bottumView}>
-                    <Text style={styles.textHadinglogin}>Login</Text>
-                    <View style={{}}>
-                        <Text style={styles.text}>Email</Text>
-                        <TextInput placeholder={"example@gmail.com"}
-                            style={styles.inputtext}
-                            onChangeText={(email) => this.setState({ Email: email })}
-                            value={this.state.Email}
-                        ></TextInput>
-                        <Text style={styles.text}>password</Text>
-                        <TextInput placeholder={"*******"}
-                            style={styles.inputtext}
-                            onChangeText={(email) => this.setState({ Password: email })}
-                            value={this.state.Password}
-                        ></TextInput>
-                        <TouchableOpacity>
-                            <Text style={{
-                                alignSelf: 'flex-end',
-                                fontWeight: 'bold',
-                                color: '#3498db',
-                                marginBottom: 30
-                            }}>
-                                Forget your password
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <View style={styles.main_container}>
+                    <View style={styles.TopView}>
+                        {/* <Text style={styles.textHading}>Notes</Text> */}
+                    </View>
+                    <View style={styles.bottumView}>
+                        <Text style={styles.textHadinglogin}>Login</Text>
+                        <View style={{}}>
+                            <Text style={styles.text}>Email</Text>
+                            <TextInput placeholder={"example@gmail.com"}
+                                style={styles.inputtext}
+                                onChangeText={(email) => this.setState({ Email: email })}
+                                value={this.state.Email}
+                            ></TextInput>
+                            <Text style={styles.text}>password</Text>
+                            <TextInput placeholder={"*******"}
+                                style={styles.inputtext}
+                                onChangeText={(email) => this.setState({ Password: email })}
+                                value={this.state.Password}
+                                secureTextEntry={true}
+                            ></TextInput>
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate("user")}
+                            >
+                                <Text style={{
+                                    alignSelf: 'flex-end',
+                                    fontWeight: 'bold',
+                                    color: '#3498db',
+                                    marginBottom: 30
+                                }}>
+                                    Forget your password
+                        </Text>
+
+                            </TouchableOpacity>
+
+                        </View>
+                        <TouchableOpacity style={styles.button}
+                            onPress={() => {
+                                if (this.state.Email == "" && this.state.Password == "")
+                                    return
+                                if (this.state.Email == "vansh" && this.state.Password == "123") {
+                                    this.props.navigation.navigate("NotesPage")
+                                    this.setState({ Email: "", Password: "" })
+                                }
+                                else {
+                                    alert("Enter  User name and Password")
+                                    this.setState({ Email: "", Password: "" })
+                                }
+
+                            }
+
+
+                            }
+
+
+                        >
+                            <Text style={styles.btntext}>Login</Text>
+
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this.props.navigation.navigate("signup")}
+                        >
+                            <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
+                                Don't have an account? Sign up
                         </Text>
 
                         </TouchableOpacity>
 
                     </View>
-                    <TouchableOpacity style={styles.button}
-                        onPress={() => {
-                            if (this.state.Email == "" && this.state.Password == "")
-                                return
-                            if (this.state.Email == "vansh" && this.state.Password == "123") {
-                                this.props.navigation.navigate("NotesPage")
-                                this.setState({ Email: "", Password: "" })
-                            }
-                            else {
-                                alert("Enter  User name and Password")
-                                this.setState({ Email: "", Password: "" })
-                            }
-
-                        }
-
-
-                        }
-
-
-                    >
-                        <Text style={styles.btntext}>Login</Text>
-
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate("user")}
-                    >
-                        <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
-                            Don't have an account? Sign up
-                        </Text>
-
-                    </TouchableOpacity>
 
                 </View>
-
-            </View>
+            </TouchableWithoutFeedback>
             // </KeyboardAwareScrollView>
         )
     }

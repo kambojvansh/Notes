@@ -8,6 +8,7 @@ import { Image, View, Dimensions, Text } from 'react-native';
 import model from './src/model'
 import UsersData from './src/UsersData';
 import UserDetails from './src/UserDetails';
+import SignUp from './src/SignUp';
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -52,6 +53,7 @@ export default function App() {
         <Stack.Screen name="model" component={model} />
         <Stack.Screen name="user" component={UsersData} />
         <Stack.Screen name="details" component={UserDetails} />
+        <Stack.Screen name="signup" component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
