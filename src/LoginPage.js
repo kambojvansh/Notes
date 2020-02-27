@@ -7,19 +7,56 @@ import {
     TouchableOpacity,
     Dimensions,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    ActivityIndicator,
+    Modal,
 } from 'react-native';
+import firebase from 'react-native-firebase'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class LoginPage extends Component {
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            this.props.navigation.navigate(user ? 'NotesPage' : 'LoginPage')
+        })
+    }
 
     state = {
         Email: '',
-        Password: ''
+        Password: '',
+        errorMessage: '',
+        isLoading: false
+    }
+    handleLogin = () => {
+        this.setState({ isLoading: true })
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.Email, this.state.Password)
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.props.navigation.navigate('NotesPage')
+            })
+            .catch(error => {
+                this.setState({ isLoading: false })
+                this.setState({ errorMessage: error.message })
+                alert(this.state.errorMessage)
+            })
     }
 
+
     render() {
+        // if (this.state.isLoading) {
+        //     return (
+        //         <View style={{ flex: 1, alignSelf: 'center', justifyContent: 'center' }}>
+        //             <ActivityIndicator size='large'
+        //                 color="#3498db" />
+        //         </View>
+        //     )
+        // }
         return (
             // <KeyboardAwareScrollView style={styles.main_container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -28,71 +65,91 @@ export default class LoginPage extends Component {
                         {/* <Text style={styles.textHading}>Notes</Text> */}
                     </View>
                     <View style={styles.bottumView}>
-                        <Text style={styles.textHadinglogin}>Login</Text>
-                        <View style={{}}>
-                            <Text style={styles.text}>Email</Text>
-                            <TextInput placeholder={"example@gmail.com"}
-                                style={styles.inputtext}
-                                onChangeText={(email) => this.setState({ Email: email })}
-                                value={this.state.Email}
-                            ></TextInput>
-                            <Text style={styles.text}>password</Text>
-                            <TextInput placeholder={"*******"}
-                                style={styles.inputtext}
-                                onChangeText={(email) => this.setState({ Password: email })}
-                                value={this.state.Password}
-                                secureTextEntry={true}
-                            ></TextInput>
-                            <TouchableOpacity
-                                onPress={() => this.props.navigation.navigate("user")}
+                        <KeyboardAwareScrollView>
+                            <Text style={styles.textHadinglogin}>Login</Text>
+                            <View style={{}}>
+                                <Text style={styles.text}>Email</Text>
+                                <TextInput placeholder={"example@gmail.com"}
+                                    style={styles.inputtext}
+                                    onChangeText={(email) => this.setState({ Email: email })}
+                                    value={this.state.Email}
+                                    keyboardType="email-address"
+                                ></TextInput>
+                                <Text style={styles.text}>password</Text>
+                                <TextInput placeholder={"*******"}
+                                    style={styles.inputtext}
+                                    onChangeText={(email) => this.setState({ Password: email })}
+                                    value={this.state.Password}
+                                    secureTextEntry={true}
+                                ></TextInput>
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate("user")}
+                                >
+                                    <Text style={{
+                                        alignSelf: 'flex-end',
+                                        fontWeight: 'bold',
+                                        color: '#3498db',
+                                        marginBottom: 30
+                                    }}>
+                                        Forget your password
+                        </Text>
+
+
+                                </TouchableOpacity>
+
+
+                            </View>
+                            <TouchableOpacity style={styles.button}
+                                onPress={() => {
+                                    if (this.state.Email == "" && this.state.Password == "")
+                                        return
+                                    this.handleLogin()
+                                    // if (this.state.Email == "vansh" && this.state.Password == "123") {
+                                    //     this.props.navigation.navigate("NotesPage")
+                                    //     this.setState({ Email: "", Password: "" })
+                                    // }
+                                    // else {
+                                    //     alert("Enter  User name and Password")
+                                    //     this.setState({ Email: "", Password: "" })
+                                    // }
+
+                                }
+
+
+                                }
+
+
                             >
-                                <Text style={{
-                                    alignSelf: 'flex-end',
-                                    fontWeight: 'bold',
-                                    color: '#3498db',
-                                    marginBottom: 30
-                                }}>
-                                    Forget your password
+                                <Text style={styles.btntext}>Login</Text>
+
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => this.props.navigation.navigate("signup")}
+                            >
+                                <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
+                                    Don't have an account? Sign up
                         </Text>
 
                             </TouchableOpacity>
-
-                        </View>
-                        <TouchableOpacity style={styles.button}
-                            onPress={() => {
-                                if (this.state.Email == "" && this.state.Password == "")
-                                    return
-                                if (this.state.Email == "vansh" && this.state.Password == "123") {
-                                    this.props.navigation.navigate("NotesPage")
-                                    this.setState({ Email: "", Password: "" })
-                                }
-                                else {
-                                    alert("Enter  User name and Password")
-                                    this.setState({ Email: "", Password: "" })
-                                }
-
-                            }
-
-
-                            }
-
-
-                        >
-                            <Text style={styles.btntext}>Login</Text>
-
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => this.props.navigation.navigate("signup")}
-                        >
-                            <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
-                                Don't have an account? Sign up
-                        </Text>
-
-                        </TouchableOpacity>
+                        </KeyboardAwareScrollView>
 
                     </View>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={this.state.isLoading}>
+
+                        <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                            <View style={{ backgroundColor: "white" }}>
+                                <ActivityIndicator size='large'
+                                    color="#3498db" />
+                            </View>
+                        </View>
+
+                    </Modal>
 
                 </View>
+
             </TouchableWithoutFeedback>
             // </KeyboardAwareScrollView>
         )

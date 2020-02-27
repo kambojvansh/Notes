@@ -7,13 +7,41 @@ import {
     TouchableOpacity,
     Dimensions,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Modal,
+    ActivityIndicator
 } from 'react-native';
+import firebase from 'react-native-firebase'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class SignUp extends Component {
+    state = {
+        email: '',
+        password: '',
+        errorMessage: null,
+        isLoading: false
+    }
+    handleSignUp = () => {
+        setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
+        this.setState({ isLoading: true })
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            // .then(() => this.props.navigation.navigate('Home'))
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.props.navigation.navigate('LoginPage')
+                // alert("sucsess")
+
+            })
+            .catch(error => {
+                this.setState({ isLoading: false })
+                this.setState({ errorMessage: error.message })
+                alert(this.state.errorMessage)
+            })
+    }
     render() {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -31,29 +59,53 @@ export default class SignUp extends Component {
                     <View style={styles.BottumContainer}>
                         <TextInput style={styles.textinput}
                             placeholder={"First Name"}
-                            placeholderTextColor="#fff"
+                        // placeholderTextColor="#fff"
                         ></TextInput>
                         <TextInput style={styles.textinput}
                             placeholder={"Last Name"}
-                            placeholderTextColor="#fff"
+                        // placeholderTextColor="#fff"
                         ></TextInput>
                         <TextInput style={styles.textinput}
                             placeholder={"Email"}
-                            placeholderTextColor="#fff"
+                            // placeholderTextColor="#fff"
                             keyboardType="email-address"
+                            onChangeText={(email) => this.setState({ email: email })}
+                            value={this.state.email}
                         ></TextInput>
                         <TextInput style={styles.textinput}
                             placeholder={"Password"}
-                            placeholderTextColor="#fff"
+                            // placeholderTextColor="#fff"
                             secureTextEntry={true}
+                            onChangeText={(email) => this.setState({ password: email })}
+                            value={this.state.password}
                         ></TextInput>
                         <TouchableOpacity style={styles.btn}
-                            onPress={() => this.props.navigation.navigate("user")}
+                            // onPress={() => this.props.navigation.navigate("user")}
+                            onPress={() => {
+                                if (this.state.email == "" && this.state.password == "")
+                                    return
+                                this.handleSignUp()
+                            }
+                            }
                         >
                             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>
                                 Create Account
                         </Text>
                         </TouchableOpacity>
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={this.state.isLoading}>
+
+                            <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                                <View style={{ backgroundColor: "#3498db" }}>
+                                    <ActivityIndicator size='large'
+                                        color="white"
+                                        style={{ height: 100 }} />
+                                </View>
+                            </View>
+
+                        </Modal>
                     </View>
                     {/* </View> */}
 
@@ -70,7 +122,7 @@ const styles = StyleSheet.create({
     TopContainer: {
         flex: 1,
         backgroundColor: 'white',
-        height: screenHeight / 4.5,
+        height: screenHeight / 4.3,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'flex-end'
@@ -81,7 +133,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#3498db",
         borderTopRightRadius: 400,
         elevation: 20,
-        height: screenHeight / 1.4,
+        height: screenHeight / 1.3,
         justifyContent: 'center',
         paddingHorizontal: 70
     },

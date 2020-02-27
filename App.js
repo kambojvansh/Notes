@@ -53,7 +53,13 @@ export default function App() {
         <Stack.Screen name="model" component={model} />
         <Stack.Screen name="user" component={UsersData} />
         <Stack.Screen name="details" component={UserDetails} />
-        <Stack.Screen name="signup" component={SignUp} />
+        <Stack.Screen name="signup" component={SignUp}
+          options={{
+            headerShown: false,
+
+          }}
+
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

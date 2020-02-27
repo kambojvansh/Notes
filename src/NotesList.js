@@ -139,13 +139,13 @@ export default class NotesList extends Component {
 
                     <View>
                         {/* For Delete Modal Code*/}
-                        <Modal
+                        {/* <Modal
                             animationType="slide"
                             transparent={true}
                             visible={this.state.DeleteModalVisible}>
 
                             <View style={{ marginHorizontal: 30, marginTop: 200 }}>
-                                <View style={{ backgroundColor: "#3498db" }}>
+                                <View style={styles.deleteModel}>
                                     <Text style={{ marginTop: 10, alignSelf: 'center', fontSize: 15, color: 'white', fontWeight: 'bold' }}>
                                         Are You Wants To Delete This Comment
                         </Text>
@@ -165,7 +165,53 @@ export default class NotesList extends Component {
                                 </View>
                             </View>
 
+                        </Modal> */}
+
+                        {/* model for delete comment */}
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={this.state.DeleteModalVisible}>
+
+                            <View style={{ marginHorizontal: 30, marginTop: 200, }}>
+                                <View style={styles.model}>
+                                    <View style={styles.model}>
+                                        <Text style={styles.modelText}>Delete</Text>
+                                        <Text style={styles.modelText2}>Are You Wants to Delete This Comment</Text>
+                                        {/* <View style={{ flexDirection: "row", flex: 1, backgroundColor: 'white' }}> */}
+                                        {/* <View style={{ backgroundColor: 'white', marginRight: 5, }}>
+                                    <Text style={styles.modelText}>Cancel</Text>
+                                </View>
+                                <View style={{ backgroundColor: 'white', marginRight: 5 }}>
+                                    <Text style={styles.modelText}>Log out</Text>
+                                </View> */}
+                                        {/* </View> */}
+                                        <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
+                                            <TouchableOpacity
+
+                                                onPress={() => this.setState({ DeleteModalVisible: false })}
+                                            >
+                                                <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={{ position: 'absolute', right: 30 }}
+                                                onPress={() => this.setState(this.DeleteElement(this.deletItemIndex))}
+                                            >
+                                                <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Delete</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+
+
+                                </View>
+
+                            </View>
+
                         </Modal>
+
+
+
                         <Modal
                             animationType="slide"
                             transparent={true}
@@ -395,6 +441,24 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         backgroundColor: '#3498db'
+    },
+    deleteModel: {
+        backgroundColor: "#3498db",
+        borderRadius: 50
+    },
+    modelText: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        marginTop: 10,
+        color: 'white'
+    },
+    modelText2: {
+        fontSize: 25,
+        alignSelf: 'center',
+        textAlign: 'center',
+        marginTop: 10,
+        color: 'white'
     }
 
 })
