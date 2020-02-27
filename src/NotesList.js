@@ -124,7 +124,8 @@ export default class NotesList extends Component {
                                         this.setState({ DeleteModalVisible: true })
                                     }}
                                     // deleteElement={() => this.setState(this.DeleteElement(index))}
-                                    next={(likes) => this.props.navigation.navigate("Display", { commentPass: item.comment })}
+                                    next={(likes) => this.props.navigation.navigate("Display",
+                                        { commentPass: item.comment })}
                                 />}
                             keyExtractor={(index, item) => index + item}
                         >
@@ -138,39 +139,12 @@ export default class NotesList extends Component {
                     {/*for add new comment  */}
 
                     <View>
-                        {/* For Delete Modal Code*/}
-                        {/* <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={this.state.DeleteModalVisible}>
 
-                            <View style={{ marginHorizontal: 30, marginTop: 200 }}>
-                                <View style={styles.deleteModel}>
-                                    <Text style={{ marginTop: 10, alignSelf: 'center', fontSize: 15, color: 'white', fontWeight: 'bold' }}>
-                                        Are You Wants To Delete This Comment
-                        </Text>
-                                    <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
-                                        <TouchableOpacity
-                                            onPress={() => this.setState(this.DeleteElement(this.deletItemIndex))}
-                                        >
-                                            <Text style={{ color: 'blue', fontSize: 15, fontWeight: 'bold' }}>Yes</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ position: 'absolute', right: 30 }}
-
-                                            onPress={() => this.setState({ DeleteModalVisible: false })}
-                                        >
-                                            <Text style={{ color: 'blue', fontSize: 15, fontWeight: 'bold' }}>No</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
-
-                        </Modal> */}
 
                         {/* model for delete comment */}
 
                         <Modal
-                            animationType="slide"
+                            animationType="fade"
                             transparent={true}
                             visible={this.state.DeleteModalVisible}>
 
@@ -178,27 +152,27 @@ export default class NotesList extends Component {
                                 <View style={styles.model}>
                                     <View style={styles.model}>
                                         <Text style={styles.modelText}>Delete</Text>
-                                        <Text style={styles.modelText2}>Are You Wants to Delete This Comment</Text>
-                                        {/* <View style={{ flexDirection: "row", flex: 1, backgroundColor: 'white' }}> */}
-                                        {/* <View style={{ backgroundColor: 'white', marginRight: 5, }}>
-                                    <Text style={styles.modelText}>Cancel</Text>
-                                </View>
-                                <View style={{ backgroundColor: 'white', marginRight: 5 }}>
-                                    <Text style={styles.modelText}>Log out</Text>
-                                </View> */}
-                                        {/* </View> */}
-                                        <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
+                                        <Text style={styles.modelText2}>
+                                            Are You Wants to Delete This Comment
+                                            </Text>
+                                        <View style={
+                                            { flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }
+                                        }>
                                             <TouchableOpacity
 
                                                 onPress={() => this.setState({ DeleteModalVisible: false })}
                                             >
-                                                <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
+                                                <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>
+                                                    Cancel
+                                                    </Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity
                                                 style={{ position: 'absolute', right: 30 }}
                                                 onPress={() => this.setState(this.DeleteElement(this.deletItemIndex))}
                                             >
-                                                <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Delete</Text>
+                                                <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>
+                                                    Delete
+                                                    </Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -216,14 +190,7 @@ export default class NotesList extends Component {
                             animationType="slide"
                             transparent={true}
                             visible={this.state.modalVisible}
-                        // onRequestClose={() => {
-                        //     Alert.alert('Modal has been closed.');
-                        // }}
                         >
-                            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> */}
-
-
-
                             <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
                                 <View style={[styles.commentContainer, styles.model
                                 ]}>

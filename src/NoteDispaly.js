@@ -74,24 +74,17 @@ export default class NoteDisplay extends Component {
                     </View>
 
                 </Modal> */}
+                {/* <View style={{ backgroundColor: 'red' }}> */}
+
                 <Modal
-                    animationType="slide"
+                    animationType="fade"
                     transparent={true}
                     visible={this.state.ModalVisible}>
-
-                    <View style={{ marginHorizontal: 30, marginTop: 200, }}>
+                    <View style={{ marginHorizontal: 30, marginTop: 200 }}>
                         <View style={styles.model}>
                             <View style={styles.model}>
                                 <Text style={styles.modelText}>Log out</Text>
                                 <Text style={styles.modelText2}>You will be returned to the login screen</Text>
-                                {/* <View style={{ flexDirection: "row", flex: 1, backgroundColor: 'white' }}> */}
-                                {/* <View style={{ backgroundColor: 'white', marginRight: 5, }}>
-                                    <Text style={styles.modelText}>Cancel</Text>
-                                </View>
-                                <View style={{ backgroundColor: 'white', marginRight: 5 }}>
-                                    <Text style={styles.modelText}>Log out</Text>
-                                </View> */}
-                                {/* </View> */}
                                 <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
                                     <TouchableOpacity
                                         onPress={() => this.signOutUser()}
@@ -113,6 +106,7 @@ export default class NoteDisplay extends Component {
                     </View>
 
                 </Modal>
+                {/* </View> */}
 
 
             </View>

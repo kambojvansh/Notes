@@ -93,7 +93,7 @@ export default class SignUp extends Component {
                         </Text>
                         </TouchableOpacity>
                         <Modal
-                            animationType="slide"
+                            animationType="fade"
                             transparent={true}
                             visible={this.state.isLoading}>
 

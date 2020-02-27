@@ -32,6 +32,7 @@ export default class LoginPage extends Component {
         isLoading: false
     }
     handleLogin = () => {
+        setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
         this.setState({ isLoading: true })
         firebase
             .auth()
@@ -135,7 +136,7 @@ export default class LoginPage extends Component {
 
                     </View>
                     <Modal
-                        animationType="slide"
+                        animationType="fade"
                         transparent={true}
                         visible={this.state.isLoading}>
 
