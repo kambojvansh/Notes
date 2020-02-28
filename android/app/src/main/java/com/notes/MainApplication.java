@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+// import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -12,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 // import com.facebook.react.ReactApplication;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 // import io.invertase.firebase.RNFirebasePackage;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -31,12 +33,10 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           // packages.add(new RNFirebasePackage());
           packages.add(new RNFirebaseAuthPackage());
+          packages.add(new RNFirebaseFirestorePackage());
+          // packages.add(new AsyncStoragePackage());
           return packages;
-      //     return Arrays.<ReactPackage>asList(
-      //       new MainReactPackage(),
-      //       new RNFirebasePackage(),
-      //       new RNFirebaseAuthPackage() // <-- Add this line
-      // );
+          // new AsyncStoragePackage();
         }
 
         @Override

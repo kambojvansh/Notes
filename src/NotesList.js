@@ -11,6 +11,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard
 } from 'react-native';
+import firebase from 'react-native-firebase'
 // import { StackNavigator } from 'react-navigation';
 
 export default class NotesList extends Component {
@@ -22,11 +23,19 @@ export default class NotesList extends Component {
 
     constructor() {
         super()
+        this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
+        this.get = firebase.firestore().collection(firebase.auth().currentUser.uid)
+        // this.ref = firebase.firestore().collection("vansh").doc(firebase.auth().currentUser.uid).collection("Notes")
+        this.unsubscribe = null;
         this.state = {
             textInput: "",
+            userId: '',
             modalVisible: false,
             DeleteModalVisible: false,
             islikComment: false,
+            comment: "",
+            likes: 25,
+            islike: false,
             arr: [
                 {
                     comment: "komal",
@@ -60,17 +69,35 @@ export default class NotesList extends Component {
 
 
     addcomment = (text, likeStatus) => {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                // console.log("user: ", user);
+                // alert(user.uid)
+                // this.setState({ userId: user.uid })
+                // User is signed in.
+            } else {
+                // No user is signed in.
+            }
+        });
 
         if (text == "") {
+            // this.getData()
             return
         }
         let newarray = this.state.arr
         newarray.push({ comment: text, likes: 422, islike: likeStatus })
-        return {
-            arr: newarray,
-            textInput: "",
-            modalVisible: false,
-        }
+        this.setState({
+            comment: text,
+            likes: 422,
+            islike: likeStatus,
+            modalVisible: false
+        })
+        // return {
+        //     arr: newarray,
+        //     textInput: "",
+        //     modalVisible: false,
+        // }
+        this.addPost()
 
     }
     DeleteElement = (index) => {
@@ -82,15 +109,24 @@ export default class NotesList extends Component {
         }
     }
     deletItemIndex = ''
-    // textInput = (value) => {
-    //     return {
-    //         text: "bxjs"
-    //     }
-
+    addPost = () => {
+        this.ref.add({
+            Notes: this.state.textInput,
+            isLikes: this.state.islikComment,
+            likes: 422,
+        });
+        this.setState({ textInput: '' })
+    }
+    // getData = () => {
+    //     this.ref.get()
+    //         .then(snapshot => {
+    //             snapshot
+    //                 .docs
+    //                 .forEach(doc => {
+    //                     alert((doc.data.jason())
+    //                 });
+    //         });
     // }
-
-
-    // textInput = ""
 
     render() {
 
@@ -208,8 +244,14 @@ export default class NotesList extends Component {
 
                                     <TouchableOpacity style={styles.btn}
                                         onPress={() => {
-                                            this.setState(state => this.addcomment(this.state.textInput, this.state.islikeComment)
-                                            )
+                                            if (this.state.islikeComment) {
+                                                this.setState({ islikeComment: false })
+                                            }
+                                            else {
+                                                this.setState({ islikeComment: true })
+                                            }
+                                            this.addcomment(this.state.textInput, this.state.islikeComment)
+                                            // this.setState(state => this.addcomment(this.state.textInput, this.state.islikeComment))
                                         }}
                                     >
                                         <Image

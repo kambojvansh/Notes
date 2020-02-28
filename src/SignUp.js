@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import AsyncStorage from '@react-native-community/async-storage';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -20,8 +21,18 @@ export default class SignUp extends Component {
     state = {
         email: '',
         password: '',
+        name: '',
+        lname: '',
         errorMessage: null,
         isLoading: false
+    }
+    storeData = async () => {
+        try {
+            await AsyncStorage.setItem('firstName', this.state.name)
+            await AsyncStorage.setItem('lastName', this.state.lname)
+        } catch (e) {
+            // saving error
+        }
     }
     handleSignUp = () => {
         setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
@@ -32,6 +43,7 @@ export default class SignUp extends Component {
             // .then(() => this.props.navigation.navigate('Home'))
             .then(() => {
                 this.setState({ isLoading: false })
+                this.storeData()
                 this.props.navigation.navigate('LoginPage')
                 // alert("sucsess")
 
@@ -59,10 +71,14 @@ export default class SignUp extends Component {
                     <View style={styles.BottumContainer}>
                         <TextInput style={styles.textinput}
                             placeholder={"First Name"}
+                            onChangeText={(text) => this.setState({ name: text })}
+                            value={this.state.name}
                         // placeholderTextColor="#fff"
                         ></TextInput>
                         <TextInput style={styles.textinput}
                             placeholder={"Last Name"}
+                            onChangeText={(text) => this.setState({ lname: text })}
+                            value={this.state.lname}
                         // placeholderTextColor="#fff"
                         ></TextInput>
                         <TextInput style={styles.textinput}

@@ -7,17 +7,38 @@ import {
     Modal
 } from 'react-native';
 import firebase from 'react-native-firebase'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class NoteDisplay extends Component {
     constructor(props) {
         super(props)
+        this.getValueLocally()
         // const value = this.props.route
         // console.log(props.route.params, "props")
         this.state = {
             ModalVisible: false,
-            error: ''
+            error: '',
+            getValue: '',
+            lname: ''
         }
     }
+    getValueLocally = async () => {
+        try {
+            let firstName = await AsyncStorage.getItem('firstName')
+            let lastName = await AsyncStorage.getItem('lastName')
+            this.setState({
+                getValue: firstName,
+                lname: lastName
+            })
+            // alert("Done")
+        } catch (e) {
+            alert(e)
+            // saving error
+        }
+    }
+    // getValueLocally = () => {
+    //     AsyncStorage.getItem('UserName').then((value) => this.setState({ getValue: value }))
+    // }
     signOutUser = async () => {
         try {
             await firebase.auth().signOut();
@@ -35,6 +56,12 @@ export default class NoteDisplay extends Component {
         return (
 
             <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
+                    <Text>Hello {this.state.getValue} </Text>
+                    <Text>{this.state.lname}</Text>
+
+                </View>
+
                 <View style={styles.commentContainer}>
                     <Text style={styles.text}>
                         {this.text}
