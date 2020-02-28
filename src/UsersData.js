@@ -13,10 +13,12 @@ import {
     ActivityIndicator
 } from 'react-native';
 // import { Comment } from './NotesList';
+import firebase from 'react-native-firebase'
 
 export default class UsersData extends React.Component {
 
     constructor(props) {
+        this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
         super(props)
         this.state = {
             isLoading: true,
@@ -25,27 +27,54 @@ export default class UsersData extends React.Component {
             // arr: ['3', '1', '2']
         }
     }
+    // async getData() {
+    //     try {
+    //         const response = await fetch('https://jsonplaceholder.typicode.com/todos')
+    //         const data = await response.json()
+    //         this.setState({
+    //             isLoading: false,
+    //             dataSource: data,
+    //         });
+    //     } catch (err) {
+    //         if (err == "TypeError: Network request failed") {
+    //             this.setState({
+    //                 isLoading: false,
+    //             });
+    //             alert("Please open Internet")
+    //         }
+    //         console.log("Error Found: " + err)
+
+    //     }
+
+    // }
+
     async getData() {
         try {
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos')
-            const data = await response.json()
+            const response = await this.ref.get()
+            let data = []
+            data = await response._docs
+            alert(data)
+            console.log(data)
             this.setState({
                 isLoading: false,
                 dataSource: data,
             });
+            // this.setState({
+            //     isLoading: false,
+            //     dataSource: data,
+            // });
         } catch (err) {
-            if (err == "TypeError: Network request failed") {
-                this.setState({
-                    isLoading: false,
-                });
-                alert("Please open Internet")
-            }
+            // if (err == "TypeError: Network request failed") {
+            //     // this.setState({
+            //     //     isLoading: false,
+            //     // });
+            //     alert("Please open Internet")
+            // }
             console.log("Error Found: " + err)
 
         }
 
     }
-
     componentDidMount() {
         this.getData()
     }
@@ -63,16 +92,17 @@ export default class UsersData extends React.Component {
             <FlatList
                 data={this.state.dataSource}
                 renderItem={({ item }) => <Users
-                    userdetails={item.title}
-                    userId={item.userId}
-                    showDetails={() => this.props.navigation.navigate("details",
-                        {
-                            userId: item.userId,
-                            id: item.id,
-                            title: item.title,
-                            completed: item.completed
-                        }
-                    )}
+                    userdetails={item.Notes}
+                    userId={"1"}
+                    showDetails={() => { }}
+                // showDetails={() => this.props.navigation.navigate("details",
+                //     {
+                //         userId: item.userId,
+                //         id: item.id,
+                //         title: item.title,
+                //         completed: item.completed
+                //     }
+                // )}
                 />}
                 keyExtractor={(item, index) => item.id + index}
             />
@@ -89,8 +119,11 @@ export class Users extends Component {
                     onPress={() => this.props.showDetails()}
                 >
                     <Text style={{ fontSize: 25, paddingHorizontal: 10 }}>
-                        {this.props.userId}{" "}{this.props.userdetails}
+                        {this.props.userdetails}
                     </Text>
+                    {/* <Text style={{ fontSize: 25, paddingHorizontal: 10 }}>
+                        {this.props.userId}{" "}{this.props.userdetails}
+                    </Text> */}
 
                 </TouchableOpacity>
             </View>

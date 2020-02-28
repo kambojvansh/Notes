@@ -72,6 +72,12 @@ export default class NoteDisplay extends Component {
                     >
                         <Text style={styles.text}>Logout</Text>
                     </TouchableOpacity>
+                    {/* <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('user')}
+                        style={styles.btn}
+                    >
+                        <Text style={styles.text}>noesss</Text>
+                    </TouchableOpacity> */}
 
                 </View>
                 {/* <Modal

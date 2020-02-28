@@ -44,7 +44,7 @@ export default class SignUp extends Component {
             .then(() => {
                 this.setState({ isLoading: false })
                 this.storeData()
-                this.props.navigation.navigate('LoginPage')
+                this.props.navigation.navigate('NotesPage')
                 // alert("sucsess")
 
             })

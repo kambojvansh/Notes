@@ -27,71 +27,35 @@ export default class NotesList extends Component {
         this.get = firebase.firestore().collection(firebase.auth().currentUser.uid)
         // this.ref = firebase.firestore().collection("vansh").doc(firebase.auth().currentUser.uid).collection("Notes")
         this.unsubscribe = null;
+        this.liekstatus = true
         this.state = {
             textInput: "",
-            userId: '',
             modalVisible: false,
             DeleteModalVisible: false,
             islikComment: false,
             comment: "",
-            likes: 25,
             islike: false,
-            arr: [
-                {
-                    comment: "komal",
-                    likes: 25,
-                    islike: false
-                },
-                {
-                    comment: "vansh",
-                    likes: 2,
-                    islike: false
-                },
-                {
-                    comment: "shivam",
-                    likes: 252,
-                    islike: false
-                },
-                {
-                    comment: "suraj",
-                    likes: 854,
-                    islike: false
-                },
-                {
-                    comment: "mohit",
-                    likes: 425,
-                    islike: false
-                },
-            ],
+
+            arr: [],
 
         }
     }
 
 
     addcomment = (text, likeStatus) => {
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                // console.log("user: ", user);
-                // alert(user.uid)
-                // this.setState({ userId: user.uid })
-                // User is signed in.
-            } else {
-                // No user is signed in.
-            }
-        });
-
+        this.liekstatus = likeStatus
         if (text == "") {
             // this.getData()
             return
         }
-        let newarray = this.state.arr
-        newarray.push({ comment: text, likes: 422, islike: likeStatus })
-        this.setState({
-            comment: text,
-            likes: 422,
-            islike: likeStatus,
-            modalVisible: false
-        })
+        // let newarray = this.state.arr
+        // newarray.push({ Note: text, likes: 422, islike: likeStatus })
+        // this.setState({
+        //     // Note: text,
+        //     // likes: 422,
+        //     // islike: likeStatus,
+        //     modalVisible: false
+        // })
         // return {
         //     arr: newarray,
         //     textInput: "",
@@ -112,23 +76,51 @@ export default class NotesList extends Component {
     addPost = () => {
         this.ref.add({
             Notes: this.state.textInput,
-            isLikes: this.state.islikComment,
-            likes: 422,
+            isLikes: this.liekstatus,
         });
-        this.setState({ textInput: '' })
+        this.setState({ textInput: '', modalVisible: false })
     }
     // getData = () => {
     //     this.ref.get()
-    //         .then(snapshot => {
-    //             snapshot
-    //                 .docs
-    //                 .forEach(doc => {
-    //                     alert((doc.data.jason())
-    //                 });
-    //         });
+    //         .then(querySnapshot => {
+    //             console.log(querySnapshot);
+    //             console.log(querySnapshot._docs);
+    //             let data = []
+    //             data = querySnapshot._docs.json()
+    //             alert(data.Notes)
+    //         })
     // }
+    async getData() {
+        // alert("bdvbdjvb")
+        try {
+            const response = await this.ref.get()
+            let data = []
+            data = await response._docs
+            // alert(data)
+            this.setState({ arr: data })
+            // console.log(this.state.arr._data.isLike)
+            // this.setState({
+            //     isLoading: false,
+            //     dataSource: data,
+            // });
+        } catch (err) {
+            // if (err == "TypeError: Network request failed") {
+            //     // this.setState({
+            //     //     isLoading: false,
+            //     // });
+            //     alert("Please open Internet")
+            // }
+            console.log("Error Found: " + err)
+
+        }
+
+    }
+    componentDidMount() {
+        this.getData()
+    }
 
     render() {
+        this.getData()
 
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -140,19 +132,20 @@ export default class NotesList extends Component {
                             data={this.state.arr}
                             renderItem={({ item, index }) =>
                                 <Comment
-                                    comment={item.comment}
-                                    likes={item.likes}
-                                    islikeComment={item.islike}
+                                    note={item._data.Notes}
+                                    likes={item._data.likes}
+                                    islikeComment={item._data.isLikes}
                                     handelLike={() => {
-                                        let newArr = this.state.arr
-                                        if (item.islike) {
-                                            newArr[index].islike = false
-                                            this.setState({ arr: newArr })
-                                        }
-                                        else {
-                                            newArr[index].islike = true
-                                            this.setState({ arr: newArr })
-                                        }
+                                        // let newArr = this.state.arr
+                                        // if (item._data.isLike) {
+                                        //     newArr[index].isLike = false
+                                        //     this.setState({ arr: newArr })
+                                        // }
+                                        // else {
+                                        //     newArr[index].isLike = true
+                                        //     this.setState({ arr: newArr })
+                                        // }
+                                        // alert(item._data.isLikes)
                                     }
                                     }
                                     delete={() => {
@@ -161,7 +154,7 @@ export default class NotesList extends Component {
                                     }}
                                     // deleteElement={() => this.setState(this.DeleteElement(index))}
                                     next={(likes) => this.props.navigation.navigate("Display",
-                                        { commentPass: item.comment })}
+                                        { commentPass: item._data.Notes })}
                                 />}
                             keyExtractor={(index, item) => index + item}
                         >
@@ -339,7 +332,7 @@ export class Comment extends Component {
                             <View style={{ flex: 4 }}>
                                 <Text
                                     numberOfLines={1}
-                                    style={styles.text}>{this.props.comment}</Text>
+                                    style={styles.text}>{this.props.note}</Text>
 
                             </View>
                             <View style={[styles.commentContainer, { flex: 1 }]}>
