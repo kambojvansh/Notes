@@ -11,12 +11,15 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Dimensions,
+    Alert
 } from 'react-native';
 import firebase from 'react-native-firebase'
+import OptionsMenu from "react-native-options-menu";
 // import CardView from 'react-native-cardview'
 // import { Card } from 'react-native-shadow-cards';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
+const MoreIcon = require("../images/options.png");
 
 export default class NotesList extends Component {
 
@@ -72,14 +75,26 @@ export default class NotesList extends Component {
             console.log('Item removed from database')
         })
     }
+    signOutUser = async () => {
+        try {
+            await firebase.auth().signOut();
+            this.setState({ ModalVisible: false })
+            this.props.navigation.navigate('LoginPage')
+            // alert("Logout")
+        } catch (e) {
+            // console.log(e);
+            this.setState({ error: e })
+            alert(this.state.e)
+        }
+    }
 
     openTwoButtonAlert = () => {
         Alert.alert(
-            'Delete User',
+            'Logout User',
             'Are you sure?',
             [
-                { text: 'Yes', onPress: () => this.deleteUser() },
-                { text: 'No', onPress: () => console.log('No item was removed'), style: 'cancel' },
+                { text: 'Yes', onPress: () => this.signOutUser() },
+                { text: 'No', onPress: () => console.log('User not signout'), style: 'cancel' },
             ],
             {
                 cancelable: true
@@ -126,12 +141,49 @@ export default class NotesList extends Component {
                 style={{}}>
 
 
-                <View style={{ flex: 1, width: screenWidth, alignSelf: 'center', backgroundColor: 'black' }}>
-                    <Text
-                        style={{ color: 'white', alignSelf: 'center', fontSize: 40 }}
+                <View style={{
+                    flex: 1,
+                    width: screenWidth,
+                    alignSelf: 'center',
+                    backgroundColor: 'black',
+                }}>
+                    <View
+                        style={{
+                            backgroundColor: 'black',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            width: screenWidth
+                        }}
                     >
-                        All Notes
-                    </Text>
+                        <Text
+                            style={{ color: 'white', alignSelf: 'center', fontSize: 40 }}
+                        >
+                            All Notes
+                        </Text>
+                        <View
+                            style={{ position: 'absolute', right: 10 }}
+                        >
+                            <OptionsMenu
+                                button={MoreIcon}
+                                buttonStyle={{
+                                    width: 32,
+                                    height: 40,
+                                    margin: 7.5,
+                                    resizeMode: "contain",
+                                    // position: 'absolute',
+                                    // left: 70
+                                }}
+                                destructiveIndex={1}
+                                options={["Logout", "Cancel"]}
+                                actions={[this.openTwoButtonAlert, null]}
+                            />
+
+                        </View>
+
+
+
+                    </View>
+
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
                     <View style={{ flex: 1 }}>
                         <FlatList

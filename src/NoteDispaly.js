@@ -136,6 +136,18 @@ export default class NoteDisplay extends Component {
                         justifyContent: 'flex-end',
                         backgroundColor: 'white'
                     }}>
+                        <TouchableOpacity style={[styles.btns, { position: 'absolute', left: 10 }]}
+                            onPress={() => {
+                                // this.updateUser()
+                                // )
+                                this.props.navigation.navigate("NotesPage")
+                            }}
+                        >
+                            <Image
+                                style={[styles.img, {}]}
+                                source={require('../images/back.png')}
+                            ></Image>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.btns}
                             onPress={() => {
                                 this.updateUser()
