@@ -49,7 +49,17 @@ export default function App() {
           }}
 
         />
-        <Stack.Screen name="Display" component={Display} />
+        <Stack.Screen name="Display" component={Display}
+          options={{
+            headerStyle: {
+              backgroundColor: '#3498db',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 25
+            },
+          }} />
         <Stack.Screen name="model" component={model} />
         <Stack.Screen name="user" component={UsersData} />
         <Stack.Screen name="details" component={UserDetails} />

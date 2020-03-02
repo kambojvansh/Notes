@@ -4,10 +4,18 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Modal
+    Modal,
+    TextInput,
+    Dimensions,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Image,
+    Alert
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import AsyncStorage from '@react-native-community/async-storage'
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class NoteDisplay extends Component {
     constructor(props) {
@@ -19,7 +27,10 @@ export default class NoteDisplay extends Component {
             ModalVisible: false,
             error: '',
             getValue: '',
-            lname: ''
+            lname: '',
+            note: '',
+            islike: false,
+            key: ''
         }
     }
     getValueLocally = async () => {
@@ -52,104 +63,212 @@ export default class NoteDisplay extends Component {
         }
     }
     text = this.props.route.params.commentPass
+    like = this.props.route.params.like
+
+    componentDidMount() {
+        this.setState({
+            note: this.text,
+            islike: this.props.route.params.like
+        })
+        // alert(this.state.islike)
+        // alert(this.state.note)
+        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
+        dbRef.get().then((res) => {
+            if (res.exists) {
+                const user = res.data();
+                this.setState({
+                    key: res.id,
+                    name: user.name,
+                    email: user.email,
+                });
+            } else {
+                console.log("Document does not exist!");
+            }
+        });
+    }
+
+    updateUser() {
+        // this.setState({
+        //     isLoading: true,
+        // });
+        const updateDBRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey);
+        updateDBRef.set({
+            Notes: this.state.note,
+            isLikes: this.state.islike,
+        })
+            .then(() => { alert("Data Updated") })
+            // .then((docRef) => {
+            //     this.setState({
+            //         key: '',
+            //         name: '',
+            //         email: '',
+            //         mobile: '',
+            //         isLoading: false,
+            //     });
+            //     this.props.navigation.navigate('UserScreen');
+            // })
+            .catch((error) => {
+                console.error("Error: ", error);
+                this.setState({
+                    // isLoading: false,
+                });
+            });
+    }
+    deleteUser(key) {
+
+        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
+        dbRef.delete().then((res) => {
+            console.log('Item removed from database')
+            // this.props.navigation.navigate('UserScreen');
+        })
+            .then(() => this.props.navigation.navigate("NotesPage"))
+    }
+
+    openTwoButtonAlert = () => {
+        Alert.alert(
+            'Delete User',
+            'Are you sure?',
+            [
+                { text: 'Yes', onPress: () => this.deleteUser() },
+                { text: 'No', onPress: () => console.log('No item was removed'), style: 'cancel' },
+            ],
+            {
+                cancelable: true
+            }
+        );
+    }
+
     render() {
         return (
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
-            <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 10 }}>
-                    <Text>Hello {this.state.getValue} </Text>
-                    <Text>{this.state.lname}</Text>
+                <View style={{ flex: 1, }}>
+                    {/* <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        margin: 10
+                    }}>
+                        <Text>Hello {this.state.getValue} </Text>
+                        <Text>{this.state.lname}</Text>
+                        <TouchableOpacity
+                            onPress={() => this.setState({ ModalVisible: true })}
+                            style={styles.btn}
+                        >
+                            <Text style={styles.text}>Logout</Text>
+                        </TouchableOpacity>
 
-                </View>
+                    </View> */}
 
-                <View style={styles.commentContainer}>
-                    <Text style={styles.text}>
-                        {this.text}
-                    </Text>
-                    <TouchableOpacity
-                        onPress={() => this.setState({ ModalVisible: true })}
-                        style={styles.btn}
-                    >
-                        <Text style={styles.text}>Logout</Text>
-                    </TouchableOpacity>
-                    {/* <TouchableOpacity
-                        onPress={() => this.props.navigation.navigate('user')}
-                        style={styles.btn}
-                    >
-                        <Text style={styles.text}>noesss</Text>
-                    </TouchableOpacity> */}
+                    <View style={styles.commentContainer}>
+                        <TextInput style={{
+                            height: screenHeight / 2,
+                            width: screenWidth - 50,
+                            // textAlign: 'center'
+                            textAlignVertical: 'top',
+                            fontWeight: 'bold',
+                            backgroundColor: 'white'
+                        }}
+                            multiline={true}
+                            value={this.state.note}
+                            onChangeText={(text) => this.setState({ note: text })}
+                        >
 
-                </View>
-                {/* <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={this.state.ModalVisible}>
-
-                    <View style={{ marginHorizontal: 30, marginTop: 200, }}>
-                        <View style={styles.model}>
-                            <Text style={{ marginTop: 10, alignSelf: 'center', fontSize: 15, color: 'white', fontWeight: 'bold' }}>
-                                Are You Wants To Logout
-                        </Text>
-                            <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
-                                <TouchableOpacity
-                                    onPress={() => this.signOutUser()}
-                                >
-                                    <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Yes</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ position: 'absolute', right: 30 }}
-
-                                    onPress={() => this.setState({ ModalVisible: false })}
-                                >
-                                    <Text style={{ color: 'red', fontSize: 25, fontWeight: 'bold' }}>No</Text>
-                                </TouchableOpacity>
-                            </View>
+                        </TextInput>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => {
+                                    this.updateUser()
+                                    // )
+                                }}
+                            >
+                                <Image
+                                    style={[styles.img, {}]}
+                                    source={require('../images/update.png')}
+                                ></Image>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => {
+                                    this.openTwoButtonAlert()
+                                    // )
+                                }}
+                            >
+                                <Image
+                                    style={[styles.img, {}]}
+                                    source={require('../images/delete.png')}
+                                ></Image>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => {
+                                    if (this.state.islike) {
+                                        this.setState({ islike: false })
+                                    }
+                                    else {
+                                        this.setState({ islike: true })
+                                    }
+                                }}
+                            >
+                                <Image
+                                    style={[styles.img, {}]}
+                                    source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
+                                ></Image>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => this.setState({ ModalVisible: true })}
+                            >
+                                <Image
+                                    style={[styles.img, {}]}
+                                    source={require('../images/logout.png')}
+                                ></Image>
+                            </TouchableOpacity>
                         </View>
+
+
                     </View>
 
-                </Modal> */}
-                {/* <View style={{ backgroundColor: 'red' }}> */}
 
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={this.state.ModalVisible}>
-                    <View style={{ marginHorizontal: 30, marginTop: 200 }}>
-                        <View style={styles.model}>
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.ModalVisible}>
+                        <View style={{ marginHorizontal: 30, marginTop: 200 }}>
                             <View style={styles.model}>
-                                <Text style={styles.modelText}>Log out</Text>
-                                <Text style={styles.modelText2}>You will be returned to the login screen</Text>
-                                <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
-                                    <TouchableOpacity
-                                        onPress={() => this.signOutUser()}
-                                    >
-                                        <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Log out</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{ position: 'absolute', right: 30 }}
+                                <View style={styles.model}>
+                                    <Text style={styles.modelText}>Log out</Text>
+                                    <Text style={styles.modelText2}>You will be returned to the login screen</Text>
+                                    <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
+                                        <TouchableOpacity
+                                            onPress={() => this.signOutUser()}
+                                        >
+                                            <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Log out</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ position: 'absolute', right: 30 }}
 
-                                        onPress={() => this.setState({ ModalVisible: false })}
-                                    >
-                                        <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
-                                    </TouchableOpacity>
+                                            onPress={() => this.setState({ ModalVisible: false })}
+                                        >
+                                            <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
-                            </View>
 
+
+                            </View>
 
                         </View>
 
-                    </View>
-
-                </Modal>
-                {/* </View> */}
+                    </Modal>
+                    {/* </View> */}
 
 
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
         )
     }
 }
 const styles = StyleSheet.create({
     commentContainer: {
         backgroundColor: 'white',
-        flex: 0.5,
+        flex: 0.7,
+        padding: 10,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         borderTopRightRadius: 30,
@@ -158,12 +277,12 @@ const styles = StyleSheet.create({
 
     },
     text: {
-        margin: 25,
+        // margin: 25,
         fontWeight: 'bold'
     },
     btn: {
         backgroundColor: 'skyblue',
-        marginTop: 20,
+        // marginTop: 20,
         alignSelf: 'center',
         padding: 10,
         borderBottomRightRadius: 20,
@@ -191,6 +310,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
         color: 'white'
+    },
+    btns: {
+    },
+    img: {
+        height: 30,
+        width: 30,
+        margin: 10
     }
 
 })

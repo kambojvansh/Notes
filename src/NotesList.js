@@ -24,26 +24,29 @@ export default class NotesList extends Component {
     constructor() {
         super()
         this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
-        this.get = firebase.firestore().collection(firebase.auth().currentUser.uid)
+        this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
         // this.ref = firebase.firestore().collection("vansh").doc(firebase.auth().currentUser.uid).collection("Notes")
         this.unsubscribe = null;
-        this.liekstatus = true
+        this.likestatus = true
         this.state = {
             textInput: "",
             modalVisible: false,
             DeleteModalVisible: false,
-            islikComment: false,
+            islikeComment: false,
             comment: "",
             islike: false,
-
+            userArr: [],
             arr: [],
+            Notes: '',
+            isLikes: '',
+            key: '',
 
         }
     }
 
 
-    addcomment = (text, likeStatus) => {
-        this.liekstatus = likeStatus
+    addcomment = (text, like) => {
+        // this.likestatus = like
         if (text == "") {
             // this.getData()
             return
@@ -61,22 +64,73 @@ export default class NotesList extends Component {
         //     textInput: "",
         //     modalVisible: false,
         // }
-        this.addPost()
+        this.addPost(like)
 
     }
     DeleteElement = (index) => {
-        let newarray = this.state.arr
-        newarray.splice(index, 1)
-        return {
-            arr: newarray,
-            DeleteModalVisible: false,
-        }
+        // alert(this.state.key)
+        // let newarray = this.state.arr
+        // newarray.splice(index, 1)
+        // return {
+        //     arr: newarray,
+        //     DeleteModalVisible: false,
+        // }
+        // const dbRef = firebase.firestore().collection('users').doc(this.props.route.params.userkey)
+        // dbRef.get().then((res) => {
+        //     if (res.exists) {
+        //         const user = res.data();
+        //         this.setState({
+        //             key: res.id,
+        //             Notes: user.Notes,
+        //             isLikes: user.isLikes,
+        //             // mobile: user.mobile,
+        //             // isLoading: false
+        //         });
+        //     } else {
+        //         console.log("Document does not exist!");
+        //     }
+        // });
+        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
+        dbRef.delete().then((res) => {
+            console.log('Item removed from database')
+            this.setState({ DeleteModalVisible: false })
+            // this.props.navigation.navigate('UserScreen');
+        })
     }
-    deletItemIndex = ''
-    addPost = () => {
+    inputValueUpdate = (val, prop) => {
+        const state = this.state;
+        state[prop] = val;
+        this.setState(state);
+    }
+
+    deleteUser(key) {
+
+        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
+        dbRef.delete().then((res) => {
+            console.log('Item removed from database')
+            // this.props.navigation.navigate('UserScreen');
+        })
+    }
+
+    openTwoButtonAlert = () => {
+        Alert.alert(
+            'Delete User',
+            'Are you sure?',
+            [
+                { text: 'Yes', onPress: () => this.deleteUser() },
+                { text: 'No', onPress: () => console.log('No item was removed'), style: 'cancel' },
+            ],
+            {
+                cancelable: true
+            }
+        );
+    }
+    deletItem = ''
+    addPost = (likeStatus) => {
+        this.likestatus = likeStatus
         this.ref.add({
             Notes: this.state.textInput,
-            isLikes: this.liekstatus,
+            isLikes: this.likestatus,
         });
         this.setState({ textInput: '', modalVisible: false })
     }
@@ -90,38 +144,60 @@ export default class NotesList extends Component {
     //             alert(data.Notes)
     //         })
     // }
-    async getData() {
-        // alert("bdvbdjvb")
-        try {
-            const response = await this.ref.get()
-            let data = []
-            data = await response._docs
-            // alert(data)
-            this.setState({ arr: data })
-            // console.log(this.state.arr._data.isLike)
-            // this.setState({
-            //     isLoading: false,
-            //     dataSource: data,
-            // });
-        } catch (err) {
-            // if (err == "TypeError: Network request failed") {
-            //     // this.setState({
-            //     //     isLoading: false,
-            //     // });
-            //     alert("Please open Internet")
-            // }
-            console.log("Error Found: " + err)
+    // async getData() {
+    //     // alert("bdvbdjvb")
+    //     try {
+    //         const response = await this.ref.get()
+    //         let data = []
+    //         data = await response._docs
+    //         // alert(data)
+    //         this.setState({ arr: data })
+    //         // console.log("---------------------")
+    //         console.log(data)
+    //         // this.setState({
+    //         //     isLoading: false,
+    //         //     dataSource: data,
+    //         // });
+    //     } catch (err) {
+    //         // if (err == "TypeError: Network request failed") {
+    //         //     // this.setState({
+    //         //     //     isLoading: false,
+    //         //     // });
+    //         //     alert("Please open Internet")
+    //         // }
+    //         console.log("Error Found: " + err)
 
-        }
+    //     }
 
+    // }
+    getCollection = (querySnapshot) => {
+        const userArr = [];
+        querySnapshot.forEach((res) => {
+            const { Notes, isLikes } = res.data();
+            userArr.push({
+                key: res.id,
+                res,
+                Notes,
+                isLikes,
+            });
+        });
+        this.setState({
+            userArr,
+            isLoading: false,
+        });
     }
+    // componentDidMount() {
+    //     this.getData()
+    // }
     componentDidMount() {
-        this.getData()
+        this.unsubscribe = this.ref.onSnapshot(this.getCollection);
     }
-
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
     render() {
-        this.getData()
-
+        // this.getData()
+        this.getCollection
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
@@ -129,12 +205,13 @@ export default class NotesList extends Component {
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
                     <View style={{ flex: 1 }}>
                         <FlatList
-                            data={this.state.arr}
+                            data={this.state.userArr}
+                            // numColumns={2}
                             renderItem={({ item, index }) =>
                                 <Comment
-                                    note={item._data.Notes}
-                                    likes={item._data.likes}
-                                    islikeComment={item._data.isLikes}
+                                    note={item.Notes}
+                                    likes={item.likes}
+                                    islikeComment={item.isLikes}
                                     handelLike={() => {
                                         // let newArr = this.state.arr
                                         // if (item._data.isLike) {
@@ -149,12 +226,19 @@ export default class NotesList extends Component {
                                     }
                                     }
                                     delete={() => {
-                                        this.deletItemIndex = index
-                                        this.setState({ DeleteModalVisible: true })
+                                        // alert(item.key)
+                                        // this.deletItem = item.key
+                                        // this.setState({key: item.key })
+
+                                        this.setState({ DeleteModalVisible: true, key: item.key })
                                     }}
                                     // deleteElement={() => this.setState(this.DeleteElement(index))}
                                     next={(likes) => this.props.navigation.navigate("Display",
-                                        { commentPass: item._data.Notes })}
+                                        {
+                                            commentPass: item.Notes,
+                                            userkey: item.key,
+                                            like: item.isLikes
+                                        })}
                                 />}
                             keyExtractor={(index, item) => index + item}
                         >
@@ -197,7 +281,7 @@ export default class NotesList extends Component {
                                             </TouchableOpacity>
                                             <TouchableOpacity
                                                 style={{ position: 'absolute', right: 30 }}
-                                                onPress={() => this.setState(this.DeleteElement(this.deletItemIndex))}
+                                                onPress={() => this.setState(this.DeleteElement(this.deletItem))}
                                             >
                                                 <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>
                                                     Delete
@@ -237,12 +321,12 @@ export default class NotesList extends Component {
 
                                     <TouchableOpacity style={styles.btn}
                                         onPress={() => {
-                                            if (this.state.islikeComment) {
-                                                this.setState({ islikeComment: false })
-                                            }
-                                            else {
-                                                this.setState({ islikeComment: true })
-                                            }
+                                            // if (this.state.islikeComment) {
+                                            //     this.setState({ islikeComment: false })
+                                            // }
+                                            // else {
+                                            //     this.setState({ islikeComment: true })
+                                            // }
                                             this.addcomment(this.state.textInput, this.state.islikeComment)
                                             // this.setState(state => this.addcomment(this.state.textInput, this.state.islikeComment))
                                         }}
@@ -267,7 +351,7 @@ export default class NotesList extends Component {
                                     >
                                         <Image
                                             style={styles.img}
-                                            source={this.state.islikeComment ? require('../images/likeRed.png') : require('../images/like.png')}
+                                            source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
                                         ></Image>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.btn}
@@ -347,7 +431,7 @@ export class Comment extends Component {
                                 >
                                     <Image
                                         style={styles.img}
-                                        source={this.props.islikeComment ? require('../images/likeRed.png') : require('../images/like.png')}
+                                        source={this.props.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
                                     ></Image>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.btn}
