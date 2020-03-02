@@ -10,17 +10,20 @@ import {
     Modal,
     TouchableWithoutFeedback,
     Keyboard,
+    Dimensions,
 } from 'react-native';
 import firebase from 'react-native-firebase'
 // import CardView from 'react-native-cardview'
 // import { Card } from 'react-native-shadow-cards';
+const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class NotesList extends Component {
 
     constructor() {
         super()
         this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
-        this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
+        // this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
         this.unsubscribe = null;
         this.likestatus = true
         this.state = {
@@ -62,7 +65,7 @@ export default class NotesList extends Component {
         this.setState(state);
     }
 
-    deleteUser(key) {
+    deleteUser() {
 
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
         dbRef.delete().then((res) => {
@@ -119,15 +122,21 @@ export default class NotesList extends Component {
     render() {
         this.getCollection
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}
+                style={{}}>
 
 
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, width: screenWidth, alignSelf: 'center', backgroundColor: 'black' }}>
+                    <Text
+                        style={{ color: 'white', alignSelf: 'center', fontSize: 40 }}
+                    >
+                        All Notes
+                    </Text>
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={this.state.userArr}
-                            // numColumns={2}
+                            numColumns={2}
                             renderItem={({ item, index }) =>
                                 <Comment
                                     note={item.Notes}
@@ -213,7 +222,7 @@ export default class NotesList extends Component {
                             visible={this.state.modalVisible}
                         >
                             <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
-                                <View style={[styles.commentContainer, styles.model
+                                <View style={[styles.modal, styles.model
                                 ]}>
                                     <View style={{ width: 250 }}>
                                         <TextInput
@@ -234,7 +243,7 @@ export default class NotesList extends Component {
                                         }}
                                     >
                                         <Image
-                                            style={[styles.img, {}]}
+                                            style={[styles.imgModel, {}]}
                                             source={require('../images/add.png')}
                                         ></Image>
                                     </TouchableOpacity>
@@ -251,7 +260,7 @@ export default class NotesList extends Component {
                                         }
                                     >
                                         <Image
-                                            style={styles.img}
+                                            style={styles.imgModel}
                                             source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
                                         ></Image>
                                     </TouchableOpacity>
@@ -262,7 +271,7 @@ export default class NotesList extends Component {
                                         }}
                                     >
                                         <Image
-                                            style={[styles.img, {}]}
+                                            style={[styles.imgModel, {}]}
                                             source={require('../images/down.png')}
                                         ></Image>
                                     </TouchableOpacity>
@@ -277,14 +286,19 @@ export default class NotesList extends Component {
                             {/* </TouchableWithoutFeedback> */}
                         </Modal>
                     </View>
-                    <TouchableOpacity style={[styles.btn, { marginBottom: 20 }]}
+                    <TouchableOpacity style={[styles.btn, {
+                        marginBottom: 20,
+                        position: 'absolute',
+                        right: 10,
+                        bottom: 10
+                    }]}
                         onPress={() => {
                             // alert("skdnskn")
                             this.setState({ modalVisible: true })
                         }}
                     >
                         <Image
-                            style={[styles.img, { height: 50, width: 50, }]}
+                            style={[styles.img, { height: 60, width: 60, }]}
                             source={require('../images/add.png')}
                         ></Image>
                     </TouchableOpacity>
@@ -312,15 +326,30 @@ export class Comment extends Component {
                     // onPress={() => this.props.navigation.navigate("NotesPage")}
                     onPress={() => this.props.next()}
                 >
-                    <View style={{ margin: 10 }}>
+                    <View style={{ margin: 5 }}>
                         <View style={styles.commentContainer}>
-                            <View style={{ flex: 4 }}>
+                            <View style={{ margin: 10 }}>
+                                <TouchableOpacity style={styles.btn}
+                                    onPress={() => {
+
+                                        this.props.handelLike()
+                                    }
+                                    }
+                                >
+                                    <Image
+                                        style={styles.img}
+                                        source={this.props.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
+                                    ></Image>
+                                </TouchableOpacity>
+
+                            </View>
+                            <View style={{ alignItems: 'center' }}>
                                 <Text
                                     numberOfLines={1}
                                     style={styles.text}>{this.props.note}</Text>
 
                             </View>
-                            <View style={[styles.commentContainer, { flex: 1 }]}>
+                            {/* <View style={[styles.commentContainer, { flex: 1 }]}>
                                 <TouchableOpacity style={styles.btn}
                                     onPress={() => {
 
@@ -342,7 +371,7 @@ export class Comment extends Component {
                                     ></Image>
                                 </TouchableOpacity>
 
-                            </View>
+                            </View> */}
 
 
 
@@ -350,7 +379,7 @@ export class Comment extends Component {
 
                     </View>
                 </TouchableOpacity>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback >
         )
 
     }
@@ -382,6 +411,18 @@ const HearderImage = () => {
 const styles = StyleSheet.create({
     commentContainer: {
         backgroundColor: 'white',
+        alignSelf: 'center',
+        paddingHorizontal: 5,
+        height: 150,
+        width: screenWidth / 2.1,
+        borderBottomLeftRadius: 40,
+        borderBottomRightRadius: 40,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        marginTop: 10
+    },
+    modal: {
+        backgroundColor: 'white',
         paddingHorizontal: 5,
         flexDirection: 'row',
         justifyContent: "flex-start",
@@ -389,16 +430,22 @@ const styles = StyleSheet.create({
         height: 70
     },
     text: {
-        fontSize: 20,
-        marginHorizontal: 10
+        // marginHorizontal: 10,
     },
     img: {
+        height: 20,
+        width: 20,
+        alignSelf: 'flex-start'
+    },
+    imgModel: {
         height: 40,
         width: 40,
-        alignSelf: 'center'
+        alignSelf: 'flex-start'
     },
     btn: {
-        marginHorizontal: 2
+        marginHorizontal: 2,
+        // height: 10,
+        // width: 10
 
     },
     inputtext: {

@@ -38,9 +38,10 @@ export default function App() {
         />
         <Stack.Screen name="NotesPage" component={Notes}
           options={{
-            headerStyle: {
-              backgroundColor: '#3498db',
-            },
+            // headerStyle: {
+            //   backgroundColor: '#3498db',
+            // },
+            headerShown: false,
             headerTintColor: '#fff',
             headerTitleStyle: {
               fontWeight: 'bold',
@@ -51,9 +52,10 @@ export default function App() {
         />
         <Stack.Screen name="Display" component={Display}
           options={{
-            headerStyle: {
-              backgroundColor: '#3498db',
-            },
+            // headerStyle: {
+            //   backgroundColor: '#3498db',
+            // },
+            headerShown: false,
             headerTintColor: '#fff',
             headerTitleStyle: {
               fontWeight: 'bold',

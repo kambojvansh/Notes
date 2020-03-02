@@ -98,7 +98,7 @@ export default class SignUp extends Component {
                         <TouchableOpacity style={styles.btn}
                             // onPress={() => this.props.navigation.navigate("user")}
                             onPress={() => {
-                                if (this.state.email == "" && this.state.password == "")
+                                if (this.state.email == "" && this.state.password == "" && this.state.name == "" && this.state.lname == "")
                                     return
                                 this.handleSignUp()
                             }

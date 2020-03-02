@@ -114,7 +114,7 @@ export default class NoteDisplay extends Component {
 
     openTwoButtonAlert = () => {
         Alert.alert(
-            'Delete User',
+            'Delete Note',
             'Are you sure?',
             [
                 { text: 'Yes', onPress: () => this.deleteUser() },
@@ -131,6 +131,58 @@ export default class NoteDisplay extends Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
                 <View style={{ flex: 1, }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        backgroundColor: 'white'
+                    }}>
+                        <TouchableOpacity style={styles.btns}
+                            onPress={() => {
+                                this.updateUser()
+                                // )
+                            }}
+                        >
+                            <Image
+                                style={[styles.img, {}]}
+                                source={require('../images/update.png')}
+                            ></Image>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btns}
+                            onPress={() => {
+                                this.openTwoButtonAlert()
+                                // )
+                            }}
+                        >
+                            <Image
+                                style={[styles.img, {}]}
+                                source={require('../images/delete.png')}
+                            ></Image>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btns}
+                            onPress={() => {
+                                if (this.state.islike) {
+                                    this.setState({ islike: false })
+                                }
+                                else {
+                                    this.setState({ islike: true })
+                                }
+                            }}
+                        >
+                            <Image
+                                style={[styles.img, {}]}
+                                source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
+                            ></Image>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btns}
+                            onPress={() => this.setState({ ModalVisible: true })}
+                        >
+                            <Image
+                                style={[styles.img, {}]}
+                                source={require('../images/logout.png')}
+                            ></Image>
+                        </TouchableOpacity>
+                    </View>
+
 
 
                     <View style={styles.commentContainer}>
@@ -148,53 +200,6 @@ export default class NoteDisplay extends Component {
                         >
 
                         </TextInput>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => {
-                                    this.updateUser()
-                                    // )
-                                }}
-                            >
-                                <Image
-                                    style={[styles.img, {}]}
-                                    source={require('../images/update.png')}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => {
-                                    this.openTwoButtonAlert()
-                                    // )
-                                }}
-                            >
-                                <Image
-                                    style={[styles.img, {}]}
-                                    source={require('../images/delete.png')}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => {
-                                    if (this.state.islike) {
-                                        this.setState({ islike: false })
-                                    }
-                                    else {
-                                        this.setState({ islike: true })
-                                    }
-                                }}
-                            >
-                                <Image
-                                    style={[styles.img, {}]}
-                                    source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
-                                ></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => this.setState({ ModalVisible: true })}
-                            >
-                                <Image
-                                    style={[styles.img, {}]}
-                                    source={require('../images/logout.png')}
-                                ></Image>
-                            </TouchableOpacity>
-                        </View>
 
 
                     </View>
