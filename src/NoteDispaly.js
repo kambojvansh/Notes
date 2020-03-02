@@ -21,8 +21,7 @@ export default class NoteDisplay extends Component {
     constructor(props) {
         super(props)
         this.getValueLocally()
-        // const value = this.props.route
-        // console.log(props.route.params, "props")
+
         this.state = {
             ModalVisible: false,
             error: '',
@@ -41,15 +40,13 @@ export default class NoteDisplay extends Component {
                 getValue: firstName,
                 lname: lastName
             })
-            // alert("Done")
+
         } catch (e) {
             alert(e)
-            // saving error
+
         }
     }
-    // getValueLocally = () => {
-    //     AsyncStorage.getItem('UserName').then((value) => this.setState({ getValue: value }))
-    // }
+
     signOutUser = async () => {
         try {
             await firebase.auth().signOut();
@@ -97,16 +94,7 @@ export default class NoteDisplay extends Component {
             isLikes: this.state.islike,
         })
             .then(() => { alert("Data Updated") })
-            // .then((docRef) => {
-            //     this.setState({
-            //         key: '',
-            //         name: '',
-            //         email: '',
-            //         mobile: '',
-            //         isLoading: false,
-            //     });
-            //     this.props.navigation.navigate('UserScreen');
-            // })
+
             .catch((error) => {
                 console.error("Error: ", error);
                 this.setState({
@@ -143,21 +131,7 @@ export default class NoteDisplay extends Component {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
                 <View style={{ flex: 1, }}>
-                    {/* <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        margin: 10
-                    }}>
-                        <Text>Hello {this.state.getValue} </Text>
-                        <Text>{this.state.lname}</Text>
-                        <TouchableOpacity
-                            onPress={() => this.setState({ ModalVisible: true })}
-                            style={styles.btn}
-                        >
-                            <Text style={styles.text}>Logout</Text>
-                        </TouchableOpacity>
 
-                    </View> */}
 
                     <View style={styles.commentContainer}>
                         <TextInput style={{

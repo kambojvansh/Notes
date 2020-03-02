@@ -9,23 +9,18 @@ import {
     TextInput,
     Modal,
     TouchableWithoutFeedback,
-    Keyboard
+    Keyboard,
 } from 'react-native';
 import firebase from 'react-native-firebase'
-// import { StackNavigator } from 'react-navigation';
+// import CardView from 'react-native-cardview'
+// import { Card } from 'react-native-shadow-cards';
 
 export default class NotesList extends Component {
-
-    // static navigationOptions = ({ navigation, screenProps }) => ({
-    //     title: "demoooo",
-    //     headerRight: <HearderImage />,
-    // });
 
     constructor() {
         super()
         this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
         this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
-        // this.ref = firebase.firestore().collection("vansh").doc(firebase.auth().currentUser.uid).collection("Notes")
         this.unsubscribe = null;
         this.likestatus = true
         this.state = {
@@ -46,55 +41,19 @@ export default class NotesList extends Component {
 
 
     addcomment = (text, like) => {
-        // this.likestatus = like
+
         if (text == "") {
-            // this.getData()
             return
         }
-        // let newarray = this.state.arr
-        // newarray.push({ Note: text, likes: 422, islike: likeStatus })
-        // this.setState({
-        //     // Note: text,
-        //     // likes: 422,
-        //     // islike: likeStatus,
-        //     modalVisible: false
-        // })
-        // return {
-        //     arr: newarray,
-        //     textInput: "",
-        //     modalVisible: false,
-        // }
         this.addPost(like)
 
     }
     DeleteElement = (index) => {
-        // alert(this.state.key)
-        // let newarray = this.state.arr
-        // newarray.splice(index, 1)
-        // return {
-        //     arr: newarray,
-        //     DeleteModalVisible: false,
-        // }
-        // const dbRef = firebase.firestore().collection('users').doc(this.props.route.params.userkey)
-        // dbRef.get().then((res) => {
-        //     if (res.exists) {
-        //         const user = res.data();
-        //         this.setState({
-        //             key: res.id,
-        //             Notes: user.Notes,
-        //             isLikes: user.isLikes,
-        //             // mobile: user.mobile,
-        //             // isLoading: false
-        //         });
-        //     } else {
-        //         console.log("Document does not exist!");
-        //     }
-        // });
+
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
         dbRef.delete().then((res) => {
             console.log('Item removed from database')
             this.setState({ DeleteModalVisible: false })
-            // this.props.navigation.navigate('UserScreen');
         })
     }
     inputValueUpdate = (val, prop) => {
@@ -108,7 +67,6 @@ export default class NotesList extends Component {
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
         dbRef.delete().then((res) => {
             console.log('Item removed from database')
-            // this.props.navigation.navigate('UserScreen');
         })
     }
 
@@ -134,42 +92,7 @@ export default class NotesList extends Component {
         });
         this.setState({ textInput: '', modalVisible: false })
     }
-    // getData = () => {
-    //     this.ref.get()
-    //         .then(querySnapshot => {
-    //             console.log(querySnapshot);
-    //             console.log(querySnapshot._docs);
-    //             let data = []
-    //             data = querySnapshot._docs.json()
-    //             alert(data.Notes)
-    //         })
-    // }
-    // async getData() {
-    //     // alert("bdvbdjvb")
-    //     try {
-    //         const response = await this.ref.get()
-    //         let data = []
-    //         data = await response._docs
-    //         // alert(data)
-    //         this.setState({ arr: data })
-    //         // console.log("---------------------")
-    //         console.log(data)
-    //         // this.setState({
-    //         //     isLoading: false,
-    //         //     dataSource: data,
-    //         // });
-    //     } catch (err) {
-    //         // if (err == "TypeError: Network request failed") {
-    //         //     // this.setState({
-    //         //     //     isLoading: false,
-    //         //     // });
-    //         //     alert("Please open Internet")
-    //         // }
-    //         console.log("Error Found: " + err)
 
-    //     }
-
-    // }
     getCollection = (querySnapshot) => {
         const userArr = [];
         querySnapshot.forEach((res) => {
@@ -186,9 +109,7 @@ export default class NotesList extends Component {
             isLoading: false,
         });
     }
-    // componentDidMount() {
-    //     this.getData()
-    // }
+
     componentDidMount() {
         this.unsubscribe = this.ref.onSnapshot(this.getCollection);
     }
@@ -196,10 +117,10 @@ export default class NotesList extends Component {
         this.unsubscribe();
     }
     render() {
-        // this.getData()
         this.getCollection
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+
 
                 <View style={{ flex: 1 }}>
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
@@ -213,26 +134,13 @@ export default class NotesList extends Component {
                                     likes={item.likes}
                                     islikeComment={item.isLikes}
                                     handelLike={() => {
-                                        // let newArr = this.state.arr
-                                        // if (item._data.isLike) {
-                                        //     newArr[index].isLike = false
-                                        //     this.setState({ arr: newArr })
-                                        // }
-                                        // else {
-                                        //     newArr[index].isLike = true
-                                        //     this.setState({ arr: newArr })
-                                        // }
-                                        // alert(item._data.isLikes)
                                     }
                                     }
                                     delete={() => {
-                                        // alert(item.key)
-                                        // this.deletItem = item.key
-                                        // this.setState({key: item.key })
+
 
                                         this.setState({ DeleteModalVisible: true, key: item.key })
                                     }}
-                                    // deleteElement={() => this.setState(this.DeleteElement(index))}
                                     next={(likes) => this.props.navigation.navigate("Display",
                                         {
                                             commentPass: item.Notes,
@@ -321,14 +229,8 @@ export default class NotesList extends Component {
 
                                     <TouchableOpacity style={styles.btn}
                                         onPress={() => {
-                                            // if (this.state.islikeComment) {
-                                            //     this.setState({ islikeComment: false })
-                                            // }
-                                            // else {
-                                            //     this.setState({ islikeComment: true })
-                                            // }
+
                                             this.addcomment(this.state.textInput, this.state.islikeComment)
-                                            // this.setState(state => this.addcomment(this.state.textInput, this.state.islikeComment))
                                         }}
                                     >
                                         <Image
@@ -339,7 +241,6 @@ export default class NotesList extends Component {
                                     {/* For Like Button*/}
                                     <TouchableOpacity style={styles.btn}
                                         onPress={() => {
-                                            // this.setState(stateForLike => this.handelLike(stateForLike))
                                             if (this.state.islikeComment) {
                                                 this.setState({ islikeComment: false })
                                             }
@@ -422,9 +323,7 @@ export class Comment extends Component {
                             <View style={[styles.commentContainer, { flex: 1 }]}>
                                 <TouchableOpacity style={styles.btn}
                                     onPress={() => {
-                                        // this.setState(stateForLike => this.handelLike(stateForLike))
-                                        // this.props.Change()
-                                        // this.props.setImage()
+
                                         this.props.handelLike()
                                     }
                                     }
@@ -448,12 +347,7 @@ export class Comment extends Component {
 
 
                         </View>
-                        {/* <View>
-                        <Text>Tota Likes <Text style={{ fontWeight: 'bold' }}>
 
-                            {likeCount}
-                        </Text></Text>
-                    </View> */}
                     </View>
                 </TouchableOpacity>
             </TouchableWithoutFeedback>
