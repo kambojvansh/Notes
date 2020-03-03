@@ -61,12 +61,13 @@ export default class LoginPage extends Component {
         return (
             // <KeyboardAwareScrollView style={styles.main_container}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View style={styles.main_container}>
-                    <View style={styles.TopView}>
-                        {/* <Text style={styles.textHading}>Notes</Text> */}
-                    </View>
-                    <View style={styles.bottumView}>
-                        <KeyboardAwareScrollView>
+                <KeyboardAwareScrollView>
+                    <View style={styles.main_container}>
+                        <View style={styles.TopView}>
+                            {/* <Text style={styles.textHading}>Notes</Text> */}
+                        </View>
+                        <View style={styles.bottumView}>
+                            {/* <KeyboardAwareScrollView> */}
                             <Text style={styles.textHadinglogin}>Login</Text>
                             <View style={{}}>
                                 <Text style={styles.text}>Email</Text>
@@ -84,7 +85,7 @@ export default class LoginPage extends Component {
                                     secureTextEntry={true}
                                 ></TextInput>
                                 <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate("user")}
+                                // onPress={() => this.props.navigation.navigate("user")}
                                 >
                                     <Text style={{
                                         alignSelf: 'flex-end',
@@ -127,29 +128,30 @@ export default class LoginPage extends Component {
                             <TouchableOpacity
                                 onPress={() => this.props.navigation.navigate("signup")}
                             >
-                                <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold' }]}>
+                                <Text style={[styles.text, { alignSelf: 'center', fontWeight: 'bold', marginBottom: 15 }]}>
                                     Don't have an account? Sign up
                         </Text>
 
                             </TouchableOpacity>
-                        </KeyboardAwareScrollView>
+                            {/* </KeyboardAwareScrollView> */}
+
+                        </View>
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={this.state.isLoading}>
+
+                            <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                                <View style={{ backgroundColor: "white" }}>
+                                    <ActivityIndicator size='large'
+                                        color="#3498db" />
+                                </View>
+                            </View>
+
+                        </Modal>
 
                     </View>
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={this.state.isLoading}>
-
-                        <View style={{ marginTop: 350, alignSelf: 'center' }}>
-                            <View style={{ backgroundColor: "white" }}>
-                                <ActivityIndicator size='large'
-                                    color="#3498db" />
-                            </View>
-                        </View>
-
-                    </Modal>
-
-                </View>
+                </KeyboardAwareScrollView>
 
             </TouchableWithoutFeedback>
             // </KeyboardAwareScrollView>

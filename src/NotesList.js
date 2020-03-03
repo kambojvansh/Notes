@@ -145,10 +145,13 @@ export default class NotesList extends Component {
     render() {
         this.getCollection
         return (
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}
+            <TouchableWithoutFeedback onPress={() => {
+                Keyboard.dismiss
+                this.setState({ modalVisible: false })
+
+            }
+            } accessible={false}
                 style={{}}>
-
-
                 <View style={{
                     flex: 1,
                     width: screenWidth,
@@ -278,77 +281,82 @@ export default class NotesList extends Component {
 
                         </Modal>
 
+                        <TouchableWithoutFeedback onPress={() => {
+                            Keyboard.dismiss
+                            this.setState({ modalVisible: false })
 
+                        }
+                        } accessible={false}
+                            style={{}}>
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={this.state.modalVisible}
+                            >
 
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={this.state.modalVisible}
-                        >
-                            <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
-                                <View style={[styles.modal, styles.model
-                                ]}>
-                                    <View style={{ width: 250 }}>
-                                        <TextInput
-                                            style={styles.inputtext}
-                                            onChangeText={text => this.setState({ textInput: text })}
-                                            placeholder={"Enter comment Here"}
-                                            placeholderTextColor="#fff"
-                                            value={this.state.textInput}
-                                        />
-                                        {/* style={styles.inputtext} */}
+                                <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
+                                    <View style={[styles.modal, styles.model
+                                    ]}>
+                                        <View style={{ width: 250 }}>
+                                            <TextInput
+                                                style={styles.inputtext}
+                                                onChangeText={text => this.setState({ textInput: text })}
+                                                placeholder={"Enter comment Here"}
+                                                placeholderTextColor="#fff"
+                                                value={this.state.textInput}
+                                            />
+                                            {/* style={styles.inputtext} */}
+                                        </View>
+                                        {/* <View style={[styles.commentContainer]}> */}
+
+                                        <TouchableOpacity style={styles.btn}
+                                            onPress={() => {
+
+                                                this.addcomment(this.state.textInput, this.state.islikeComment)
+                                            }}
+                                        >
+                                            <Image
+                                                style={[styles.imgModel, {}]}
+                                                source={require('../images/add.png')}
+                                            ></Image>
+                                        </TouchableOpacity>
+                                        {/* For Like Button*/}
+                                        <TouchableOpacity style={styles.btn}
+                                            onPress={() => {
+                                                if (this.state.islikeComment) {
+                                                    this.setState({ islikeComment: false })
+                                                }
+                                                else {
+                                                    this.setState({ islikeComment: true })
+                                                }
+                                            }
+                                            }
+                                        >
+                                            <Image
+                                                style={styles.imgModel}
+                                                source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
+                                            ></Image>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.btn}
+                                            onPress={() => {
+                                                this.setState({ modalVisible: false })
+                                                // )
+                                            }}
+                                        >
+                                            <Image
+                                                style={[styles.imgModel, {}]}
+                                                source={require('../images/down.png')}
+                                            ></Image>
+                                        </TouchableOpacity>
+
+                                        {/* </View> */}
                                     </View>
-                                    {/* <View style={[styles.commentContainer]}> */}
-
-                                    <TouchableOpacity style={styles.btn}
-                                        onPress={() => {
-
-                                            this.addcomment(this.state.textInput, this.state.islikeComment)
-                                        }}
-                                    >
-                                        <Image
-                                            style={[styles.imgModel, {}]}
-                                            source={require('../images/add.png')}
-                                        ></Image>
-                                    </TouchableOpacity>
-                                    {/* For Like Button*/}
-                                    <TouchableOpacity style={styles.btn}
-                                        onPress={() => {
-                                            if (this.state.islikeComment) {
-                                                this.setState({ islikeComment: false })
-                                            }
-                                            else {
-                                                this.setState({ islikeComment: true })
-                                            }
-                                        }
-                                        }
-                                    >
-                                        <Image
-                                            style={styles.imgModel}
-                                            source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
-                                        ></Image>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.btn}
-                                        onPress={() => {
-                                            this.setState({ modalVisible: false })
-                                            // )
-                                        }}
-                                    >
-                                        <Image
-                                            style={[styles.imgModel, {}]}
-                                            source={require('../images/down.png')}
-                                        ></Image>
-                                    </TouchableOpacity>
-
-                                    {/* </View> */}
-
-
-
-
                                 </View>
-                            </View>
-                            {/* </TouchableWithoutFeedback> */}
-                        </Modal>
+
+                                {/* </TouchableWithoutFeedback> */}
+                            </Modal>
+                        </TouchableWithoutFeedback>
+
                     </View>
                     <TouchableOpacity style={[styles.btn, {
                         marginBottom: 20,
@@ -369,7 +377,7 @@ export default class NotesList extends Component {
 
 
                 </View >
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback >
 
 
         )
@@ -409,7 +417,7 @@ export class Comment extends Component {
                             </View>
                             <View style={{ alignItems: 'center' }}>
                                 <Text
-                                    numberOfLines={1}
+                                    // numberOfLines={1}
                                     style={[styles.text, { fontWeight: 'bold', fontSize: 18 }]}>{this.props.heading}</Text>
                                 <Text
                                     numberOfLines={1}
