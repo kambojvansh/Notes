@@ -25,7 +25,9 @@ export default class NotesList extends Component {
 
     constructor() {
         super()
+        // this.time = firebase.firestore.FieldPath('time')
         this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
+        this.getref = firebase.firestore().collection(firebase.auth().currentUser.uid).orderBy("notesdate", "desc")
         // this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
         this.unsubscribe = null;
         this.likestatus = true
@@ -107,6 +109,7 @@ export default class NotesList extends Component {
         this.ref.add({
             Notes: this.state.textInput,
             isLikes: this.likestatus,
+            notesdate: new Date()
         });
         this.setState({ textInput: '', modalVisible: false })
     }
@@ -114,13 +117,18 @@ export default class NotesList extends Component {
     getCollection = (querySnapshot) => {
         const userArr = [];
         querySnapshot.forEach((res) => {
-            const { Notes, isLikes } = res.data();
+            const { Notes, isLikes, notesHeading, timestamp } = res.data();
+            // const date = res.data().notesdate.timestamp.toDate()
             userArr.push({
                 key: res.id,
                 res,
                 Notes,
                 isLikes,
+                notesHeading,
+                timestamp
+                ,
             });
+            // console.log(userArr)
         });
         this.setState({
             userArr,
@@ -129,7 +137,7 @@ export default class NotesList extends Component {
     }
 
     componentDidMount() {
-        this.unsubscribe = this.ref.onSnapshot(this.getCollection);
+        this.unsubscribe = this.getref.onSnapshot(this.getCollection);
     }
     componentWillUnmount() {
         this.unsubscribe();
@@ -192,9 +200,12 @@ export default class NotesList extends Component {
                             renderItem={({ item, index }) =>
                                 <Comment
                                     note={item.Notes}
-                                    likes={item.likes}
+                                    // likes={item.likes}
+                                    heading={item.notesHeading}
                                     islikeComment={item.isLikes}
+                                    // date={"date"}
                                     handelLike={() => {
+                                        // alert(new Date(item.notesdate).toDateString())
                                     }
                                     }
                                     delete={() => {
@@ -206,7 +217,8 @@ export default class NotesList extends Component {
                                         {
                                             commentPass: item.Notes,
                                             userkey: item.key,
-                                            like: item.isLikes
+                                            like: item.isLikes,
+                                            heading: item.notesHeading
                                         })}
                                 />}
                             keyExtractor={(index, item) => index + item}
@@ -398,34 +410,15 @@ export class Comment extends Component {
                             <View style={{ alignItems: 'center' }}>
                                 <Text
                                     numberOfLines={1}
+                                    style={[styles.text, { fontWeight: 'bold', fontSize: 18 }]}>{this.props.heading}</Text>
+                                <Text
+                                    numberOfLines={1}
                                     style={styles.text}>{this.props.note}</Text>
+                                {/* <Text
+                                    numberOfLines={1}
+                                    style={styles.text}>{this.props.date}</Text> */}
 
                             </View>
-                            {/* <View style={[styles.commentContainer, { flex: 1 }]}>
-                                <TouchableOpacity style={styles.btn}
-                                    onPress={() => {
-
-                                        this.props.handelLike()
-                                    }
-                                    }
-                                >
-                                    <Image
-                                        style={styles.img}
-                                        source={this.props.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
-                                    ></Image>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.btn}
-                                    onPress={() => this.props.delete()}
-                                >
-                                    <Image
-                                        style={styles.img}
-                                        source={require('../images/deletBox.png')}
-                                    ></Image>
-                                </TouchableOpacity>
-
-                            </View> */}
-
-
 
                         </View>
 

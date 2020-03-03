@@ -29,7 +29,8 @@ export default class NoteDisplay extends Component {
             lname: '',
             note: '',
             islike: false,
-            key: ''
+            key: '',
+            notesHeading: ""
         }
     }
     getValueLocally = async () => {
@@ -65,7 +66,8 @@ export default class NoteDisplay extends Component {
     componentDidMount() {
         this.setState({
             note: this.text,
-            islike: this.props.route.params.like
+            islike: this.props.route.params.like,
+            notesHeading: this.props.route.params.heading
         })
         // alert(this.state.islike)
         // alert(this.state.note)
@@ -92,6 +94,8 @@ export default class NoteDisplay extends Component {
         updateDBRef.set({
             Notes: this.state.note,
             isLikes: this.state.islike,
+            notesHeading: this.state.notesHeading,
+            notesdate: new Date()
         })
             .then(() => { alert("Data Updated") })
 
@@ -198,6 +202,28 @@ export default class NoteDisplay extends Component {
 
 
                     <View style={styles.commentContainer}>
+                        <TextInput style={{
+                            // height: screenHeight / 2,
+                            width: screenWidth - 50,
+                            // // textAlign: 'center'
+                            // textAlignVertical: 'top',
+                            fontWeight: 'bold',
+                            fontSize: 25,
+                            alignSelf: 'center',
+                            textAlign: 'center',
+                            backgroundColor: 'lightgray',
+                            borderBottomLeftRadius: 30,
+                            borderBottomRightRadius: 30,
+                            borderTopRightRadius: 30,
+                            borderTopLeftRadius: 30,
+                        }}
+                            multiline={true}
+                            placeholder={"Add heading"}
+                            value={this.state.notesHeading}
+                            onChangeText={(text) => this.setState({ notesHeading: text })}
+                        >
+
+                        </TextInput>
                         <TextInput style={{
                             height: screenHeight / 2,
                             width: screenWidth - 50,
