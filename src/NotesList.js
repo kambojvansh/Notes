@@ -35,6 +35,8 @@ export default class NotesList extends Component {
             textInput: "",
             modalVisible: false,
             DeleteModalVisible: false,
+            downModalVisible: false,
+            topModalVisible: false,
             islikeComment: false,
             comment: "",
             islike: false,
@@ -136,6 +138,32 @@ export default class NotesList extends Component {
         });
     }
 
+    //for flat list
+    handeldowntab = () => {
+        this.setState({ topModalVisible: true })
+    }
+    upButtonHandler = () => {
+        //OnCLick of Up button we scrolled the list to top
+        this.ListView_Ref.scrollToOffset({ offset: 0, animated: true });
+        this.setState({ topModalVisible: false })
+    };
+
+    downButtonHandler = () => {
+        //OnCLick of down button we scrolled the list to bottom
+        this.ListView_Ref.scrollToEnd({ animated: true });
+    };
+    // ListViewItemSeparator = () => {
+    //     return (
+    //         <View
+    //             style={{
+    //                 height: 0.5,
+    //                 width: '100%',
+    //                 backgroundColor: '#000',
+    //             }}
+    //         />
+    //     );
+    // };
+
     componentDidMount() {
         this.unsubscribe = this.getref.onSnapshot(this.getCollection);
     }
@@ -198,6 +226,12 @@ export default class NotesList extends Component {
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
                     <View style={{ flex: 1 }}>
                         <FlatList
+                            // ItemSeparatorComponent={this.ListViewItemSeparator}
+                            ref={(ref) => {
+                                this.ListView_Ref = ref;
+                            }}
+                            // onEndReached={this.handeldowntab}
+                            // onEndReachedThreshold={0.5}
                             data={this.state.userArr}
                             numColumns={2}
                             renderItem={({ item, index }) =>
@@ -227,6 +261,47 @@ export default class NotesList extends Component {
                             keyExtractor={(index, item) => index + item}
                         >
                         </FlatList>
+                        {/* <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={this.state.downModalVisible}> */}
+                        {/* {this.state.downModalVisible ? */}
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={this.downButtonHandler}
+                            style={styles.downButton}>
+                            <Image
+                                source={{
+                                    uri:
+                                        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_down.png',
+                                }}
+                                style={styles.downButtonImage}
+
+                            />
+                        </TouchableOpacity>
+
+                        {/* : null} */}
+                        {/* {this.state.topModalVisible ? */}
+                        <TouchableOpacity
+                            activeOpacity={0.5}
+                            onPress={this.upButtonHandler}
+                            style={styles.upButton}>
+                            <Image
+                                source={{
+                                    uri:
+                                        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_up.png',
+                                }}
+                                style={styles.upButtonImage}
+                            />
+                        </TouchableOpacity>
+
+                        {/* : null} */}
+
+
+
+                        {/* </Modal> */}
+
+                        {/*  */}
 
 
                     </View>
@@ -539,7 +614,35 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
         color: 'white'
-    }
+    },
+    upButton: {
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        bottom: 20,
+    },
+    upButtonImage: {
+        resizeMode: 'contain',
+        width: 30,
+        height: 30,
+    },
+    downButton: {
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        top: 20,
+    },
+    downButtonImage: {
+        resizeMode: 'contain',
+        width: 30,
+        height: 30,
+    },
 
 })
 
