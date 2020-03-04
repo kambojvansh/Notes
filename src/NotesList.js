@@ -15,7 +15,7 @@ import {
     BackHandler,
 } from 'react-native';
 import firebase from 'react-native-firebase'
-import OptionsMenu from "react-native-options-menu";
+import OptionsMenu from "react-native-options-menu"
 // import CardView from 'react-native-cardview'
 // import { Card } from 'react-native-shadow-cards';
 const screenWidth = Math.round(Dimensions.get('window').width);
