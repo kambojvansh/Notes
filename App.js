@@ -9,6 +9,7 @@ import model from './src/model'
 import UsersData from './src/UsersData';
 import UserDetails from './src/UserDetails';
 import SignUp from './src/SignUp';
+import addNotes from './src/addNotes';
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -51,6 +52,18 @@ export default function App() {
 
         />
         <Stack.Screen name="Display" component={Display}
+          options={{
+            // headerStyle: {
+            //   backgroundColor: '#3498db',
+            // },
+            headerShown: false,
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 25
+            },
+          }} />
+        <Stack.Screen name="addNotes" component={addNotes}
           options={{
             // headerStyle: {
             //   backgroundColor: '#3498db',

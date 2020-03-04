@@ -11,7 +11,8 @@ import {
     Keyboard,
     Image,
     Alert,
-    ActivityIndicator
+    ActivityIndicator,
+    BackHandler
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -20,7 +21,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
-export default class NoteDisplay extends Component {
+export default class addNotes extends Component {
     constructor(props) {
         super(props)
         this.getValueLocally()
@@ -53,48 +54,37 @@ export default class NoteDisplay extends Component {
         }
     }
 
-    signOutUser = async () => {
-        try {
-            await firebase.auth().signOut();
-            this.setState({ ModalVisible: false })
-            this.props.navigation.navigate('LoginPage')
-            // alert("Logout")
-        } catch (e) {
-            // console.log(e);
-            this.setState({ error: e })
-            alert(this.state.e)
-        }
-    }
-    text = this.props.route.params.commentPass
-    like = this.props.route.params.like
-    heading = this.props.route.params.heading
-
     componentDidMount() {
-        this.setState({
-            note: this.text,
-            islike: this.props.route.params.like,
-            notesHeading: this.props.route.params.heading
-        })
-        // alert(this.state.islike)
-        // alert(this.state.note)
-        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
-        dbRef.get().then((res) => {
-            if (res.exists) {
-                const user = res.data();
-                this.setState({
-                    key: res.id,
-                    name: user.name,
-                    email: user.email,
-                });
-            } else {
-                console.log("Document does not exist!");
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+    }
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    }
+    onBackPress = () => {
+        // alert("ksksnckn")
+        if (this.state.note == "" && this.state.notesHeading == "") {
+            this.props.navigation.navigate('NotesPage')
+            return
+        }
+        Alert.alert(
+            'Save Your chnages or',
+            'discard them?',
+            [
+                { text: 'Yes', onPress: () => this.updateUser() },
+                { text: 'No', onPress: () => this.props.navigation.navigate('NotesPage') },
+                { text: 'cencel', onPress: () => { }, style: 'cancel' },
+            ],
+            {
+                cancelable: true
             }
-        });
+        );
+        return true;
     }
 
     updateUser() {
-        if (this.text == this.state.note.trim() && this.heading == this.state.notesHeading && this.like == this.state.islike) {
-            this.setState({ isSave: false })
+        // let islike = this.state.islike
+        if (this.state.note == "" && this.state.notesHeading == "") {
+            // this.setState({ isSave: false })
 
             // { Keyboard.dismiss }
             return
@@ -110,7 +100,8 @@ export default class NoteDisplay extends Component {
         })
             .then(() => {
                 this.setState({ isLoading: false })
-                alert("Data Updated")
+                // alert("Data Saved")
+                this.props.navigation.navigate('NotesPage')
             })
 
             .catch((error) => {
@@ -154,19 +145,36 @@ export default class NoteDisplay extends Component {
                 {/* style={this.state.ModalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)', flex: 1 } : { flex: 1 }}> */}
                 {/* <KeyboardAwareScrollView> */}
                 <View style={{ flex: 1 }}>
-                    {/* <View
-                        style={{ backgroundColor="#3498db" }}
-                    ></View> */}
                     <View style={{
                         flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        backgroundColor: 'white'
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        // position: 'absolute',
+                        width: screenWidth,
+                        alignItems: 'center'
                     }}>
                         <TouchableOpacity style={[styles.btns, { position: 'absolute', left: 10 }]}
                             onPress={() => {
                                 // this.updateUser()
                                 // )
-                                this.props.navigation.navigate("NotesPage")
+                                if (this.state.note == "" && this.state.notesHeading == "") {
+                                    this.props.navigation.navigate('NotesPage')
+                                    return
+                                }
+                                Alert.alert(
+                                    'Save Your chnages or',
+                                    'discard them?',
+                                    [
+                                        { text: 'Yes', onPress: () => this.updateUser() },
+                                        { text: 'No', onPress: () => this.props.navigation.navigate('NotesPage') },
+                                        { text: 'cencel', onPress: () => { }, style: 'cancel' },
+                                    ],
+                                    {
+                                        cancelable: true
+                                    }
+                                );
+
+                                // this.props.navigation.navigate("NotesPage")
                             }}
                         >
                             <Image
@@ -176,15 +184,23 @@ export default class NoteDisplay extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.btns}
                             onPress={() => {
-                                this.openTwoButtonAlert()
+                                this.updateUser()
                                 // )
                             }}
                         >
-                            <Image
+                            {/* <Image
                                 style={[styles.img, {}]}
-                                source={require('../images/delete.png')}
-                            ></Image>
+                                source={require('../images/update.png')}
+                            ></Image> */}
+                            <Text
+                                style={{
+                                    alignSelf: 'center',
+                                    fontSize: 20,
+                                    fontWeight: 'bold'
+                                }}
+                            >Save</Text>
                         </TouchableOpacity>
+
                         <TouchableOpacity style={styles.btns}
                             onPress={() => {
                                 if (this.state.islike) {
@@ -200,19 +216,7 @@ export default class NoteDisplay extends Component {
                                 source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
                             ></Image>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btns}
-                            onPress={() => this.setState({ ModalVisible: true })}
-                        >
-                            <Image
-                                style={[styles.img, {}]}
-                                source={require('../images/logout.png')}
-                            ></Image>
-                        </TouchableOpacity>
                     </View>
-                    {/* <View style={styles.TopView}>
-                       
-                    </View> */}
-
 
                     <View style={styles.commentContainer}>
                         <TextInput style={{
@@ -248,8 +252,10 @@ export default class NoteDisplay extends Component {
                             textAlignVertical: 'top',
                             fontWeight: 'bold',
                             backgroundColor: 'white'
+
                         }}
                             multiline={true}
+                            placeholder={"Notes"}
                             value={this.state.note}
 
                             onChangeText={(text) => {
@@ -262,53 +268,10 @@ export default class NoteDisplay extends Component {
 
 
                     </View>
-                    {this.state.isSave ?
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            backgroundColor: 'white',
-                            position: 'absolute',
-                            width: screenWidth,
-                            alignItems: 'center'
-                        }}>
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => {
-                                    this.updateUser()
-                                    // )
-                                }}
-                            >
-                                {/* <Image
-                                style={[styles.img, {}]}
-                                source={require('../images/update.png')}
-                            ></Image> */}
-                                <Text
-                                    style={{
-                                        alignSelf: 'center',
-                                        fontSize: 20,
-                                        fontWeight: 'bold'
-                                    }}
-                                >Save</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.btns}
-                                onPress={() => {
-                                    if (this.state.islike) {
-                                        this.setState({ islike: false })
-                                    }
-                                    else {
-                                        this.setState({ islike: true })
-                                    }
-                                }}
-                            >
-                                <Image
-                                    style={[styles.img, {}]}
-                                    source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
-                                ></Image>
-                            </TouchableOpacity>
-                        </View>
+                    {/* {this.state.isSave ? */}
 
 
-                        : null}
+                    {/* : null} */}
 
 
 

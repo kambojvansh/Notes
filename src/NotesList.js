@@ -476,7 +476,11 @@ export default class NotesList extends Component {
                     }]}
                         onPress={() => {
                             // alert("skdnskn")
-                            this.setState({ modalVisible: true })
+                            // this.setState({ modalVisible: true })
+                            this.props.navigation.navigate("addNotes",
+                                {
+                                    userkey: this.state.userArr.key,
+                                })
                         }}
                     >
                         <Image
