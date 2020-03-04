@@ -11,7 +11,8 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Dimensions,
-    Alert
+    Alert,
+    BackHandler,
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import OptionsMenu from "react-native-options-menu";
@@ -50,7 +51,7 @@ export default class NotesList extends Component {
     }
 
 
-    addcomment = (text, like) => {
+    addComment = (text, like) => {
 
         if (text == "") {
             return
@@ -58,7 +59,8 @@ export default class NotesList extends Component {
         this.addPost(like)
 
     }
-    DeleteElement = (index) => {
+
+    deleteElement = (index) => {
 
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
         dbRef.delete().then((res) => {
@@ -66,6 +68,7 @@ export default class NotesList extends Component {
             this.setState({ DeleteModalVisible: false })
         })
     }
+
     inputValueUpdate = (val, prop) => {
         const state = this.state;
         state[prop] = val;
@@ -73,17 +76,18 @@ export default class NotesList extends Component {
     }
 
     deleteUser() {
-
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
         dbRef.delete().then((res) => {
             console.log('Item removed from database')
         })
     }
+
     signOutUser = async () => {
         try {
             await firebase.auth().signOut();
-            this.setState({ ModalVisible: false })
-            this.props.navigation.navigate('LoginPage')
+            this.setState({ ModalVisible: false }, () => {
+                this.props.navigation.navigate('LoginPage')
+            })
             // alert("Logout")
         } catch (e) {
             // console.log(e);
@@ -111,7 +115,7 @@ export default class NotesList extends Component {
         this.ref.add({
             Notes: this.state.textInput,
             isLikes: this.likestatus,
-            notesdate: new Date()
+            notesdate: new Date().getTime()
         });
         this.setState({ textInput: '', modalVisible: false })
     }
@@ -119,16 +123,15 @@ export default class NotesList extends Component {
     getCollection = (querySnapshot) => {
         const userArr = [];
         querySnapshot.forEach((res) => {
-            const { Notes, isLikes, notesHeading, timestamp } = res.data();
-            // const date = res.data().notesdate.timestamp.toDate()
+            const { Notes, isLikes, notesHeading, notesdate } = res.data();
+            // const date = res.data().notesdate.Timestamp.toDate()
             userArr.push({
                 key: res.id,
                 res,
                 Notes,
                 isLikes,
                 notesHeading,
-                timestamp
-                ,
+                notesdate
             });
             // console.log(userArr)
         });
@@ -145,30 +148,49 @@ export default class NotesList extends Component {
     upButtonHandler = () => {
         //OnCLick of Up button we scrolled the list to top
         this.ListView_Ref.scrollToOffset({ offset: 0, animated: true });
-        this.setState({ topModalVisible: false })
+        // this.setState({ topModalVisible: false })
     };
 
     downButtonHandler = () => {
         //OnCLick of down button we scrolled the list to bottom
         this.ListView_Ref.scrollToEnd({ animated: true });
     };
-    // ListViewItemSeparator = () => {
-    //     return (
-    //         <View
-    //             style={{
-    //                 height: 0.5,
-    //                 width: '100%',
-    //                 backgroundColor: '#000',
-    //             }}
-    //         />
-    //     );
-    // };
+    onBackPress = () => {
+        // alert("ksksnckn")
+        Alert.alert(
+            'Exit',
+            'Are you sure?',
+            [
+                { text: 'Yes', onPress: () => BackHandler.exitApp() },
+                { text: 'No', onPress: () => console.log('User not exit'), style: 'cancel' },
+            ],
+            {
+                cancelable: true
+            }
+        );
+        return true;
+    }
+    // handelDate() {
+    //     return new Date(item.notesdate).toDateString()
 
+    // }
+    formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
     componentDidMount() {
         this.unsubscribe = this.getref.onSnapshot(this.getCollection);
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     }
     componentWillUnmount() {
         this.unsubscribe();
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
     render() {
         this.getCollection
@@ -240,9 +262,23 @@ export default class NotesList extends Component {
                                     // likes={item.likes}
                                     heading={item.notesHeading}
                                     islikeComment={item.isLikes}
-                                    // date={"date"}
+                                    date={
+
+                                        // today = new Date(),
+                                        new Date().toDateString() > new Date(item.notesdate).toDateString() ?
+                                            new Date(item.notesdate).toDateString() :
+                                            this.formatAMPM(new Date(item.notesdate))
+                                        // new Date(item.notesdate).toTimeString()
+                                        // new Date(item.notesdate).getHours() + ":" + new Date(item.notesdate).getMinutes() + ":" + new Date(item.notesdate).getSeconds()
+                                        // if(){
+                                        //     new Date(item.notesdate).toDateString()
+
+                                        // }
+
+                                    }
                                     handelLike={() => {
-                                        // alert(new Date(item.notesdate).toDateString())
+                                        // console.log(item.date._type.timestamp)
+                                        // alert(item.date.toDate())
                                     }
                                     }
                                     delete={() => {
@@ -272,8 +308,7 @@ export default class NotesList extends Component {
                             style={styles.downButton}>
                             <Image
                                 source={{
-                                    uri:
-                                        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_down.png',
+                                    uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_down.png',
                                 }}
                                 style={styles.downButtonImage}
 
@@ -288,8 +323,7 @@ export default class NotesList extends Component {
                             style={styles.upButton}>
                             <Image
                                 source={{
-                                    uri:
-                                        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_up.png',
+                                    uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_up.png',
                                 }}
                                 style={styles.upButtonImage}
                             />
@@ -340,7 +374,7 @@ export default class NotesList extends Component {
                                             </TouchableOpacity>
                                             <TouchableOpacity
                                                 style={{ position: 'absolute', right: 30 }}
-                                                onPress={() => this.setState(this.DeleteElement(this.deletItem))}
+                                                onPress={() => this.setState(this.deleteElement(this.deletItem))}
                                             >
                                                 <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>
                                                     Delete
@@ -368,63 +402,64 @@ export default class NotesList extends Component {
                                 transparent={true}
                                 visible={this.state.modalVisible}
                             >
+                                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                                    <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
+                                        <View style={[styles.modal, styles.model
+                                        ]}>
+                                            <View style={{ width: 250 }}>
+                                                <TextInput
+                                                    style={styles.inputtext}
+                                                    onChangeText={text => this.setState({ textInput: text })}
+                                                    placeholder={"Enter Your Notes Here"}
+                                                    placeholderTextColor="#fff"
+                                                    value={this.state.textInput}
+                                                />
+                                                {/* style={styles.inputtext} */}
+                                            </View>
+                                            {/* <View style={[styles.commentContainer]}> */}
 
-                                <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
-                                    <View style={[styles.modal, styles.model
-                                    ]}>
-                                        <View style={{ width: 250 }}>
-                                            <TextInput
-                                                style={styles.inputtext}
-                                                onChangeText={text => this.setState({ textInput: text })}
-                                                placeholder={"Enter comment Here"}
-                                                placeholderTextColor="#fff"
-                                                value={this.state.textInput}
-                                            />
-                                            {/* style={styles.inputtext} */}
+                                            <TouchableOpacity style={styles.btn}
+                                                onPress={() => {
+
+                                                    this.addComment(this.state.textInput, this.state.islikeComment)
+                                                }}
+                                            >
+                                                <Image
+                                                    style={[styles.imgModel, {}]}
+                                                    source={require('../images/add.png')}
+                                                ></Image>
+                                            </TouchableOpacity>
+                                            {/* For Like Button*/}
+                                            <TouchableOpacity style={styles.btn}
+                                                onPress={() => {
+                                                    if (this.state.islikeComment) {
+                                                        this.setState({ islikeComment: false })
+                                                    }
+                                                    else {
+                                                        this.setState({ islikeComment: true })
+                                                    }
+                                                }
+                                                }
+                                            >
+                                                <Image
+                                                    style={styles.imgModel}
+                                                    source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
+                                                ></Image>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.btn}
+                                                onPress={() => {
+                                                    this.setState({ modalVisible: false })
+                                                    // )
+                                                }}
+                                            >
+                                                <Image
+                                                    style={[styles.imgModel, {}]}
+                                                    source={require('../images/down.png')}
+                                                ></Image>
+                                            </TouchableOpacity>
+
+                                            {/* </View> */}
                                         </View>
-                                        {/* <View style={[styles.commentContainer]}> */}
-
-                                        <TouchableOpacity style={styles.btn}
-                                            onPress={() => {
-
-                                                this.addcomment(this.state.textInput, this.state.islikeComment)
-                                            }}
-                                        >
-                                            <Image
-                                                style={[styles.imgModel, {}]}
-                                                source={require('../images/add.png')}
-                                            ></Image>
-                                        </TouchableOpacity>
-                                        {/* For Like Button*/}
-                                        <TouchableOpacity style={styles.btn}
-                                            onPress={() => {
-                                                if (this.state.islikeComment) {
-                                                    this.setState({ islikeComment: false })
-                                                }
-                                                else {
-                                                    this.setState({ islikeComment: true })
-                                                }
-                                            }
-                                            }
-                                        >
-                                            <Image
-                                                style={styles.imgModel}
-                                                source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
-                                            ></Image>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.btn}
-                                            onPress={() => {
-                                                this.setState({ modalVisible: false })
-                                                // )
-                                            }}
-                                        >
-                                            <Image
-                                                style={[styles.imgModel, {}]}
-                                                source={require('../images/down.png')}
-                                            ></Image>
-                                        </TouchableOpacity>
-
-                                        {/* </View> */}
                                     </View>
                                 </View>
 
@@ -497,9 +532,13 @@ export class Comment extends Component {
                                 <Text
                                     numberOfLines={1}
                                     style={styles.text}>{this.props.note}</Text>
-                                {/* <Text
-                                    numberOfLines={1}
-                                    style={styles.text}>{this.props.date}</Text> */}
+
+
+                            </View>
+                            <View style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                                <Text
+                                    // numberOfLines={1}
+                                    style={{ color: 'gray' }}>{this.props.date}</Text>
 
                             </View>
 

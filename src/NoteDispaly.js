@@ -10,10 +10,13 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Image,
-    Alert
+    Alert,
+    ActivityIndicator
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import AsyncStorage from '@react-native-community/async-storage'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -30,7 +33,9 @@ export default class NoteDisplay extends Component {
             note: '',
             islike: false,
             key: '',
-            notesHeading: ""
+            notesHeading: "",
+            isLoading: false,
+            isSave: false
         }
     }
     getValueLocally = async () => {
@@ -62,6 +67,7 @@ export default class NoteDisplay extends Component {
     }
     text = this.props.route.params.commentPass
     like = this.props.route.params.like
+    heading = this.props.route.params.heading
 
     componentDidMount() {
         this.setState({
@@ -87,9 +93,14 @@ export default class NoteDisplay extends Component {
     }
 
     updateUser() {
-        // this.setState({
-        //     isLoading: true,
-        // });
+        if (this.text == this.state.note.trim() && this.heading == this.state.notesHeading && this.like == this.state.islike) {
+            this.setState({ isSave: false })
+
+            // { Keyboard.dismiss }
+            return
+        }
+
+        this.setState({ isLoading: true, isSave: false })
         const updateDBRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey);
         updateDBRef.set({
             Notes: this.state.note,
@@ -97,7 +108,10 @@ export default class NoteDisplay extends Component {
             notesHeading: this.state.notesHeading,
             notesdate: new Date()
         })
-            .then(() => { alert("Data Updated") })
+            .then(() => {
+                this.setState({ isLoading: false })
+                alert("Data Updated")
+            })
 
             .catch((error) => {
                 console.error("Error: ", error);
@@ -108,12 +122,16 @@ export default class NoteDisplay extends Component {
     }
     deleteUser(key) {
 
+        this.setState({ isLoading: true })
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
         dbRef.delete().then((res) => {
             console.log('Item removed from database')
             // this.props.navigation.navigate('UserScreen');
         })
-            .then(() => this.props.navigation.navigate("NotesPage"))
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.props.navigation.navigate("NotesPage")
+            })
     }
 
     openTwoButtonAlert = () => {
@@ -133,8 +151,12 @@ export default class NoteDisplay extends Component {
     render() {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-
-                <View style={{ flex: 1, }}>
+                {/* style={this.state.ModalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)', flex: 1 } : { flex: 1 }}> */}
+                {/* <KeyboardAwareScrollView> */}
+                <View style={{ flex: 1 }}>
+                    {/* <View
+                        style={{ backgroundColor="#3498db" }}
+                    ></View> */}
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'flex-end',
@@ -150,17 +172,6 @@ export default class NoteDisplay extends Component {
                             <Image
                                 style={[styles.img, {}]}
                                 source={require('../images/back.png')}
-                            ></Image>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btns}
-                            onPress={() => {
-                                this.updateUser()
-                                // )
-                            }}
-                        >
-                            <Image
-                                style={[styles.img, {}]}
-                                source={require('../images/update.png')}
                             ></Image>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.btns}
@@ -198,7 +209,9 @@ export default class NoteDisplay extends Component {
                             ></Image>
                         </TouchableOpacity>
                     </View>
-
+                    {/* <View style={styles.TopView}>
+                       
+                    </View> */}
 
 
                     <View style={styles.commentContainer}>
@@ -220,7 +233,11 @@ export default class NoteDisplay extends Component {
                             multiline={true}
                             placeholder={"Add heading"}
                             value={this.state.notesHeading}
-                            onChangeText={(text) => this.setState({ notesHeading: text })}
+                            onChangeText={(text) => {
+                                this.setState({ isSave: true })
+                                // alert("scskckn")
+                                this.setState({ notesHeading: text })
+                            }}
                         >
 
                         </TextInput>
@@ -234,49 +251,123 @@ export default class NoteDisplay extends Component {
                         }}
                             multiline={true}
                             value={this.state.note}
-                            onChangeText={(text) => this.setState({ note: text })}
+
+                            onChangeText={(text) => {
+                                this.setState({ isSave: true })
+                                this.setState({ note: text })
+                            }}
                         >
 
                         </TextInput>
 
 
                     </View>
+                    {this.state.isSave ?
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            backgroundColor: 'white',
+                            position: 'absolute',
+                            width: screenWidth,
+                            alignItems: 'center'
+                        }}>
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => {
+                                    this.updateUser()
+                                    // )
+                                }}
+                            >
+                                {/* <Image
+                                style={[styles.img, {}]}
+                                source={require('../images/update.png')}
+                            ></Image> */}
+                                <Text
+                                    style={{
+                                        alignSelf: 'center',
+                                        fontSize: 20,
+                                        fontWeight: 'bold'
+                                    }}
+                                >Save</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.btns}
+                                onPress={() => {
+                                    if (this.state.islike) {
+                                        this.setState({ islike: false })
+                                    }
+                                    else {
+                                        this.setState({ islike: true })
+                                    }
+                                }}
+                            >
+                                <Image
+                                    style={[styles.img, {}]}
+                                    source={this.state.islike ? require('../images/isstar.png') : require('../images/star.png')}
+                                ></Image>
+                            </TouchableOpacity>
+                        </View>
+
+
+                        : null}
+
 
 
                     <Modal
                         animationType="fade"
                         transparent={true}
                         visible={this.state.ModalVisible}>
-                        <View style={{ marginHorizontal: 30, marginTop: 200 }}>
-                            <View style={styles.model}>
+                        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                            <View style={{ marginHorizontal: 30, marginTop: 200 }}>
                                 <View style={styles.model}>
-                                    <Text style={styles.modelText}>Log out</Text>
-                                    <Text style={styles.modelText2}>You will be returned to the login screen</Text>
-                                    <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
-                                        <TouchableOpacity
-                                            onPress={() => this.signOutUser()}
-                                        >
-                                            <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Log out</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ position: 'absolute', right: 30 }}
+                                    <View style={styles.model}>
+                                        <Text style={styles.modelText}>Log out</Text>
+                                        <Text style={styles.modelText2}>You will be returned to the login screen</Text>
+                                        <View style={{ flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }}>
+                                            <TouchableOpacity
+                                                onPress={() => this.signOutUser()}
+                                            >
+                                                <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>Log out</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={{ position: 'absolute', right: 30 }}
 
-                                            onPress={() => this.setState({ ModalVisible: false })}
-                                        >
-                                            <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
-                                        </TouchableOpacity>
+                                                onPress={() => this.setState({ ModalVisible: false })}
+                                            >
+                                                <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
-                                </View>
 
+
+                                </View>
 
                             </View>
 
                         </View>
 
+
                     </Modal>
                     {/* </View> */}
 
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.isLoading}>
+                        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+
+                            <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                                <View style={{ backgroundColor: 'rgba(0,0,0,0)' }}>
+                                    <ActivityIndicator size='large'
+                                        color="#3498db"
+                                        style={{ height: 100 }} />
+                                </View>
+                            </View>
+                        </View>
+
+                    </Modal>
+
 
                 </View>
+                {/* </KeyboardAwareScrollView> */}
             </TouchableWithoutFeedback>
         )
     }
@@ -334,6 +425,18 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
         margin: 10
+    },
+    TopView: {
+        backgroundColor: '#3498db',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        justifyContent: 'center',
+        position: 'absolute',
+        height: 500,
+        width: screenWidth,
+        bottom: 10,
     }
 
 })
