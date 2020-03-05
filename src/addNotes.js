@@ -100,7 +100,7 @@ export default class addNotes extends Component {
 
     updateUser() {
 
-        if (this.state.note == "" && this.state.notesHeading == "") {
+        if (this.state.note == "" && this.state.notesHeading == "" && this.state.isImage) {
             // this.setState({ isSave: false })
 
             // { Keyboard.dismiss }
@@ -228,7 +228,7 @@ export default class addNotes extends Component {
     render() {
         const { uploading, imageSource, progress, images } = this.state;
         const disabledStyle = uploading ? styles.disabledBtn : {};
-        const actionBtnStyles = [styles.btn, disabledStyle];
+        const actionBtnStyles = [styles.imgBtn, disabledStyle];
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 {/* style={this.state.ModalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)', flex: 1 } : { flex: 1 }}> */}
@@ -566,6 +566,16 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
         height: 5,
         shadowColor: '#000',
-    }
+    },
+    imgBtn: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderRadius: 20,
+        backgroundColor: 'rgb(3, 154, 229)',
+        marginTop: 20,
+        alignItems: 'center'
+    },
 
 })

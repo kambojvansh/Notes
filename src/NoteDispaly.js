@@ -89,7 +89,8 @@ export default class NoteDisplay extends Component {
 
         }
         catch (arr) {
-            alert(arr)
+            // alert(arr)
+            console.log(arr)
 
         }
 
@@ -240,28 +241,7 @@ export default class NoteDisplay extends Component {
                 <KeyboardAwareScrollView>
                     <View style={{ flex: 1 }}>
 
-                        {/* <View
-                        style={{ position: 'absolute', right: 10 }}
-                    >
-                        <OptionsMenu
-                            button={MoreIcon}
-                            buttonStyle={{
-                                width: 32,
-                                height: 40,
-                                margin: 7.5,
-                                resizeMode: "contain",
-                                // position: 'absolute',
-                                // left: 70
-                            }}
-                            destructiveIndex={1}
-                            options={["Logout", "Cancel"]}
-                            actions={[this.openTwoButtonAlert, null]}
-                        />
 
-                    </View> */}
-                        {/* <View
-                        style={{ backgroundColor="#3498db" }}
-                    ></View> */}
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'flex-end',
@@ -379,6 +359,7 @@ export default class NoteDisplay extends Component {
                                 backgroundColor: 'white'
                             }}
                                 multiline={true}
+                                placeholder={"Notes"}
                                 value={this.state.note}
 
                                 onChangeText={(text) => {
@@ -389,21 +370,13 @@ export default class NoteDisplay extends Component {
 
                             </TextInput>
                             <View style={{ alignSelf: 'center' }}>
-                                {/* <Image
-                                    style={{
-                                        width: 300,
-                                        height: 400,
-                                    }}
-                                    source={{ uri: this.state.imageSource }}
-                                ></Image> */}
+
                                 {/** Display selected image */}
 
                                 {imageSource !== '' && (
 
                                     <View>
-                                        {/* <View
-                                            style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
-                                        /> */}
+
                                         <Image source={{ uri: imageSource }} style={styles.image} />
                                         {uploading && (
                                             <View
@@ -434,19 +407,7 @@ export default class NoteDisplay extends Component {
                                                 style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
                                             />
                                         )}
-                                        {/* <TouchableOpacity
-                                            style={actionBtnStyles}
-                                            onPress={this.uploadImage}
-                                            disabled={uploading}
-                                        >
-                                            <View>
-                                                {uploading ? (
-                                                    <Text style={styles.btnTxt}>Uploading ...</Text>
-                                                ) : (
-                                                        <Text style={styles.btnTxt}>Upload image</Text>
-                                                    )}
-                                            </View>
-                                        </TouchableOpacity> */}
+
                                     </View>
                                 )}
 
@@ -499,10 +460,7 @@ export default class NoteDisplay extends Component {
                                         // )
                                     }}
                                 >
-                                    {/* <Image
-                                style={[styles.img, {}]}
-                                source={require('../images/update.png')}
-                            ></Image> */}
+
                                     <Text
                                         style={{
                                             alignSelf: 'center',
