@@ -194,9 +194,10 @@ export default class addNotes extends Component {
                     let state = {};
                     state = {
                         ...this.state,
-                        progress: snapshot.bytesTransferred / snapshot.totalBytes
+                        // progress: snapshot.bytesTransferred / snapshot.totalBytes
                         // progress: parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100) // Calculate progress percentage
                     };
+                    this.setState({ progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 })
                     // this.setState({ progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 })
                     if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
                         // const loaclUrl = this.state.images;
@@ -390,14 +391,28 @@ export default class addNotes extends Component {
                                     source={{ uri: this.state.imageSource }}
                                 ></Image> */}
                                 {/** Display selected image */}
+                                {/* <Image
+                                    style={{ height: 100, width: screenWidth / 2.5 }}
+                                    source={require('../images/progress.gif')}
+                                >
+
+                                </Image> */}
 
                                 {imageSource !== '' && (
                                     <View>
                                         <Image source={{ uri: imageSource }} style={styles.image} />
                                         {uploading && (
                                             <View
-                                                style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
-                                            />
+                                            // style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
+                                            >
+                                                <Image
+                                                    style={{ alignSelf: 'center', height: 100, width: screenWidth / 2.5 }}
+                                                    source={require('../images/progress.gif')}
+                                                >
+
+                                                </Image>
+                                            </View>
+
                                         )}
                                         <TouchableOpacity
                                             style={actionBtnStyles}

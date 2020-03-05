@@ -98,6 +98,26 @@ export default class NoteDisplay extends Component {
         }
 
     }
+    deletImage = async () => {
+        this.setState({ isLoading: true, isSave: false })
+        // alert(this.state.imageSource2)
+        if (this.props.route.params.image === "") {
+            this.deleteUser()
+            return
+        }
+
+        const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${this.props.route.params.image}`);
+        try {
+            await imgRef.delete()
+            this.deleteUser()
+        }
+        catch (arr) {
+            // alert(arr)
+            console.error(arr)
+
+        }
+
+    }
 
     componentDidMount() {
         this.setState({
@@ -126,7 +146,8 @@ export default class NoteDisplay extends Component {
             isLikes: this.state.islike,
             notesHeading: this.state.notesHeading,
             notesdate: new Date().getTime(),
-            img: this.props.route.params.image
+            img: this.props.route.params.image,
+
         })
             .then(() => {
                 this.setState({ isLoading: false })
@@ -141,6 +162,7 @@ export default class NoteDisplay extends Component {
             });
     }
     deleteUser(key) {
+
 
         this.setState({ isLoading: true })
         const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
@@ -159,7 +181,7 @@ export default class NoteDisplay extends Component {
             'Delete Note',
             'Are you sure?',
             [
-                { text: 'Yes', onPress: () => this.deleteUser() },
+                { text: 'Yes', onPress: () => this.deletImage() },
                 { text: 'No', onPress: () => console.log('No item was removed'), style: 'cancel' },
             ],
             {
@@ -384,8 +406,15 @@ export default class NoteDisplay extends Component {
                                         <Image source={{ uri: imageSource }} style={styles.image} />
                                         {uploading && (
                                             <View
-                                                style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
-                                            />
+                                            // style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
+                                            >
+                                                <Image
+                                                    style={{ alignSelf: 'center', height: 100, width: screenWidth / 2.5 }}
+                                                    source={require('../images/progress.gif')}
+                                                >
+
+                                                </Image>
+                                            </View>
                                         )}
                                         <TouchableOpacity
                                             style={actionBtnStyles}
