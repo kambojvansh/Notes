@@ -80,8 +80,11 @@ export default class NoteDisplay extends Component {
     text = this.props.route.params.commentPass
     like = this.props.route.params.like
     heading = this.props.route.params.heading
+
     getImage = async () => {
-        // alert(this.props.route.params.image)
+        // alert(this.state.imageSource2)
+        if (this.props.route.params.image === "")
+            return
         const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${this.props.route.params.image}`);
         try {
             let url = await imgRef.getDownloadURL()
@@ -215,6 +218,7 @@ export default class NoteDisplay extends Component {
                             ...this.state,
                             uploading: false,
                             imgSource: '',
+                            imgSource2: '',
                             imageUri: '',
                             progress: 0,
                             images: loaclUrl

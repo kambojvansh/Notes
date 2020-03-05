@@ -50,25 +50,25 @@ export default class addNotes extends Component {
 
         }
     }
-    getValueLocally = async () => {
-        try {
+    // getValueLocally = async () => {
+    //     try {
 
-            let firstName = await AsyncStorage.getItem('firstName')
-            let lastName = await AsyncStorage.getItem('lastName')
-            let img = await AsyncStorage.getItem('images')
-            // alert(img)
-            this.setState({
-                getValue: firstName,
-                lname: lastName,
-                images: img
-            })
-            // this.updateUser()
+    //         let firstName = await AsyncStorage.getItem('firstName')
+    //         let lastName = await AsyncStorage.getItem('lastName')
+    //         let img = await AsyncStorage.getItem('images')
+    //         // alert(img)
+    //         this.setState({
+    //             getValue: firstName,
+    //             lname: lastName,
+    //             images: img
+    //         })
+    //         // this.updateUser()
 
-        } catch (e) {
-            alert(e)
+    //     } catch (e) {
+    //         alert(e)
 
-        }
-    }
+    //     }
+    // }
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -99,6 +99,7 @@ export default class addNotes extends Component {
 
 
     updateUser() {
+        // alert(this.state.images)
 
         if (this.state.note == "" && this.state.notesHeading == "" && this.state.isImage) {
             // this.setState({ isSave: false })
@@ -212,7 +213,7 @@ export default class addNotes extends Component {
                             progress: 0,
                             images: loaclUrl
                         };
-                        AsyncStorage.setItem('images', loaclUrl);
+                        // AsyncStorage.setItem('images', loaclUrl);
                     }
                     this.setState(state);
                     // this.getValueLocally()
