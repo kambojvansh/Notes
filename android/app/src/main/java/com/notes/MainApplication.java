@@ -15,6 +15,7 @@ import java.util.List;
 // import com.facebook.react.ReactApplication;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 // import com.kishanjvaghela.cardview.RNCardViewPackage;
 // import io.invertase.firebase.RNFirebasePackage;
 
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new RNFirebasePackage());
           packages.add(new RNFirebaseAuthPackage());
           packages.add(new RNFirebaseFirestorePackage());
+          packages.add(new RNFirebaseStoragePackage());
           // packages.add(new RNCardViewPackage());
           // packages.add(new AsyncStoragePackage());
           return packages;

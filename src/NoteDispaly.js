@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-image-crop-picker'
 import OptionsMenu from "react-native-options-menu"
+import uuid from 'uuid/v4'
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -39,11 +40,18 @@ export default class NoteDisplay extends Component {
             notesHeading: "",
             isLoading: false,
             isSave: false,
-            imageSource: ''
+            imageSource: '',
+            imgSource: '',
+            uploading: false,
+            progress: 0,
+            images: "",
+            img: '',
+            imageSource2: ''
         }
     }
     getValueLocally = async () => {
         try {
+            this.props.route.params.image
             let firstName = await AsyncStorage.getItem('firstName')
             let lastName = await AsyncStorage.getItem('lastName')
             this.setState({
@@ -72,28 +80,31 @@ export default class NoteDisplay extends Component {
     text = this.props.route.params.commentPass
     like = this.props.route.params.like
     heading = this.props.route.params.heading
+    getImage = async () => {
+        // alert(this.props.route.params.image)
+        const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${this.props.route.params.image}`);
+        try {
+            let url = await imgRef.getDownloadURL()
+            this.setState({ imageSource2: url })
+
+        }
+        catch (arr) {
+            alert(arr)
+
+        }
+
+    }
 
     componentDidMount() {
         this.setState({
             note: this.text,
             islike: this.props.route.params.like,
-            notesHeading: this.props.route.params.heading
+            notesHeading: this.props.route.params.heading,
+            img: this.props.route.params.image
         })
-        // alert(this.state.islike)
-        // alert(this.state.note)
-        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey)
-        dbRef.get().then((res) => {
-            if (res.exists) {
-                const user = res.data();
-                this.setState({
-                    key: res.id,
-                    name: user.name,
-                    email: user.email,
-                });
-            } else {
-                console.log("Document does not exist!");
-            }
-        });
+
+        this.getImage()
+
     }
 
     updateUser() {
@@ -110,7 +121,8 @@ export default class NoteDisplay extends Component {
             Notes: this.state.note,
             isLikes: this.state.islike,
             notesHeading: this.state.notesHeading,
-            notesdate: new Date().getTime()
+            notesdate: new Date().getTime(),
+            img: this.props.route.params.image
         })
             .then(() => {
                 this.setState({ isLoading: false })
@@ -152,6 +164,7 @@ export default class NoteDisplay extends Component {
         );
     }
     picFromGallary = () => {
+        this.setState({ imageSource2: "" })
         ImagePicker.openPicker({
             width: 300,
             height: 400,
@@ -164,6 +177,7 @@ export default class NoteDisplay extends Component {
         // )
     }
     fromCamera = () => {
+        this.setState({ imageSource2: "" })
         ImagePicker.openCamera({
             width: 300,
             height: 400,
@@ -173,13 +187,59 @@ export default class NoteDisplay extends Component {
             // console.log(image);
         });
     }
+    uploadImage = () => {
+        const ext = this.state.imageSource.split('.').pop(); // Extract image extension
+        const filename = `${this.props.route.params.image}`; // Generate unique name
+        this.setState({ uploading: true });
+        firebase
+            .storage()
+            .ref(`Notes/Images/${firebase.auth().currentUser.uid}/${filename}`)
+            .putFile(this.state.imageSource)
+            .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                snapshot => {
+                    // alert((snapshot.bytesTransferred / snapshot.totalBytes))
+                    let state = {};
+                    state = {
+                        ...this.state,
+                        progress: 20
+                        // progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100// Calculate progress percentage
+                    };
+                    // this.setState({ progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 })
+                    if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                        // const allImages = this.state.images;
+                        // allImages.push(snapshot.downloadURL);
+                        let loaclUrl = filename
+                        state = {
+                            ...this.state,
+                            uploading: false,
+                            imgSource: '',
+                            imageUri: '',
+                            progress: 0,
+                            images: loaclUrl
+                        };
+                        // AsyncStorage.setItem('images', JSON.stringify(allImages));
+                    }
+                    this.setState(state);
+                },
+                error => {
+                    unsubscribe();
+                    alert('Sorry, Try again.');
+                }
+            );
+    };
+
 
     render() {
+        const { uploading, imageSource, progress, img, imageSource2 } = this.state;
+        const disabledStyle = uploading ? styles.disabledBtn : {};
+        const actionBtnStyles = [styles.imgBtn, disabledStyle];
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 {/* style={this.state.ModalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)', flex: 1 } : { flex: 1 }}> */}
                 <KeyboardAwareScrollView>
                     <View style={{ flex: 1 }}>
+
                         {/* <View
                         style={{ position: 'absolute', right: 10 }}
                     >
@@ -219,6 +279,7 @@ export default class NoteDisplay extends Component {
                                     source={require('../images/back.png')}
                                 ></Image>
                             </TouchableOpacity>
+                            {/* <Text>{this.state.progress}</Text> */}
                             <TouchableOpacity style={styles.btns}
                                 onPress={() => {
                                     this.openTwoButtonAlert()
@@ -328,13 +389,66 @@ export default class NoteDisplay extends Component {
 
                             </TextInput>
                             <View style={{ alignSelf: 'center' }}>
-                                <Image
+                                {/* <Image
                                     style={{
                                         width: 300,
                                         height: 400,
                                     }}
                                     source={{ uri: this.state.imageSource }}
-                                ></Image>
+                                ></Image> */}
+                                {/** Display selected image */}
+
+                                {imageSource !== '' && (
+
+                                    <View>
+                                        {/* <View
+                                            style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
+                                        /> */}
+                                        <Image source={{ uri: imageSource }} style={styles.image} />
+                                        {uploading && (
+                                            <View
+                                                style={[styles.progressBar, { width: `${progress}%`, marginTop: 10 }]}
+                                            />
+                                        )}
+                                        <TouchableOpacity
+                                            style={actionBtnStyles}
+                                            onPress={this.uploadImage}
+                                            disabled={uploading}
+                                        >
+                                            <View>
+                                                {uploading ? (
+                                                    <Text style={styles.btnTxt}>Uploading ...</Text>
+                                                ) : (
+                                                        <Text style={styles.btnTxt}>Upload image</Text>
+                                                    )}
+                                            </View>
+                                        </TouchableOpacity>
+
+                                    </View>
+                                )}
+                                {imageSource2 !== '' && (
+                                    <View>
+                                        <Image source={{ uri: imageSource2 }} style={styles.image} />
+                                        {uploading && (
+                                            <View
+                                                style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
+                                            />
+                                        )}
+                                        {/* <TouchableOpacity
+                                            style={actionBtnStyles}
+                                            onPress={this.uploadImage}
+                                            disabled={uploading}
+                                        >
+                                            <View>
+                                                {uploading ? (
+                                                    <Text style={styles.btnTxt}>Uploading ...</Text>
+                                                ) : (
+                                                        <Text style={styles.btnTxt}>Upload image</Text>
+                                                    )}
+                                            </View>
+                                        </TouchableOpacity> */}
+                                    </View>
+                                )}
 
                             </View>
 
@@ -566,6 +680,32 @@ const styles = StyleSheet.create({
         height: 500,
         width: screenWidth,
         bottom: 10,
-    }
+    },
+    disabledBtn: {
+        backgroundColor: 'rgba(3,155,229,0.5)'
+    },
+    image: {
+        marginTop: 20,
+        minWidth: 300,
+        height: 300,
+        resizeMode: 'contain',
+        backgroundColor: '#ccc',
+    },
+    progressBar: {
+        // backgroundColor: 'rgb(3, 154, 229)',
+        backgroundColor: 'blue',
+        height: 5,
+        shadowColor: '#000',
+    },
+    imgBtn: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderRadius: 20,
+        backgroundColor: 'rgb(3, 154, 229)',
+        marginTop: 20,
+        alignItems: 'center'
+    },
 
 })

@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-image-crop-picker'
 import OptionsMenu from "react-native-options-menu"
+import uuid from 'uuid/v4'
 
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -28,7 +29,7 @@ const MoreIcon = require("../images/attach.png");
 export default class addNotes extends Component {
     constructor(props) {
         super(props)
-        this.getValueLocally()
+        // this.getValueLocally()
 
         this.state = {
             ModalVisible: false,
@@ -39,20 +40,29 @@ export default class addNotes extends Component {
             notesHeading: "",
             isLoading: false,
             isSave: false,
+            isImage: true,
             imageSource: '',
-            isImage: true
+            imgSource: '',
+            uploading: false,
+            progress: 0,
+            images: ''
 
 
         }
     }
     getValueLocally = async () => {
         try {
+
             let firstName = await AsyncStorage.getItem('firstName')
             let lastName = await AsyncStorage.getItem('lastName')
+            let img = await AsyncStorage.getItem('images')
+            // alert(img)
             this.setState({
                 getValue: firstName,
-                lname: lastName
+                lname: lastName,
+                images: img
             })
+            // this.updateUser()
 
         } catch (e) {
             alert(e)
@@ -87,8 +97,9 @@ export default class addNotes extends Component {
         return true;
     }
 
+
     updateUser() {
-        // let islike = this.state.islike
+
         if (this.state.note == "" && this.state.notesHeading == "") {
             // this.setState({ isSave: false })
 
@@ -102,7 +113,8 @@ export default class addNotes extends Component {
             Notes: this.state.note,
             isLikes: this.state.islike,
             notesHeading: this.state.notesHeading,
-            notesdate: new Date().getTime()
+            notesdate: new Date().getTime(),
+            img: this.state.images
         })
             .then(() => {
                 this.setState({ isLoading: false, isImage: false })
@@ -166,8 +178,57 @@ export default class addNotes extends Component {
             // console.log(image);
         });
     }
+    uploadImage = () => {
+        const ext = this.state.imageSource.split('.').pop(); // Extract image extension
+        const filename = `${uuid()}.${ext}`; // Generate unique name
+        this.setState({ uploading: true });
+        firebase
+            .storage()
+            .ref(`Notes/Images/${firebase.auth().currentUser.uid}/${filename}`)
+            .putFile(this.state.imageSource)
+            .on(
+                firebase.storage.TaskEvent.STATE_CHANGED,
+                snapshot => {
+                    // alert((snapshot.bytesTransferred / snapshot.totalBytes))
+                    let state = {};
+                    state = {
+                        ...this.state,
+                        progress: snapshot.bytesTransferred / snapshot.totalBytes
+                        // progress: parseInt((snapshot.bytesTransferred / snapshot.totalBytes) * 100) // Calculate progress percentage
+                    };
+                    // this.setState({ progress: (snapshot.bytesTransferred / snapshot.totalBytes) * 100 })
+                    if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                        // const loaclUrl = this.state.images;
+                        // const ref = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${filename}`);
+                        // const url = await ref.getDownloadUrl();
+                        // allImages.push(snapshot.downloadURL);
+                        // allImages = snapshot.downloadURL(filename)
+                        let loaclUrl = filename
+                        state = {
+                            ...this.state,
+                            uploading: false,
+                            imgSource: '',
+                            imageUri: '',
+                            progress: 0,
+                            images: loaclUrl
+                        };
+                        AsyncStorage.setItem('images', loaclUrl);
+                    }
+                    this.setState(state);
+                    // this.getValueLocally()
+                    // this.updateUser()
+                },
+                error => {
+                    // unsubscribe();
+                    alert('Sorry, Try again.');
+                }
+            );
+    };
 
     render() {
+        const { uploading, imageSource, progress, images } = this.state;
+        const disabledStyle = uploading ? styles.disabledBtn : {};
+        const actionBtnStyles = [styles.btn, disabledStyle];
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 {/* style={this.state.ModalVisible ? { backgroundColor: 'rgba(0,0,0,0.5)', flex: 1 } : { flex: 1 }}> */}
@@ -320,14 +381,38 @@ export default class addNotes extends Component {
 
                             </TextInput>
                             <View style={{ alignSelf: 'center' }}>
-                                <Image
+                                {/* <Image
                                     style={{
                                         width: 300,
                                         height: 400,
                                     }}
                                     source={{ uri: this.state.imageSource }}
-                                // source={{ uri: 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png' }}
-                                ></Image>
+                                ></Image> */}
+                                {/** Display selected image */}
+
+                                {imageSource !== '' && (
+                                    <View>
+                                        <Image source={{ uri: imageSource }} style={styles.image} />
+                                        {uploading && (
+                                            <View
+                                                style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
+                                            />
+                                        )}
+                                        <TouchableOpacity
+                                            style={actionBtnStyles}
+                                            onPress={this.uploadImage}
+                                            disabled={uploading}
+                                        >
+                                            <View>
+                                                {uploading ? (
+                                                    <Text style={styles.btnTxt}>Uploading ...</Text>
+                                                ) : (
+                                                        <Text style={styles.btnTxt}>Upload image</Text>
+                                                    )}
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
 
                             </View>
 
@@ -465,6 +550,22 @@ const styles = StyleSheet.create({
         height: 500,
         width: screenWidth,
         bottom: 10,
+    },
+    disabledBtn: {
+        backgroundColor: 'rgba(3,155,229,0.5)'
+    },
+    image: {
+        marginTop: 20,
+        minWidth: 300,
+        height: 300,
+        resizeMode: 'contain',
+        backgroundColor: '#ccc',
+    },
+    progressBar: {
+        // backgroundColor: 'rgb(3, 154, 229)',
+        backgroundColor: 'blue',
+        height: 5,
+        shadowColor: '#000',
     }
 
 })

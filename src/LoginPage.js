@@ -47,8 +47,6 @@ export default class LoginPage extends Component {
                 alert(this.state.errorMessage)
             })
     }
-
-
     render() {
         // if (this.state.isLoading) {
         //     return (

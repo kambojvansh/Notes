@@ -123,7 +123,7 @@ export default class NotesList extends Component {
     getCollection = (querySnapshot) => {
         const userArr = [];
         querySnapshot.forEach((res) => {
-            const { Notes, isLikes, notesHeading, notesdate } = res.data();
+            const { Notes, isLikes, notesHeading, notesdate, img } = res.data();
             // const date = res.data().notesdate.Timestamp.toDate()
             userArr.push({
                 key: res.id,
@@ -131,7 +131,8 @@ export default class NotesList extends Component {
                 Notes,
                 isLikes,
                 notesHeading,
-                notesdate
+                notesdate,
+                img
             });
             // console.log(userArr)
         });
@@ -278,7 +279,7 @@ export default class NotesList extends Component {
                                     }
                                     handelLike={() => {
                                         // console.log(item.date._type.timestamp)
-                                        // alert(item.date.toDate())
+                                        alert(item.img)
                                     }
                                     }
                                     delete={() => {
@@ -291,7 +292,8 @@ export default class NotesList extends Component {
                                             commentPass: item.Notes,
                                             userkey: item.key,
                                             like: item.isLikes,
-                                            heading: item.notesHeading
+                                            heading: item.notesHeading,
+                                            image: item.img
                                         })}
                                 />}
                             keyExtractor={(index, item) => index + item}
