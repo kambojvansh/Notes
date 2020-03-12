@@ -37,7 +37,7 @@ export default class NotesList extends Component {
             modalVisible: false,
             DeleteModalVisible: false,
             downModalVisible: false,
-            topModalVisible: false,
+            topButtoVisible: false,
             islikeComment: false,
             comment: "",
             islike: false,
@@ -46,6 +46,10 @@ export default class NotesList extends Component {
             Notes: '',
             isLikes: '',
             key: '',
+            imageSource: '',
+            image: '',
+            images: [],
+            downButtoVisible: false
 
         }
     }
@@ -60,14 +64,14 @@ export default class NotesList extends Component {
 
     }
 
-    deleteElement = (index) => {
+    // deleteElement = (index) => {
 
-        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
-        dbRef.delete().then((res) => {
-            console.log('Item removed from database')
-            this.setState({ DeleteModalVisible: false })
-        })
-    }
+    //     const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
+    //     dbRef.delete().then((res) => {
+    //         console.log('Item removed from database')
+    //         this.setState({ DeleteModalVisible: false })
+    //     })
+    // }
 
     inputValueUpdate = (val, prop) => {
         const state = this.state;
@@ -75,12 +79,12 @@ export default class NotesList extends Component {
         this.setState(state);
     }
 
-    deleteUser() {
-        const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
-        dbRef.delete().then((res) => {
-            console.log('Item removed from database')
-        })
-    }
+    // deleteUser() {
+    //     const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
+    //     dbRef.delete().then((res) => {
+    //         console.log('Item removed from database')
+    //     })
+    // }
 
     signOutUser = async () => {
         try {
@@ -139,22 +143,22 @@ export default class NotesList extends Component {
         this.setState({
             userArr,
             isLoading: false,
+            // image: this.state.userArr.img
         });
     }
 
     //for flat list
     handeldowntab = () => {
-        this.setState({ topModalVisible: true })
+        this.setState({ topButtoVisible: false, downButtoVisible: true })
     }
     upButtonHandler = () => {
-        //OnCLick of Up button we scrolled the list to top
         this.ListView_Ref.scrollToOffset({ offset: 0, animated: true });
-        // this.setState({ topModalVisible: false })
+        this.setState({ topButtoVisible: true, downButtoVisible: false })
     };
 
     downButtonHandler = () => {
-        //OnCLick of down button we scrolled the list to bottom
         this.ListView_Ref.scrollToEnd({ animated: true });
+        this.setState({ topButtoVisible: false, downButtoVisible: true })
     };
     onBackPress = () => {
         // alert("ksksnckn")
@@ -175,6 +179,27 @@ export default class NotesList extends Component {
     //     return new Date(item.notesdate).toDateString()
 
     // }
+    // getImage = async (img) => {
+    //     // console.log(img)
+    //     // alert(this.state.image)
+    //     if (img === "")
+    //         return
+    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${img}`);
+    //     try {
+    //         // console.log("nkcnckn")
+    //         let url = await imgRef.getDownloadURL()
+
+    //         this.setState({ imageSource: url })
+
+    //     }
+    //     catch (arr) {
+    //         // alert(arr)
+    //         console.log(arr)
+
+    //     }
+
+    // }
+
     formatAMPM(date) {
         var hours = date.getHours();
         var minutes = date.getMinutes();
@@ -188,11 +213,13 @@ export default class NotesList extends Component {
     componentDidMount() {
         this.unsubscribe = this.getref.onSnapshot(this.getCollection);
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+
     }
     componentWillUnmount() {
         this.unsubscribe();
         BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
+    image = []
     render() {
         this.getCollection
         return (
@@ -247,19 +274,61 @@ export default class NotesList extends Component {
                     </View>
 
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
+                    <View style={{
+                        justifyContent: 'center'
+                    }}>
+                        <Text
+                            style={{ color: 'white', alignSelf: 'center' }}
+                        >Add new Notes</Text>
+
+                    </View>
+
                     <View style={{ flex: 1 }}>
                         <FlatList
                             // ItemSeparatorComponent={this.ListViewItemSeparator}
                             ref={(ref) => {
                                 this.ListView_Ref = ref;
                             }}
-                            // onEndReached={this.handeldowntab}
-                            // onEndReachedThreshold={0.5}
+                            onEndReached={() => { this.handeldowntab() }}
+                            onEndReachedThreshold={0.5}
                             data={this.state.userArr}
-                            numColumns={2}
+                            // numColumns={2}
                             renderItem={({ item, index }) =>
                                 <Comment
                                     note={item.Notes}
+                                    // getImage={
+                                    // // () => {
+
+                                    // async () => {
+                                    //     // console.log(img)
+                                    //     // alert(this.state.image)
+                                    //     if (item.img === "")
+                                    //         return
+                                    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${item.img}`);
+                                    //     try {
+                                    //         // console.log("nkcnckn")
+                                    //         let url = await imgRef.getDownloadURL()
+
+
+                                    //         this.setState({ imageSource: url })
+                                    //         // return url
+                                    //         this.image.push(url)
+                                    //         this.setState({ images: this.image })
+
+                                    //     }
+                                    //     catch (arr) {
+                                    //         // alert(arr)
+                                    //         console.log(arr)
+
+                                    //     }
+                                    //     // return image
+                                    // }
+                                    // alert(item.Notes)
+                                    // this.setState({ image: item.img })
+                                    // this.getImage(item.img)
+                                    // alert(this.state.image)
+                                    // }
+                                    // }
                                     // likes={item.likes}
                                     heading={item.notesHeading}
                                     islikeComment={item.isLikes}
@@ -277,9 +346,40 @@ export default class NotesList extends Component {
                                         // }
 
                                     }
+                                    // imageSource={item.img}
+                                    // url={this.state.images[index]}
+                                    // url={async () => {
+                                    //     // console.log(img)
+                                    //     // alert(this.state.image)
+                                    //     if (item.img === "")
+                                    //         return
+                                    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${item.img}`);
+                                    //     try {
+                                    //         // console.log("nkcnckn")
+                                    //         let url = await imgRef.getDownloadURL()
+
+                                    //         // this.setState({ imageSource: url })
+                                    //         return url
+                                    //         // this.image = url
+
+                                    //     }
+                                    //     catch (arr) {
+                                    //         // alert(arr)
+                                    //         console.log(arr)
+
+                                    //     }
+                                    //     return image
+                                    // }}
+                                    // url={"https://firebasestorage.googleapis.com/" +
+                                    //     "v0/b/notesapp-88de4.appspot.com/o/" +
+                                    //     "Notes%2FImages%2" +
+                                    //     "FNptMWtxMKbMDWwU5F01PSB3WSkg1" +
+                                    //     "%2" + item.img +
+                                    //     "?alt=media&token=0cb27bcd-b206-49d6-9a7b-3298edd90c8d"}
+
                                     handelLike={() => {
                                         // console.log(item.date._type.timestamp)
-                                        alert(item.img)
+                                        // alert(item.img)
                                     }
                                     }
                                     delete={() => {
@@ -304,36 +404,35 @@ export default class NotesList extends Component {
                             transparent={true}
                             visible={this.state.downModalVisible}> */}
                         {/* {this.state.downModalVisible ? */}
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.downButtonHandler}
-                            style={styles.downButton}>
-                            <Image
-                                source={{
-                                    uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_down.png',
-                                }}
-                                style={styles.downButtonImage}
+                        {this.state.topButtoVisible && (
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.downButtonHandler}
+                                style={styles.downButton}>
+                                <Image
+                                    source={{
+                                        uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_down.png',
+                                    }}
+                                    style={styles.downButtonImage}
 
-                            />
-                        </TouchableOpacity>
+                                />
+                            </TouchableOpacity>
+                        )}
 
                         {/* : null} */}
                         {/* {this.state.topModalVisible ? */}
-                        <TouchableOpacity
-                            activeOpacity={0.5}
-                            onPress={this.upButtonHandler}
-                            style={styles.upButton}>
-                            <Image
-                                source={{
-                                    uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_up.png',
-                                }}
-                                style={styles.upButtonImage}
-                            />
-                        </TouchableOpacity>
-
-                        {/* : null} */}
-
-
+                        {this.state.downButtoVisible && (
+                            <TouchableOpacity
+                                activeOpacity={0.5}
+                                onPress={this.upButtonHandler}
+                                style={styles.upButton}>
+                                <Image
+                                    source={{
+                                        uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/arrow_up.png',
+                                    }}
+                                    style={styles.upButtonImage}
+                                />
+                            </TouchableOpacity>)}
 
                         {/* </Modal> */}
 
@@ -503,6 +602,28 @@ export default class NotesList extends Component {
 export class Comment extends Component {
     constructor(props) {
         super(props)
+        // this.props.getImage()
+        // async () => {
+        //     // console.log(img)
+        //     // alert(this.state.image)
+        //     if (item.img === "")
+        //         return
+        //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${this.props.imageSource}`);
+        //     try {
+        //         // console.log("nkcnckn")
+        //         let url = await imgRef.getDownloadURL()
+
+        //         this.setState({ imageSource: url })
+        //         // return url
+        //         this.image = url
+        //     }
+        //     catch (arr) {
+        //         // alert(arr)
+        //         console.log(arr)
+
+        //     }
+        //     // return image
+        // }
     }
 
     render() {
@@ -541,12 +662,42 @@ export class Comment extends Component {
 
 
                             </View>
-                            <View style={{ position: 'absolute', bottom: 10, left: 15 }}>
+                            <View style={{ position: 'absolute', bottom: 10, left: screenWidth / 10 }}>
                                 <Text
                                     // numberOfLines={1}
                                     style={{ color: 'gray' }}>{this.props.date}</Text>
 
                             </View>
+                            {/* {this.props.imageSource !== '' && (
+                                // () => {
+                                // },
+                                <View
+                                    style={{
+                                        position: 'absolute',
+                                        height: screenHeight / 7,
+                                        right: 20,
+                                        justifyContent: 'center'
+                                    }}
+
+                                > */}
+                            {/* {alert(this.props.imageSource)} */}
+                            {/* <Image source={{ uri: this.props.url }}
+                                        style={{
+                                            backgroundColor: 'lightgray',
+                                            height: 90,
+                                            width: 90,
+                                            resizeMode: 'contain',
+                                        }} />
+                                    {uploading && (
+                                        <View
+                                            style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
+                                        />
+                                    )}
+
+                                </View>
+                            )} */}
+
+
 
                         </View>
 
@@ -586,8 +737,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignSelf: 'center',
         paddingHorizontal: 5,
-        height: 150,
-        width: screenWidth / 2.1,
+        height: screenHeight / 6,
+        width: screenWidth,
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
         borderTopLeftRadius: 40,
@@ -604,6 +755,8 @@ const styles = StyleSheet.create({
     },
     text: {
         // marginHorizontal: 10,
+        alignSelf: 'flex-start',
+        marginLeft: screenWidth / 10
     },
     img: {
         height: 20,

@@ -1,0 +1,251 @@
+--- adb starting (pid 11052) ---
+adb I 03-12 10:46:08 11052 11052 main.cpp:57] Android Debug Bridge version 1.0.39
+adb I 03-12 10:46:08 11052 11052 main.cpp:57] Version 1:8.1.0+r23-5~18.04
+adb I 03-12 10:46:08 11052 11052 main.cpp:57] Installed as /usr/lib/android-sdk/platform-tools/adb
+adb I 03-12 10:46:08 11052 11052 main.cpp:57] 
+adb I 03-12 10:46:08 11052 11052 adb_auth_host.cpp:416] adb_auth_init...
+adb I 03-12 10:46:08 11052 11052 adb_auth_host.cpp:174] read_key_file '/home/vasnsh/.android/adbkey'...
+adb I 03-12 10:46:08 11052 11052 adb_auth_host.cpp:391] adb_auth_inotify_init...
+adb I 03-12 10:46:08 11052 11052 adb_auth_host.cpp:467] Calling send_auth_response
+adb server killed by remote request
+--- adb starting (pid 11236) ---
+adb I 03-12 10:48:52 11236 11236 main.cpp:60] Android Debug Bridge version 1.0.41
+adb I 03-12 10:48:52 11236 11236 main.cpp:60] Version 29.0.5-5949299
+adb I 03-12 10:48:52 11236 11236 main.cpp:60] Installed as /home/vasnsh/Sdk/platform-tools/adb
+adb I 03-12 10:48:52 11236 11236 main.cpp:60] 
+adb I 03-12 10:48:52 11236 11236 auth.cpp:437] adb_auth_init...
+adb I 03-12 10:48:53 11236 11236 auth.cpp:412] adb_auth_inotify_init...
+adb I 03-12 10:48:53 11236 11242 transport.cpp:282] RZ8M32GAEEP: read thread spawning
+adb I 03-12 10:48:53 11236 11243 transport.cpp:295] RZ8M32GAEEP: write thread spawning
+adb I 03-12 10:48:53 11236 11236 transport.cpp:1373] fetching keys for transport RZ8M32GAEEP
+adb I 03-12 10:48:53 11236 11236 auth.cpp:489] Calling send_auth_response
+adb I 03-12 10:48:53 11236 11236 adb.cpp:114] RZ8M32GAEEP: offline
+adb server killed by remote request
+adb I 03-12 10:49:31 11236 11236 transport.cpp:980] kicking transport 0x7f49b4010d20 RZ8M32GAEEP
+adb I 03-12 10:49:31 11236 11236 transport.cpp:358] BlockingConnectionAdapter(RZ8M32GAEEP): stopping
+adb I 03-12 10:49:31 11236 11242 transport.cpp:286] RZ8M32GAEEP: read failed: Invalid argument
+adb I 03-12 10:49:31 11236 11242 transport.cpp:695] RZ8M32GAEEP: connection terminated: read failed
+adb I 03-12 10:49:31 11236 11236 transport.cpp:376] BlockingConnectionAdapter(RZ8M32GAEEP): stopped
+--- adb starting (pid 11252) ---
+adb I 03-12 10:49:31 11252 11252 main.cpp:57] Android Debug Bridge version 1.0.39
+adb I 03-12 10:49:31 11252 11252 main.cpp:57] Version 1:8.1.0+r23-5~18.04
+adb I 03-12 10:49:31 11252 11252 main.cpp:57] Installed as /usr/lib/android-sdk/platform-tools/adb
+adb I 03-12 10:49:31 11252 11252 main.cpp:57] 
+adb I 03-12 10:49:31 11252 11252 adb_auth_host.cpp:416] adb_auth_init...
+adb I 03-12 10:49:31 11252 11252 adb_auth_host.cpp:174] read_key_file '/home/vasnsh/.android/adbkey'...
+adb I 03-12 10:49:31 11252 11252 adb_auth_host.cpp:391] adb_auth_inotify_init...
+adb I 03-12 10:49:31 11252 11252 adb_auth_host.cpp:467] Calling send_auth_response
+adb E 03-12 12:17:14 11252 11256 transport_usb.cpp:146] remote usb: 1 - write terminated: Invalid argument
+adb I 03-12 12:23:15 11252 11252 adb_auth_host.cpp:467] Calling send_auth_response
+adb I 03-12 12:23:22 11252 11252 adb_auth_host.cpp:467] Calling send_auth_response
+adb E 03-12 12:46:34 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:34 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:36 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:36 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:38 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:38 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:40 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:40 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:42 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:42 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:44 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:44 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:46 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:46 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:48 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:48 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:50 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:50 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:46:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:21 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:23 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:25 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:27 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:29 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:31 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:33 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:35 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:37 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:39 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:41 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:43 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:45 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:47 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:49 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:51 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:53 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:55 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:57 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:47:59 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:01 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:03 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:20 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:22 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:24 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:26 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:28 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:30 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:32 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:34 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:36 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:41 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:41 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:41 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:43 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:43 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:45 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:45 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:47 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:47 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:49 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:49 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:48:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:01 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:20 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:20 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:22 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 12:49:22 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 14:05:49 11252 13045 transport_usb.cpp:146] remote usb: 1 - write terminated: Invalid argument
+adb E 03-12 14:05:49 11252 16299 transport_usb.cpp:146] remote usb: 1 - write terminated: Connection timed out
+adb I 03-12 14:49:41 11252 11252 adb_auth_host.cpp:467] Calling send_auth_response
+adb I 03-12 14:49:45 11252 11252 adb_auth_host.cpp:467] Calling send_auth_response
+adb E 03-12 16:18:26 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:28 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:30 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:32 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:34 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:36 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:38 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:40 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:42 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:44 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:46 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:48 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:50 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:18:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:05 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:07 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:09 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:11 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:13 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:15 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:17 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:19 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:21 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:23 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:25 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:27 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:29 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:31 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:33 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:35 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:37 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:40 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:42 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:44 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:46 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:48 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:50 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:52 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:54 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:56 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:19:58 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:20 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:23 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:25 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:27 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:29 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:31 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:20:33 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:00 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:02 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:04 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:06 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:08 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:10 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:12 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:14 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:16 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:18 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:20 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:22 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:24 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:26 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:28 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:30 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb E 03-12 16:21:32 11252 11252 services.cpp:277] failed to connect to socket 'tcp:8081': Connection refused
+adb server killed by remote request

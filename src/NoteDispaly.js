@@ -28,6 +28,7 @@ export default class NoteDisplay extends Component {
     constructor(props) {
         super(props)
         this.getValueLocally()
+        alert(this.props.route.params.image)
 
         this.state = {
             ModalVisible: false,
