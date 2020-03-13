@@ -8,8 +8,10 @@ import { Image, View, Dimensions, Text } from 'react-native';
 import model from './src/model'
 import UsersData from './src/UsersData';
 import UserDetails from './src/UserDetails';
-import SignUp from './src/SignUp';
+import SignUp from './src/signUp';
 import addNotes from './src/addNotes';
+import signIn from './src/signIn'
+import deshboard from './src/screens/deshboard'
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -20,10 +22,11 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
       >
-        <Stack.Screen name="LoginPage" component={Login}
+        <Stack.Screen name="LoginPage" component={signIn}
 
           options={{
             title: 'Notes',
+            headerShown: false,
             headerStyle: {
               backgroundColor: '#3498db',
             },
@@ -85,6 +88,11 @@ export default function App() {
           }}
 
         />
+        <Stack.Screen name="Deshboard" component={deshboard}
+          options={{
+            headerShown: false,
+
+          }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

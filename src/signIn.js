@@ -19,6 +19,33 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class SignIn extends Component {
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            this.props.navigation.navigate(user ? 'Deshboard' : 'LoginPage')
+        })
+    }
+    state = {
+        Email: '',
+        Password: '',
+        errorMessage: '',
+        isLoading: false
+    }
+    handleLogin = () => {
+        setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
+        this.setState({ isLoading: true })
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.Email, this.state.Password)
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.props.navigation.navigate('Deshboard')
+            })
+            .catch(error => {
+                this.setState({ isLoading: false })
+                this.setState({ errorMessage: error.message })
+                alert(this.state.errorMessage)
+            })
+    }
     render() {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -44,20 +71,27 @@ export default class SignIn extends Component {
                             <TextInput
                                 placeholder={"example@gmail.com"}
                                 style={styles.inputtext}
-                                // onChangeText={(email) => this.setState({ Email: email })}
-                                // value={this.state.Email}
+                                onChangeText={(email) => this.setState({ Email: email })}
+                                value={this.state.Email}
                                 keyboardType="email-address"
                             ></TextInput>
                             <TextInput
                                 placeholder={"*******"}
                                 style={styles.inputtext}
-                                // onChangeText={(email) => this.setState({ Password: email })}
-                                // value={this.state.Password}
+                                onChangeText={(email) => this.setState({ Password: email })}
+                                value={this.state.Password}
                                 secureTextEntry={true}
                             ></TextInput>
 
                             <TouchableOpacity
                                 style={styles.btn}
+                                onPress={() => {
+                                    if (this.state.Email == "" && this.state.Password == "")
+                                        return
+                                    this.handleLogin()
+
+                                }
+                                }
                             >
                                 <Text style={styles.text}>Login</Text>
                             </TouchableOpacity>
@@ -126,6 +160,7 @@ export default class SignIn extends Component {
                             </View>
                             <TouchableOpacity
                                 style={{ marginTop: 20 }}
+                                onPress={() => this.props.navigation.navigate('signup')}
                             >
                                 <Text style={{ color: 'gray' }}>Don't have an account? REGISTER</Text>
 
@@ -135,6 +170,21 @@ export default class SignIn extends Component {
 
 
                         </View>
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={this.state.isLoading}>
+                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+
+                                <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                                    <View>
+                                        <ActivityIndicator size='large'
+                                            color="#45a0e6'" />
+                                    </View>
+                                </View>
+                            </View>
+
+                        </Modal>
                     </View>
 
                 </KeyboardAwareScrollView>

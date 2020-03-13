@@ -212,12 +212,12 @@ export default class NotesList extends Component {
     }
     componentDidMount() {
         this.unsubscribe = this.getref.onSnapshot(this.getCollection);
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+        // BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
 
     }
     componentWillUnmount() {
         this.unsubscribe();
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
     image = []
     render() {

@@ -104,14 +104,6 @@ export default class LoginPage extends Component {
                                     if (this.state.Email == "" && this.state.Password == "")
                                         return
                                     this.handleLogin()
-                                    // if (this.state.Email == "vansh" && this.state.Password == "123") {
-                                    //     this.props.navigation.navigate("NotesPage")
-                                    //     this.setState({ Email: "", Password: "" })
-                                    // }
-                                    // else {
-                                    //     alert("Enter  User name and Password")
-                                    //     this.setState({ Email: "", Password: "" })
-                                    // }
 
                                 }
 

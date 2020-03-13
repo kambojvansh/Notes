@@ -11,7 +11,8 @@ import {
     ActivityIndicator,
     Modal,
     BackHandler,
-    Image
+    Image,
+    Alert
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -24,6 +25,35 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class signUp extends Component {
+
+    state = {
+        email: '',
+        password: '',
+        name: '',
+        number: '',
+        errorMessage: null,
+        isLoading: false
+    }
+    handleSignUp = () => {
+        setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
+        this.setState({ isLoading: true })
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            // .then(() => this.props.navigation.navigate('Home'))
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.storeData()
+                this.props.navigation.navigate('Deshboard')
+                // alert("sucsess")
+
+            })
+            .catch(error => {
+                this.setState({ isLoading: false })
+                this.setState({ errorMessage: error.message })
+                alert(this.state.errorMessage)
+            })
+    }
     // fieldRef = React.createRef();
 
     // onSubmit = () => {
@@ -65,6 +95,8 @@ export default class signUp extends Component {
                                     label='First and Last name'
                                     keyboardType='name-phone-pad'
                                     lineType='none'
+                                    onChangeText={(text) => this.setState({ name: text })}
+                                    value={this.state.name}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -83,6 +115,8 @@ export default class signUp extends Component {
                                     label='Phone Number'
                                     keyboardType='number-pad'
                                     lineType='none'
+                                    onChangeText={(text) => this.setState({ number: text })}
+                                    value={this.state.number}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -98,6 +132,8 @@ export default class signUp extends Component {
                                     label='example@example.com'
                                     keyboardType='email-address'
                                     lineType='none'
+                                    onChangeText={(email) => this.setState({ email: email })}
+                                    value={this.state.email}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -113,6 +149,8 @@ export default class signUp extends Component {
                                     label='Password'
                                     keyboardType='name-phone-pad'
                                     lineType='none'
+                                    onChangeText={(email) => this.setState({ password: email })}
+                                    value={this.state.password}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -133,8 +171,14 @@ export default class signUp extends Component {
 
                             <TouchableOpacity
                                 style={styles.btn}
+                                onPress={() => {
+                                    if (this.state.email == "" && this.state.password == "" && this.state.name == "" && this.state.number == "")
+                                        return
+                                    this.handleSignUp()
+                                }
+                                }
                             >
-                                <Text style={styles.text}>Login</Text>
+                                <Text style={styles.text}>Register</Text>
                             </TouchableOpacity>
                             <View
                                 style={{ flexDirection: 'row' }}
@@ -201,6 +245,7 @@ export default class signUp extends Component {
                             </View>
                             <TouchableOpacity
                                 style={{ marginTop: 20 }}
+                                onPress={() => this.props.navigation.navigate('LoginPage')}
                             >
                                 <Text style={{ color: 'gray' }}>Already have an account? LOGIN</Text>
 
@@ -210,6 +255,21 @@ export default class signUp extends Component {
 
 
                         </View>
+                        <Modal
+                            animationType="fade"
+                            transparent={true}
+                            visible={this.state.isLoading}>
+                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+
+                                <View style={{ marginTop: 350, alignSelf: 'center' }}>
+                                    <View>
+                                        <ActivityIndicator size='large'
+                                            color="#45a0e6'" />
+                                    </View>
+                                </View>
+                            </View>
+
+                        </Modal>
                     </View>
 
                 </KeyboardAwareScrollView>
