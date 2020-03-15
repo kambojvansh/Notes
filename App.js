@@ -10,93 +10,101 @@ import UsersData from './src/UsersData';
 import UserDetails from './src/UserDetails';
 import SignUp from './src/signUp';
 import addNotes from './src/addNotes';
-import signIn from './src/signIn'
+// import signIn from './src/signIn'
 import deshboard from './src/screens/deshboard'
 import NoteApp from './src/redux/App'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import reducers from './src/redux/reducers'
+import SignIn from "./src/redux/signIn"
+import ReduxThunk from 'redux-thunk'
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 export default function App() {
+  const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-      >
-        <Stack.Screen name="NoteApp" component={NoteApp} />
-        <Stack.Screen name="LoginPage" component={signIn}
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+        >
+          {/* <Stack.Screen name="NoteApp" component={SignIn} /> */}
+          <Stack.Screen name="LoginPage" component={SignIn}
 
-          options={{
-            title: 'Notes',
-            headerShown: false,
-            headerStyle: {
-              backgroundColor: '#3498db',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 25,
-              alignSelf: 'center',
-              marginLeft: screenWidth / 2.5
-            },
-          }}
+            options={{
+              title: 'Notes',
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: '#3498db',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 25,
+                alignSelf: 'center',
+                marginLeft: screenWidth / 2.5
+              },
+            }}
 
-        />
-        <Stack.Screen name="NotesPage" component={Notes}
-          options={{
-            // headerStyle: {
-            //   backgroundColor: '#3498db',
-            // },
-            headerShown: false,
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 25
-            },
-          }}
+          />
+          <Stack.Screen name="NotesPage" component={Notes}
+            options={{
+              // headerStyle: {
+              //   backgroundColor: '#3498db',
+              // },
+              headerShown: false,
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 25
+              },
+            }}
 
-        />
-        <Stack.Screen name="Display" component={Display}
-          options={{
-            // headerStyle: {
-            //   backgroundColor: '#3498db',
-            // },
-            headerShown: false,
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 25
-            },
-          }} />
-        <Stack.Screen name="addNotes" component={addNotes}
-          options={{
-            // headerStyle: {
-            //   backgroundColor: '#3498db',
-            // },
-            headerShown: false,
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 25
-            },
-          }} />
-        <Stack.Screen name="model" component={model} />
-        <Stack.Screen name="user" component={UsersData} />
-        <Stack.Screen name="details" component={UserDetails} />
-        <Stack.Screen name="signup" component={SignUp}
-          options={{
-            headerShown: false,
+          />
+          <Stack.Screen name="Display" component={Display}
+            options={{
+              // headerStyle: {
+              //   backgroundColor: '#3498db',
+              // },
+              headerShown: false,
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 25
+              },
+            }} />
+          <Stack.Screen name="addNotes" component={addNotes}
+            options={{
+              // headerStyle: {
+              //   backgroundColor: '#3498db',
+              // },
+              headerShown: false,
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 25
+              },
+            }} />
+          <Stack.Screen name="model" component={model} />
+          <Stack.Screen name="user" component={UsersData} />
+          <Stack.Screen name="details" component={UserDetails} />
+          <Stack.Screen name="signup" component={SignUp}
+            options={{
+              headerShown: false,
 
-          }}
+            }}
 
-        />
-        <Stack.Screen name="Deshboard" component={deshboard}
-          options={{
-            headerShown: false,
+          />
+          <Stack.Screen name="Deshboard" component={deshboard}
+            options={{
+              headerShown: false,
 
-          }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+            }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 // const hearderImage = () => {

@@ -1,4 +1,4 @@
-import { EMAIL_CHANGED, PASSWORD_CHANGED } from '../actions/types'
+import { EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCCESS } from '../actions/types'
 const INITIAL_STATE = { email: '', pass: '' }
 
 export default (state = INITIAL_STATE, action) => {
