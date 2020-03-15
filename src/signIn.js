@@ -15,13 +15,18 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {
+    TextField,
+    FilledTextField,
+    OutlinedTextField,
+} from 'react-native-material-textfield';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default class SignIn extends Component {
     componentDidMount() {
         firebase.auth().onAuthStateChanged(user => {
-            this.props.navigation.navigate(user ? 'Deshboard' : 'LoginPage')
+            // this.props.navigation.navigate(user ? 'Deshboard' : 'LoginPage')
         })
     }
     state = {
@@ -37,8 +42,12 @@ export default class SignIn extends Component {
             .auth()
             .signInWithEmailAndPassword(this.state.Email, this.state.Password)
             .then(() => {
-                this.setState({ isLoading: false })
-                this.props.navigation.navigate('Deshboard')
+                this.setState({
+                    Email: "",
+                    isLoading: false,
+                    Password: ""
+                }, () => this.props.navigation.navigate('Deshboard'))
+
             })
             .catch(error => {
                 this.setState({ isLoading: false })
@@ -68,20 +77,65 @@ export default class SignIn extends Component {
                         <View style={{
                             alignItems: 'center',
                         }}>
-                            <TextInput
+                            <View style={{
+                                width: screenWidth / 1.5
+                            }}>
+                                <FilledTextField
+                                    label='example@gmail.com'
+                                    keyboardType='email-address'
+                                    lineType='none'
+                                    onChangeText={(email) => this.setState({ Email: email })}
+                                    value={this.state.Email}
+                                    inputContainerStyle={{
+                                        borderBottomLeftRadius: 10,
+                                        borderBottomRightRadius: 10,
+                                        borderTopLeftRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        borderWidth: 1,
+                                        borderColor: "lightgray",
+                                        backgroundColor: 'white'
+                                    }}
+                                    labelTextStyle={{ textAlign: 'center', }}
+                                // formatText={this.formatText}
+                                // onSubmitEditing={this.onSubmit}
+                                // ref={this.fieldRef}
+                                >
+                                </FilledTextField>
+                                <FilledTextField
+                                    label='Password'
+                                    keyboardType='name-phone-pad'
+                                    lineType='none'
+                                    onChangeText={(password) => this.setState({ Password: password })}
+                                    value={this.state.Password}
+                                    inputContainerStyle={{
+                                        borderBottomLeftRadius: 10,
+                                        borderBottomRightRadius: 10,
+                                        borderTopLeftRadius: 10,
+                                        borderTopRightRadius: 10,
+                                        borderWidth: 1,
+                                        borderColor: "lightgray",
+                                        backgroundColor: 'white'
+                                    }}
+                                    labelTextStyle={{ textAlign: 'center', }}
+                                    secureTextEntry={true}
+                                    title="Minimum 6 characters"
+                                >
+                                </FilledTextField>
+                            </View>
+                            {/* <TextInput
                                 placeholder={"example@gmail.com"}
                                 style={styles.inputtext}
                                 onChangeText={(email) => this.setState({ Email: email })}
                                 value={this.state.Email}
                                 keyboardType="email-address"
-                            ></TextInput>
-                            <TextInput
+                            ></TextInput> */}
+                            {/* <TextInput
                                 placeholder={"*******"}
                                 style={styles.inputtext}
                                 onChangeText={(email) => this.setState({ Password: email })}
                                 value={this.state.Password}
                                 secureTextEntry={true}
-                            ></TextInput>
+                            ></TextInput> */}
 
                             <TouchableOpacity
                                 style={styles.btn}

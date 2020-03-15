@@ -12,6 +12,7 @@ import SignUp from './src/signUp';
 import addNotes from './src/addNotes';
 import signIn from './src/signIn'
 import deshboard from './src/screens/deshboard'
+import NoteApp from './src/redux/App'
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -22,6 +23,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
       >
+        <Stack.Screen name="NoteApp" component={NoteApp} />
         <Stack.Screen name="LoginPage" component={signIn}
 
           options={{

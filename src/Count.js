@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 
-export const Count = (props) => {
+const Count = (props) => {
 
     let [count, setCount] = useState(0)
 
@@ -39,3 +39,4 @@ const ButtonSuraj = props => {
         </TouchableOpacity>
     )
 }
+export default Count
