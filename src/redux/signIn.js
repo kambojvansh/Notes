@@ -13,6 +13,7 @@ import {
     BackHandler,
     Image
 } from 'react-native';
+import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
     TextField,
@@ -21,8 +22,10 @@ import {
 } from 'react-native-material-textfield';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, logInUser } from "./actions"
+import Loading from "./components/loading"
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
+
 
 export class SignIn extends Component {
 
@@ -35,42 +38,20 @@ export class SignIn extends Component {
     }
     buttonPressed() {
         const { email, pass } = this.props
-        // alert(email + pass)
         this.props.logInUser(email, pass)
+        // if (this.props.isLogin) {
+        //     this.props.navigation.navigate('Deshboard')
+        // }
+        // this.props.navigation.navigate('Deshboard')
+    }
+    loginSuccess = () => {
+        this.props.navigation.navigate('Deshboard')
+
     }
 
-    // componentDidMount() {
-    //     firebase.auth().onAuthStateChanged(user => {
-    //         // this.props.navigation.navigate(user ? 'Deshboard' : 'LoginPage')
-    //     })
-    // }
-    // state = {
-    //     Email: '',
-    //     Password: '',
-    //     errorMessage: '',
-    //     isLoading: false
-    // }
-    // handleLogin = () => {
-    //     setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
-    //     this.setState({ isLoading: true })
-    //     firebase
-    //         .auth()
-    //         .signInWithEmailAndPassword(this.state.Email, this.state.Password)
-    //         .then(() => {
-    //             this.setState({
-    //                 Email: "",
-    //                 isLoading: false,
-    //                 Password: ""
-    //             }, () => this.props.navigation.navigate('Deshboard'))
-
-    //         })
-    //         .catch(error => {
-    //             this.setState({ isLoading: false })
-    //             this.setState({ errorMessage: error.message })
-    //             alert(this.state.errorMessage)
-    //         })
-    // }
     render() {
+
+
         // console.log(this.props.email)
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -216,7 +197,8 @@ export class SignIn extends Component {
                             </View>
                             <TouchableOpacity
                                 style={{ marginTop: 20 }}
-                                onPress={() => this.props.navigation.navigate('signup')}
+                                // onPress={() => this.props.navigation.navigate('signup')}
+                                onPress={() => Actions.signUp()}
                             >
                                 <Text style={{ color: 'gray' }}>Don't have an account? REGISTER</Text>
 
@@ -226,21 +208,11 @@ export class SignIn extends Component {
 
 
                         </View>
-                        {/* <Modal
-                            animationType="fade"
-                            transparent={true}
-                            visible={this.state.isLoading}>
-                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        <View>
+                            {this.props.isLoading ? <Loading /> : null}
 
-                                <View style={{ marginTop: 350, alignSelf: 'center' }}>
-                                    <View>
-                                        <ActivityIndicator size='large'
-                                            color="#45a0e6'" />
-                                    </View>
-                                </View>
-                            </View>
+                        </View>
 
-                        </Modal> */}
                     </View>
 
                 </KeyboardAwareScrollView>
@@ -315,8 +287,9 @@ const mapStateTOProps = state => {
     // console.log(state)
     return {
         email: state.auth.email,
-        pass: state.auth.pass
+        pass: state.auth.pass,
+        isLoading: state.auth.isLoading,
+        isLogin: state.auth.isLogin
     }
 }
-
 export default connect(mapStateTOProps, { emailChanged, passwordChanged, logInUser })(SignIn)

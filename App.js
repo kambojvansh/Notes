@@ -8,7 +8,7 @@ import { Image, View, Dimensions, Text } from 'react-native';
 import model from './src/model'
 import UsersData from './src/UsersData';
 import UserDetails from './src/UserDetails';
-import SignUp from './src/signUp';
+import SignUp from './src/redux/signUp';
 import addNotes from './src/addNotes';
 // import signIn from './src/signIn'
 import deshboard from './src/screens/deshboard'
@@ -18,6 +18,9 @@ import { createStore, applyMiddleware } from 'redux'
 import reducers from './src/redux/reducers'
 import SignIn from "./src/redux/signIn"
 import ReduxThunk from 'redux-thunk'
+import Auth from './src/redux/reducers/AuthReducers'
+// import { loginSuccess } from './src/redux/actions/navigationScreens'
+import navigationScreens from './src/redux/actions/navigationScreens'
 const Stack = createStackNavigator();
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -102,6 +105,8 @@ export default function App() {
               headerShown: false,
 
             }} />
+          <Stack.Screen name="reducers" component={Auth} />
+          <Stack.Screen name="navigations" component={navigationScreens} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -14,46 +14,73 @@ import {
     Image,
     Alert
 } from 'react-native';
-import firebase from 'react-native-firebase'
+import { Actions } from 'react-native-router-flux'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
     TextField,
     FilledTextField,
     OutlinedTextField,
 } from 'react-native-material-textfield';
+import { connect } from 'react-redux';
+import {
+    emailChanged,
+    passwordChanged,
+    logInUser,
+    signUpUser,
+    nameChanged,
+    numberChanged
+} from "./actions"
+import Loading from "./components/loading"
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
-export default class signUp extends Component {
+export class signUp extends Component {
+    onEmailchanged(text) {
+        this.props.emailChanged(text)
 
-    state = {
-        email: '',
-        password: '',
-        name: '',
-        number: '',
-        errorMessage: null,
-        isLoading: false
     }
-    handleSignUp = () => {
-        setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
-        this.setState({ isLoading: true })
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(this.state.email, this.state.password)
-            // .then(() => this.props.navigation.navigate('Home'))
-            .then(() => {
-                this.setState({ isLoading: false })
-                this.storeData()
-                this.props.navigation.navigate('Deshboard')
-                // alert("sucsess")
+    onPasswordChanged(text) {
+        this.props.passwordChanged(text)
+    }
+    buttonPressed() {
+        const { email, pass } = this.props
+        this.props.signUpUser(email, pass)
+    }
+    onNameChanged(text) {
+        this.props.nameChanged(text)
+    }
+    onNumberChanged(text) {
+        this.props.numberChanged(text)
+    }
 
-            })
-            .catch(error => {
-                this.setState({ isLoading: false })
-                this.setState({ errorMessage: error.message })
-                alert(this.state.errorMessage)
-            })
-    }
+    // state = {
+    //     email: '',
+    //     password: '',
+    //     name: '',
+    //     number: '',
+    //     errorMessage: null,
+    //     isLoading: false
+    // }
+    // handleSignUp = () => {
+    //     setTimeout(() => { this.setState({ isLoading: false }) }, 20000);
+    //     this.setState({ isLoading: true })
+    //     firebase
+    //         .auth()
+    //         .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    //         // .then(() => this.props.navigation.navigate('Home'))
+    //         .then(() => {
+    //             this.setState({ isLoading: false })
+    //             this.storeData()
+    //             this.props.navigation.navigate('Deshboard')
+    //             // alert("sucsess")
+
+    //         })
+    //         .catch(error => {
+    //             this.setState({ isLoading: false })
+    //             this.setState({ errorMessage: error.message })
+    //             alert(this.state.errorMessage)
+    //         })
+    // }
     // fieldRef = React.createRef();
 
     // onSubmit = () => {
@@ -66,6 +93,9 @@ export default class signUp extends Component {
     //     return text.replace(/[^+\d]/g, '');
     // };
     render() {
+        if (this.props.isLogin) {
+            this.props.navigation.navigate('Deshboard')
+        }
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <KeyboardAwareScrollView>
@@ -95,8 +125,8 @@ export default class signUp extends Component {
                                     label='First and Last name'
                                     keyboardType='name-phone-pad'
                                     lineType='none'
-                                    onChangeText={(text) => this.setState({ name: text })}
-                                    value={this.state.name}
+                                    onChangeText={this.onNameChanged.bind(this)}
+                                    value={this.props.name}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -116,8 +146,8 @@ export default class signUp extends Component {
                                     label='Phone Number'
                                     keyboardType='number-pad'
                                     lineType='none'
-                                    onChangeText={(text) => this.setState({ number: text })}
-                                    value={this.state.number}
+                                    onChangeText={this.onNumberChanged.bind(this)}
+                                    value={this.props.number}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -134,8 +164,8 @@ export default class signUp extends Component {
                                     label='example@example.com'
                                     keyboardType='email-address'
                                     lineType='none'
-                                    onChangeText={(email) => this.setState({ email: email })}
-                                    value={this.state.email}
+                                    onChangeText={this.onEmailchanged.bind(this)}
+                                    value={this.props.email}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -152,8 +182,8 @@ export default class signUp extends Component {
                                     label='Password'
                                     keyboardType='name-phone-pad'
                                     lineType='none'
-                                    onChangeText={(email) => this.setState({ password: email })}
-                                    value={this.state.password}
+                                    onChangeText={this.onPasswordChanged.bind(this)}
+                                    value={this.props.pass}
                                     inputContainerStyle={{
                                         borderBottomLeftRadius: 10,
                                         borderBottomRightRadius: 10,
@@ -176,9 +206,9 @@ export default class signUp extends Component {
                             <TouchableOpacity
                                 style={styles.btn}
                                 onPress={() => {
-                                    if (this.state.email == "" && this.state.password == "" && this.state.name == "" && this.state.number == "")
+                                    if (this.props.email == "" && this.props.pass == "" && this.props.name == "" && this.props.number == "")
                                         return
-                                    this.handleSignUp()
+                                    this.buttonPressed()
                                 }
                                 }
                             >
@@ -249,7 +279,7 @@ export default class signUp extends Component {
                             </View>
                             <TouchableOpacity
                                 style={{ marginTop: 20 }}
-                                onPress={() => this.props.navigation.navigate('LoginPage')}
+                                onPress={() => Actions.login()}
                             >
                                 <Text style={{ color: 'gray' }}>Already have an account? LOGIN</Text>
 
@@ -259,21 +289,10 @@ export default class signUp extends Component {
 
 
                         </View>
-                        <Modal
-                            animationType="fade"
-                            transparent={true}
-                            visible={this.state.isLoading}>
-                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        <View>
+                            {this.props.isLoading ? <Loading /> : null}
 
-                                <View style={{ marginTop: 350, alignSelf: 'center' }}>
-                                    <View>
-                                        <ActivityIndicator size='large'
-                                            color="#45a0e6'" />
-                                    </View>
-                                </View>
-                            </View>
-
-                        </Modal>
+                        </View>
                     </View>
 
                 </KeyboardAwareScrollView>
@@ -343,32 +362,22 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
 })
+const mapStateTOProps = state => {
+    console.log(state)
+    return {
+        email: state.auth.email,
+        pass: state.auth.pass,
+        isLoading: state.auth.isLoading,
+        name: state.auth.name,
+        number: state.auth.number
+    }
+}
 
-// <TextInput
-//                                 placeholder={"First and Last name"}
-//                                 style={styles.inputtext}
-//                                 // onChangeText={(email) => this.setState({ Email: email })}
-//                                 // value={this.state.Email}
-//                                 keyboardType='name-phone-pad'
-//                             ></TextInput>
-//                             <TextInput
-//                                 placeholder={"Phone number"}
-//                                 style={styles.inputtext}
-//                                 // onChangeText={(email) => this.setState({ Email: email })}
-//                                 // value={this.state.Email}
-//                                 keyboardType='number-pad'
-//                             ></TextInput>
-//                             <TextInput
-//                                 placeholder={"example@gmail.com"}
-//                                 style={styles.inputtext}
-//                                 // onChangeText={(email) => this.setState({ Email: email })}
-//                                 // value={this.state.Email}
-//                                 keyboardType="email-address"
-//                             ></TextInput>
-//                             <TextInput
-//                                 placeholder={"*******"}
-//                                 style={styles.inputtext}
-//                                 // onChangeText={(email) => this.setState({ Password: email })}
-//                                 // value={this.state.Password}
-//                                 secureTextEntry={true}
-//                             ></TextInput>
+export default connect(mapStateTOProps, {
+    emailChanged,
+    passwordChanged,
+    logInUser,
+    signUpUser,
+    nameChanged,
+    numberChanged
+})(signUp)

@@ -1,3 +1,8 @@
 export const EMAIL_CHANGED = 'email_changed'
 export const PASSWORD_CHANGED = 'password_changed'
 export const LOGIN_USER_SUCCESS = 'login_user_success'
+export const LOADING = 'loading'
+export const SIGNUP_USER_SUCCESS = 'signup_user_success'
+export const NAME_CHANGED = 'name_changed'
+export const NUMBER_CHANGED = 'number_changed'
+export const LOGIN_USER_FAIL = 'login_user_fail'

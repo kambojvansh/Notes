@@ -16,6 +16,11 @@ const MoreIcon = require("../../images/moreOption.png");
 
 
 class Deshboard extends Component {
+    //     componentDidMount() {
+    //         this.props.navigation.setParams({
+    //             title='vansh',
+    //         });
+    // }
     logOutUser = () => {
         Alert.alert(
             'Logout User',
