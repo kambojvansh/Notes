@@ -20,13 +20,17 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import ImagePicker from 'react-native-image-crop-picker'
 import OptionsMenu from "react-native-options-menu"
 import uuid from 'uuid/v4'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux';
+import { signOut, getNotes } from "./redux/actions"
+
 
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const MoreIcon = require("../images/attach.png");
 
-export default class addNotes extends Component {
+export class addNotes extends Component {
     constructor(props) {
         super(props)
         // this.getValueLocally()
@@ -71,10 +75,10 @@ export default class addNotes extends Component {
     // }
 
     componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+        // BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     }
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
     onBackPress = () => {
         // alert("ksksnckn")
@@ -109,7 +113,7 @@ export default class addNotes extends Component {
         }
 
         this.setState({ isLoading: true, isSave: false })
-        const updateDBRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.props.route.params.userkey);
+        const updateDBRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc();
         updateDBRef.set({
             Notes: this.state.note,
             isLikes: this.state.islike,
@@ -120,7 +124,8 @@ export default class addNotes extends Component {
             .then(() => {
                 this.setState({ isLoading: false, isImage: false })
                 // alert("Data Saved")
-                this.props.navigation.navigate('NotesPage')
+                // this.props.navigation.navigate('NotesPage')
+                Actions.notes()
             })
 
             .catch((error) => {
@@ -595,3 +600,17 @@ const styles = StyleSheet.create({
     },
 
 })
+const mapStateTOProps = state => {
+    // console.log(state)
+    return {
+        isLoading: state.auth.isLoading,
+        name: state.auth.name,
+        number: state.auth.number,
+        user: state.auth.user
+    }
+}
+
+export default connect(mapStateTOProps, {
+    signOut,
+    getNotes
+})(addNotes)

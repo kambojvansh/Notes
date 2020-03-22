@@ -10,7 +10,7 @@ import model from './src/model'
 import firebase from 'react-native-firebase';
 import SignIn from './src/signIn';
 import { Count } from './src/Count';
-import deshboard from './src/screens/deshboard'
+import NotesListShow from './src/screens/NotesListShow'
 import App from './src/redux/App'
 
 AppRegistry.registerComponent(appName, () => App);

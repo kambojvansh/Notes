@@ -20,10 +20,10 @@ import OptionsMenu from "react-native-options-menu"
 // import { Card } from 'react-native-shadow-cards';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
-const MoreIcon = require("../images/options.png");
+const MoreIcon = require("../../images/moreOption.png")
 import { Actions } from 'react-native-router-flux'
 
-export default class NotesList extends Component {
+export default class NotesListShow extends Component {
 
     constructor() {
         super()
@@ -65,14 +65,7 @@ export default class NotesList extends Component {
 
     }
 
-    // deleteElement = (index) => {
 
-    //     const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
-    //     dbRef.delete().then((res) => {
-    //         console.log('Item removed from database')
-    //         this.setState({ DeleteModalVisible: false })
-    //     })
-    // }
 
     inputValueUpdate = (val, prop) => {
         const state = this.state;
@@ -80,12 +73,7 @@ export default class NotesList extends Component {
         this.setState(state);
     }
 
-    // deleteUser() {
-    //     const dbRef = firebase.firestore().collection(firebase.auth().currentUser.uid).doc(this.state.key)
-    //     dbRef.delete().then((res) => {
-    //         console.log('Item removed from database')
-    //     })
-    // }
+
 
     signOutUser = async () => {
         try {
@@ -176,30 +164,8 @@ export default class NotesList extends Component {
         );
         return true;
     }
-    // handelDate() {
-    //     return new Date(item.notesdate).toDateString()
 
-    // }
-    // getImage = async (img) => {
-    //     // console.log(img)
-    //     // alert(this.state.image)
-    //     if (img === "")
-    //         return
-    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${img}`);
-    //     try {
-    //         // console.log("nkcnckn")
-    //         let url = await imgRef.getDownloadURL()
 
-    //         this.setState({ imageSource: url })
-
-    //     }
-    //     catch (arr) {
-    //         // alert(arr)
-    //         console.log(arr)
-
-    //     }
-
-    // }
 
     formatAMPM(date) {
         var hours = date.getHours();
@@ -235,18 +201,18 @@ export default class NotesList extends Component {
                     flex: 1,
                     width: screenWidth,
                     alignSelf: 'center',
-                    backgroundColor: 'black',
                 }}>
                     <View
                         style={{
-                            backgroundColor: 'black',
+                            backgroundColor: 'white',
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            width: screenWidth
+                            width: screenWidth,
+                            height: 50
                         }}
                     >
                         <Text
-                            style={{ color: 'white', alignSelf: 'center', fontSize: 40 }}
+                            style={{ alignSelf: 'center', fontSize: 30 }}
                         >
                             All Notes
                         </Text>
@@ -256,12 +222,10 @@ export default class NotesList extends Component {
                             <OptionsMenu
                                 button={MoreIcon}
                                 buttonStyle={{
-                                    width: 32,
-                                    height: 40,
+                                    width: 20,
+                                    height: 30,
                                     margin: 7.5,
-                                    resizeMode: "contain",
-                                    // position: 'absolute',
-                                    // left: 70
+                                    resizeMode: "contain"
                                 }}
                                 destructiveIndex={1}
                                 options={["Logout", "Cancel"]}
@@ -275,16 +239,16 @@ export default class NotesList extends Component {
                     </View>
 
                     {/* <HearderImage style={{ position: "absolute" }} /> */}
-                    <View style={{
+                    {/* <View style={{
                         justifyContent: 'center'
                     }}>
                         <Text
                             style={{ color: 'white', alignSelf: 'center' }}
                         >Add new Notes</Text>
 
-                    </View>
+                    </View> */}
 
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, alignItems: 'center', backgroundColor: 'lightgray' }}>
                         <FlatList
                             // ItemSeparatorComponent={this.ListViewItemSeparator}
                             ref={(ref) => {
@@ -293,44 +257,12 @@ export default class NotesList extends Component {
                             onEndReached={() => { this.handeldowntab() }}
                             onEndReachedThreshold={0.5}
                             data={this.state.userArr}
-                            // numColumns={2}
+                            numColumns={2}
                             renderItem={({ item, index }) =>
                                 <Comment
                                     note={item.Notes}
-                                    // getImage={
-                                    // // () => {
-
-                                    // async () => {
-                                    //     // console.log(img)
-                                    //     // alert(this.state.image)
-                                    //     if (item.img === "")
-                                    //         return
-                                    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${item.img}`);
-                                    //     try {
-                                    //         // console.log("nkcnckn")
-                                    //         let url = await imgRef.getDownloadURL()
 
 
-                                    //         this.setState({ imageSource: url })
-                                    //         // return url
-                                    //         this.image.push(url)
-                                    //         this.setState({ images: this.image })
-
-                                    //     }
-                                    //     catch (arr) {
-                                    //         // alert(arr)
-                                    //         console.log(arr)
-
-                                    //     }
-                                    //     // return image
-                                    // }
-                                    // alert(item.Notes)
-                                    // this.setState({ image: item.img })
-                                    // this.getImage(item.img)
-                                    // alert(this.state.image)
-                                    // }
-                                    // }
-                                    // likes={item.likes}
                                     heading={item.notesHeading}
                                     islikeComment={item.isLikes}
                                     date={
@@ -339,44 +271,10 @@ export default class NotesList extends Component {
                                         new Date().toDateString() > new Date(item.notesdate).toDateString() ?
                                             new Date(item.notesdate).toDateString() :
                                             this.formatAMPM(new Date(item.notesdate))
-                                        // new Date(item.notesdate).toTimeString()
-                                        // new Date(item.notesdate).getHours() + ":" + new Date(item.notesdate).getMinutes() + ":" + new Date(item.notesdate).getSeconds()
-                                        // if(){
-                                        //     new Date(item.notesdate).toDateString()
-
-                                        // }
 
                                     }
-                                    // imageSource={item.img}
-                                    // url={this.state.images[index]}
-                                    // url={async () => {
-                                    //     // console.log(img)
-                                    //     // alert(this.state.image)
-                                    //     if (item.img === "")
-                                    //         return
-                                    //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${item.img}`);
-                                    //     try {
-                                    //         // console.log("nkcnckn")
-                                    //         let url = await imgRef.getDownloadURL()
 
-                                    //         // this.setState({ imageSource: url })
-                                    //         return url
-                                    //         // this.image = url
 
-                                    //     }
-                                    //     catch (arr) {
-                                    //         // alert(arr)
-                                    //         console.log(arr)
-
-                                    //     }
-                                    //     return image
-                                    // }}
-                                    // url={"https://firebasestorage.googleapis.com/" +
-                                    //     "v0/b/notesapp-88de4.appspot.com/o/" +
-                                    //     "Notes%2FImages%2" +
-                                    //     "FNptMWtxMKbMDWwU5F01PSB3WSkg1" +
-                                    //     "%2" + item.img +
-                                    //     "?alt=media&token=0cb27bcd-b206-49d6-9a7b-3298edd90c8d"}
 
                                     handelLike={() => {
                                         // console.log(item.date._type.timestamp)
@@ -528,7 +426,7 @@ export default class NotesList extends Component {
                                             >
                                                 <Image
                                                     style={[styles.imgModel, {}]}
-                                                    source={require('../images/add.png')}
+                                                    source={require('../../images/add.png')}
                                                 ></Image>
                                             </TouchableOpacity>
                                             {/* For Like Button*/}
@@ -545,7 +443,7 @@ export default class NotesList extends Component {
                                             >
                                                 <Image
                                                     style={styles.imgModel}
-                                                    source={this.state.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
+                                                    source={this.state.islikeComment ? require('../../images/isstar.png') : require('../../images/star.png')}
                                                 ></Image>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={styles.btn}
@@ -556,7 +454,7 @@ export default class NotesList extends Component {
                                             >
                                                 <Image
                                                     style={[styles.imgModel, {}]}
-                                                    source={require('../images/down.png')}
+                                                    source={require('../../images/down.png')}
                                                 ></Image>
                                             </TouchableOpacity>
 
@@ -587,7 +485,7 @@ export default class NotesList extends Component {
                     >
                         <Image
                             style={[styles.img, { height: 60, width: 60, }]}
-                            source={require('../images/add.png')}
+                            source={require('../../images/add.png')}
                         ></Image>
                     </TouchableOpacity>
 
@@ -603,28 +501,6 @@ export default class NotesList extends Component {
 export class Comment extends Component {
     constructor(props) {
         super(props)
-        // this.props.getImage()
-        // async () => {
-        //     // console.log(img)
-        //     // alert(this.state.image)
-        //     if (item.img === "")
-        //         return
-        //     const imgRef = firebase.storage().ref(`Notes/Images/${firebase.auth().currentUser.uid}/${this.props.imageSource}`);
-        //     try {
-        //         // console.log("nkcnckn")
-        //         let url = await imgRef.getDownloadURL()
-
-        //         this.setState({ imageSource: url })
-        //         // return url
-        //         this.image = url
-        //     }
-        //     catch (arr) {
-        //         // alert(arr)
-        //         console.log(arr)
-
-        //     }
-        //     // return image
-        // }
     }
 
     render() {
@@ -637,66 +513,31 @@ export class Comment extends Component {
                     onPress={() => this.props.next()}
                 >
                     <View style={{ margin: 5 }}>
+                        {/* <View style={{ backgroundColor: 'red', width: 5 }}></View> */}
                         <View style={styles.commentContainer}>
-                            <View style={{ margin: 10 }}>
-                                <TouchableOpacity style={styles.btn}
-                                    onPress={() => {
-
-                                        this.props.handelLike()
-                                    }
-                                    }
-                                >
-                                    <Image
-                                        style={styles.img}
-                                        source={this.props.islikeComment ? require('../images/isstar.png') : require('../images/star.png')}
-                                    ></Image>
-                                </TouchableOpacity>
-
-                            </View>
-                            <View style={{ alignItems: 'center' }}>
+                            <View style={{
+                                backgroundColor: 'red',
+                                width: 8,
+                                borderBottomLeftRadius: 10,
+                                borderTopLeftRadius: 10,
+                            }}></View>
+                            <View style={{ paddingRight: 5 }}>
                                 <Text
-                                    // numberOfLines={1}
+                                    numberOfLines={2}
                                     style={[styles.text, { fontWeight: 'bold', fontSize: 18 }]}>{this.props.heading}</Text>
                                 <Text
-                                    numberOfLines={1}
+                                    numberOfLines={3}
                                     style={styles.text}>{this.props.note}</Text>
 
 
                             </View>
-                            <View style={{ position: 'absolute', bottom: 10, left: screenWidth / 10 }}>
+                            <View style={{ position: 'absolute', bottom: 10, left: screenWidth / 20 }}>
                                 <Text
                                     // numberOfLines={1}
                                     style={{ color: 'gray' }}>{this.props.date}</Text>
 
                             </View>
-                            {/* {this.props.imageSource !== '' && (
-                                // () => {
-                                // },
-                                <View
-                                    style={{
-                                        position: 'absolute',
-                                        height: screenHeight / 7,
-                                        right: 20,
-                                        justifyContent: 'center'
-                                    }}
 
-                                > */}
-                            {/* {alert(this.props.imageSource)} */}
-                            {/* <Image source={{ uri: this.props.url }}
-                                        style={{
-                                            backgroundColor: 'lightgray',
-                                            height: 90,
-                                            width: 90,
-                                            resizeMode: 'contain',
-                                        }} />
-                                    {uploading && (
-                                        <View
-                                            style={[styles.progressBar, { width: `${2}${progress}%`, marginTop: 10 }]}
-                                        />
-                                    )}
-
-                                </View>
-                            )} */}
 
 
 
@@ -711,40 +552,22 @@ export class Comment extends Component {
 }
 
 
-const HearderImage = () => {
-    return (
-        <View style={{ flexDirection: 'row', }}>
-            <Image
-                source={require('../images/add.png')}
-
-                style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 40 / 2,
-                    marginLeft: 15,
-                }}>
-
-            </Image>
-
-        </View>
-
-    )
-
-
-}
 
 const styles = StyleSheet.create({
     commentContainer: {
         backgroundColor: 'white',
-        alignSelf: 'center',
-        paddingHorizontal: 5,
-        height: screenHeight / 6,
-        width: screenWidth,
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40,
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        marginTop: 10
+        // alignSelf: 'center',
+        // paddingHorizontal: 5,
+        height: screenHeight / 4,
+        width: screenWidth / 2.1,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        marginTop: 5,
+        // borderColor: 'gray',
+        // borderWidth: 0.5,
+        flexDirection: 'row'
     },
     modal: {
         backgroundColor: 'white',
@@ -755,9 +578,9 @@ const styles = StyleSheet.create({
         height: 70
     },
     text: {
-        // marginHorizontal: 10,
+        marginTop: 10,
         alignSelf: 'flex-start',
-        marginLeft: screenWidth / 10
+        marginLeft: screenWidth / 30
     },
     img: {
         height: 20,

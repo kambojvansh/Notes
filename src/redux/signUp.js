@@ -93,9 +93,9 @@ export class signUp extends Component {
     //     return text.replace(/[^+\d]/g, '');
     // };
     render() {
-        if (this.props.isLogin) {
-            this.props.navigation.navigate('Deshboard')
-        }
+        // if (this.props.isLogin) {
+        //     this.props.navigation.navigate('Deshboard')
+        // }
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <KeyboardAwareScrollView>

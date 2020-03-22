@@ -10,23 +10,38 @@ import {
 } from 'react-native'
 import OptionsMenu from "react-native-options-menu"
 import firebase from 'react-native-firebase'
+import { connect } from 'react-redux';
+import { signOut, getNotes, countOfNotes } from "../redux/actions"
+import Loading from "../redux/components/loading"
+import { Actions } from 'react-native-router-flux'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const MoreIcon = require("../../images/moreOption.png");
 
 
 class Deshboard extends Component {
-    //     componentDidMount() {
-    //         this.props.navigation.setParams({
-    //             title='vansh',
-    //         });
-    // }
+
+    constructor() {
+        super()
+        this.getref = firebase.firestore().collection(firebase.auth().currentUser.uid).orderBy("notesdate", "desc")
+    }
+    componentDidMount() {
+        // this.props.navigation.setParams({
+        //     title='vansh',
+        // });
+        // console.log(this.props.user.user.uid)
+        this.unsubscribe = this.getref.onSnapshot(this.props.getNotes)
+    }
+    componentWillUnmount() {
+        this.unsubscribe();
+        // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+    }
     logOutUser = () => {
         Alert.alert(
             'Logout User',
             'Are you sure?',
             [
-                { text: 'Yes', onPress: () => this.signOutUser() },
+                { text: 'Yes', onPress: () => this.props.signOut() },
                 { text: 'No', onPress: () => console.log('User not signout'), style: 'cancel' },
             ],
             {
@@ -34,24 +49,21 @@ class Deshboard extends Component {
             }
         );
     }
-    signOutUser = async () => {
-        try {
-            this.setState({ ModalVisible: true })
-            await firebase.auth().signOut();
-            this.setState({ ModalVisible: false }, () => {
-                this.props.navigation.navigate('LoginPage')
-            })
-            // alert("Logout")
-        } catch (e) {
-            // console.log(e);
-            this.setState({ error: e })
-            alert(this.state.e)
+    getCount() {
+        // let key, count = 0
+        let isLikes, count = 0
+        for (isLikes in this.props.userArr) {
+            if (this.props.userArr.hasOwnProperty(isLikes)) {
+                count++
+            }
         }
+        return count
     }
     render() {
+        this.props.countOfNotes(this.props.userArr)
         return (
 
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: 'lightgray' }}>
                 {/* for top option bar */}
 
 
@@ -66,7 +78,7 @@ class Deshboard extends Component {
                     }}
                 >
                     <Text
-                        style={{ alignSelf: 'center', fontSize: 30 }}
+                        style={{ alignSelf: 'center', fontSize: 25 }}
                     >
                         Deshboard
             </Text>
@@ -76,11 +88,12 @@ class Deshboard extends Component {
                         <OptionsMenu
                             button={MoreIcon}
                             buttonStyle={{
-                                width: 32,
-                                height: 40,
+                                width: 20,
+                                height: 30,
                                 margin: 7.5,
                                 resizeMode: "contain",
                                 // position: 'absolute',
+                                // alignSelf: 'center',
                                 // left: 70
                             }}
                             destructiveIndex={1}
@@ -118,7 +131,7 @@ class Deshboard extends Component {
                             <Text style={[styles.cardText, { fontSize: 10 }]}>12 Notes</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.cards, { backgroundColor: '#743fb5' }]}
-                            onPress={() => this.props.navigation.navigate('NotesPage')}
+                            onPress={() => Actions.notes()}
                         >
                             <Image
                                 source={require("../../images/all.png")}
@@ -151,7 +164,7 @@ class Deshboard extends Component {
                         >
                             <Text
                                 style={{ fontSize: 40 }}
-                            >24</Text>
+                            >{this.props.count}</Text>
                             <Text
                                 style={{ color: 'gray', marginTop: 10 }}
                             >TOTAL NOTES</Text>
@@ -236,6 +249,10 @@ class Deshboard extends Component {
                     </View>
 
                 </View>
+                <View>
+                    {this.props.isLoading ? <Loading /> : null}
+
+                </View>
 
 
             </View>
@@ -294,4 +311,21 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 })
-export default Deshboard
+const mapStateTOProps = state => {
+    // console.log(state)
+    return {
+        isLoading: state.auth.isLoading,
+        name: state.auth.name,
+        number: state.auth.number,
+        user: state.auth.user,
+        userArr: state.auth.userArr,
+        count: state.auth.count
+    }
+}
+
+export default connect(mapStateTOProps, {
+    signOut,
+    getNotes,
+    countOfNotes
+})(Deshboard)
+// export default

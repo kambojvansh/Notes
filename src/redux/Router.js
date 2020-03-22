@@ -4,7 +4,11 @@ import { Scene, Router } from 'react-native-router-flux'
 import Signin from './signIn'
 import Deshboard from '../screens/deshboard'
 import SignUp from './signUp'
-import { StyleSheet } from "react-native"
+import { StyleSheet, View, TouchableOpacity } from "react-native"
+import NotesListShow from '../screens/NotesListShow'
+import addNotes from '../addNotes'
+import Icon from 'react-native-vector-icons/Entypo';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 const RouerComponent = () => {
@@ -17,6 +21,7 @@ const RouerComponent = () => {
             <Scene key="root" hideNavBar>
                 <Scene key="auth">
                     <Scene key="login" component={Signin}
+                        // renderRightButton={InboxIcon}
                         hideNavBar={true}
                     />
                     <Scene key="signUp" component={SignUp}
@@ -25,10 +30,19 @@ const RouerComponent = () => {
                 </Scene>
                 <Scene key='main'>
                     <Scene key='deshboard' component={Deshboard}
-                        title='Deshboard'
-                        rightTitle="add"
-                        onRight={() => console.log("kcnskkns")}
+                        hideNavBar={true}
+
+                        // title='Deshboard'
+                        // rightTitle="add"
+                        // onRight={() => console.log("kcnskkns")}
+                        // renderRightButton={InboxIcon}
                         headerLayoutPreset={'center'}
+                    />
+                    <Scene key="notes" component={NotesListShow}
+                        hideNavBar={true}
+                    />
+                    <Scene key="addNotes" component={addNotes}
+                        hideNavBar={true}
                     />
                 </Scene>
             </Scene>
@@ -46,5 +60,17 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     }
 })
-
+const InboxIcon = () => {
+    return (
+        <View style={{ marginRight: 20 }} >
+            <TouchableOpacity onPress={() => console.log("asaknknsa")} >
+                <Icon
+                    name='dots-three-vertical'
+                    // type='Feather'
+                    size={30}
+                />
+            </TouchableOpacity>
+        </View>
+    );
+};
 export default RouerComponent

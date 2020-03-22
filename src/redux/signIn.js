@@ -23,11 +23,17 @@ import {
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, logInUser } from "./actions"
 import Loading from "./components/loading"
+import firebase from 'react-native-firebase'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 
 export class SignIn extends Component {
+    componentDidMount() {
+        firebase.auth().onAuthStateChanged(user => {
+            (user ? Actions.main() : null)
+        })
+    }
 
     onEmailchanged(text) {
         this.props.emailChanged(text)
@@ -44,10 +50,10 @@ export class SignIn extends Component {
         // }
         // this.props.navigation.navigate('Deshboard')
     }
-    loginSuccess = () => {
-        this.props.navigation.navigate('Deshboard')
+    // loginSuccess = () => {
+    //     this.props.navigation.navigate('Deshboard')
 
-    }
+    // }
 
     render() {
 

@@ -6,7 +6,8 @@ import {
     SIGNUP_USER_SUCCESS,
     NAME_CHANGED,
     NUMBER_CHANGED,
-    LOGIN_USER_FAIL
+    LOGIN_USER_FAIL,
+    GETNOTES
 } from '../actions/types'
 const INITIAL_STATE = {
     email: '',
@@ -14,7 +15,9 @@ const INITIAL_STATE = {
     user: null,
     isLoading: false,
     name: '',
-    number: ''
+    number: '',
+    userArr: null,
+    count: 0
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -49,6 +52,14 @@ export default (state = INITIAL_STATE, action) => {
             }
         case LOADING:
             return { ...state, isLoading: action.payload }
+        case GETNOTES:
+            return {
+                ...state, userArr: action.payload
+            }
+        case 'count':
+            return {
+                ...state, count: action.payload
+            }
         default:
             return state
     }

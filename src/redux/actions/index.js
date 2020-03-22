@@ -6,7 +6,8 @@ import {
     SIGNUP_USER_SUCCESS,
     NAME_CHANGED,
     NUMBER_CHANGED,
-    LOGIN_USER_FAIL
+    LOGIN_USER_FAIL,
+    GETNOTES
 } from "./types"
 import firebase from 'react-native-firebase'
 import { Actions } from 'react-native-router-flux'
@@ -34,6 +35,24 @@ export const numberChanged = (text) => {
     return {
         type: NUMBER_CHANGED,
         payload: text
+    }
+}
+export const signOut = () => {
+    return (dispatch) => {
+        dispatch({ type: LOADING, payload: true })
+        firebase
+            .auth()
+            .signOut()
+            .then(() => {
+                dispatch({ type: LOADING, payload: false })
+                // dispatch({ type: 'success' })
+                Actions.auth()
+            })
+            .catch(error => {
+                alert(error)
+                dispatch({ type: LOGIN_USER_FAIL })
+            })
+
     }
 }
 
@@ -75,5 +94,39 @@ export const signUpUser = (email, password) => {
                 dispatch({ type: LOGIN_USER_FAIL })
             })
 
+    }
+}
+
+export const getNotes = (querySnapshot) => {
+    const userArr = [];
+    querySnapshot.forEach((res) => {
+        const { Notes, isLikes, notesHeading, notesdate, img } = res.data();
+        userArr.push({
+            key: res.id,
+            res,
+            Notes,
+            isLikes,
+            notesHeading,
+            notesdate,
+            img
+        })
+        // console.log(userArr)
+    })
+    return {
+        type: GETNOTES,
+        payload: userArr
+    }
+
+}
+
+export const countOfNotes = (userArr) => {
+    return (dispatch) => {
+        let key, count = 0
+        for (key in userArr) {
+            if (userArr.hasOwnProperty(key)) {
+                count++
+            }
+        }
+        dispatch({ type: 'count', payload: count })
     }
 }
