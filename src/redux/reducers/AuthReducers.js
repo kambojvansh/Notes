@@ -7,7 +7,8 @@ import {
     NAME_CHANGED,
     NUMBER_CHANGED,
     LOGIN_USER_FAIL,
-    GETNOTES
+    GETNOTES,
+    MODELSHOW
 } from '../actions/types'
 const INITIAL_STATE = {
     email: '',
@@ -17,7 +18,8 @@ const INITIAL_STATE = {
     name: '',
     number: '',
     userArr: null,
-    count: 0
+    count: 0,
+    ModelVisible: false
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -59,6 +61,10 @@ export default (state = INITIAL_STATE, action) => {
         case 'count':
             return {
                 ...state, count: action.payload
+            }
+        case MODELSHOW:
+            return {
+                ...state, ModelVisible: action.payload
             }
         default:
             return state

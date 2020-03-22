@@ -22,8 +22,10 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const MoreIcon = require("../../images/moreOption.png")
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux';
+import { modalShow } from "../redux/actions"
 
-export default class NotesListShow extends Component {
+class NotesListShow extends Component {
 
     constructor() {
         super()
@@ -256,7 +258,7 @@ export default class NotesListShow extends Component {
                             }}
                             onEndReached={() => { this.handeldowntab() }}
                             onEndReachedThreshold={0.5}
-                            data={this.state.userArr}
+                            data={this.props.userArr}
                             numColumns={2}
                             renderItem={({ item, index }) =>
                                 <Comment
@@ -352,40 +354,30 @@ export default class NotesListShow extends Component {
                         <Modal
                             animationType="fade"
                             transparent={true}
-                            visible={this.state.DeleteModalVisible}>
-
-                            <View style={{ marginHorizontal: 30, marginTop: 200, }}>
-                                <View style={styles.model}>
-                                    <View style={styles.model}>
-                                        <Text style={styles.modelText}>Delete</Text>
-                                        <Text style={styles.modelText2}>
-                                            Are You Wants to Delete This Comment
-                                            </Text>
-                                        <View style={
-                                            { flexDirection: 'row', paddingHorizontal: 50, marginVertical: 10 }
-                                        }>
-                                            <TouchableOpacity
-
-                                                onPress={() => this.setState({ DeleteModalVisible: false })}
-                                            >
-                                                <Text style={{ color: 'gray', fontSize: 25, fontWeight: 'bold' }}>
-                                                    Cancel
-                                                    </Text>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                style={{ position: 'absolute', right: 30 }}
-                                                onPress={() => this.setState(this.deleteElement(this.deletItem))}
-                                            >
-                                                <Text style={{ color: 'lightgreen', fontSize: 25, fontWeight: 'bold' }}>
-                                                    Delete
-                                                    </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-
-
+                            visible={this.props.modelVisible}>
+                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.8)' }}>
+                                <View>
+                                    <TouchableOpacity style={[styles.btn, {
+                                        marginBottom: 20,
+                                        position: 'absolute',
+                                        right: 10,
+                                        top: screenHeight / 1.2
+                                    }]}
+                                        onPress={() => {
+                                            this.props.modalShow(false)
+                                            // this.setState({ modalVisible: true })
+                                            // this.props.navigation.navigate("addNotes",
+                                            //     {
+                                            //         userkey: this.state.userArr.key,
+                                            //     })
+                                        }}
+                                    >
+                                        <Image
+                                            style={[styles.img, { height: 60, width: 60, }]}
+                                            source={require('../../images/add.png')}
+                                        ></Image>
+                                    </TouchableOpacity>
                                 </View>
-
                             </View>
 
                         </Modal>
@@ -472,15 +464,15 @@ export default class NotesListShow extends Component {
                         marginBottom: 20,
                         position: 'absolute',
                         right: 10,
-                        bottom: 10
+                        top: screenHeight / 1.2
                     }]}
                         onPress={() => {
-                            // alert("skdnskn")
+                            this.props.modalShow(true)
                             // this.setState({ modalVisible: true })
-                            this.props.navigation.navigate("addNotes",
-                                {
-                                    userkey: this.state.userArr.key,
-                                })
+                            // this.props.navigation.navigate("addNotes",
+                            //     {
+                            //         userkey: this.state.userArr.key,
+                            //     })
                         }}
                     >
                         <Image
@@ -523,20 +515,24 @@ export class Comment extends Component {
                             }}></View>
                             <View style={{ paddingRight: 5 }}>
                                 <Text
-                                    numberOfLines={2}
+                                    // numberOfLines={2}
                                     style={[styles.text, { fontWeight: 'bold', fontSize: 18 }]}>{this.props.heading}</Text>
                                 <Text
-                                    numberOfLines={3}
+                                    // numberOfLines={3}
                                     style={styles.text}>{this.props.note}</Text>
-
+                                <Text
+                                    // numberOfLines={1}
+                                    style={[styles.text, { color: 'gray' }]}>{this.props.date}</Text>
 
                             </View>
-                            <View style={{ position: 'absolute', bottom: 10, left: screenWidth / 20 }}>
+                            {/* <View style={{ position: 'absolute', bottom: 10, left: screenWidth / 20 }}> */}
+                            {/* <View style={styles.text}>
+
                                 <Text
                                     // numberOfLines={1}
                                     style={{ color: 'gray' }}>{this.props.date}</Text>
 
-                            </View>
+                            </View> */}
 
 
 
@@ -558,7 +554,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         // alignSelf: 'center',
         // paddingHorizontal: 5,
-        height: screenHeight / 4,
+        // height: screenHeight / 4,
         width: screenWidth / 2.1,
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
@@ -578,7 +574,7 @@ const styles = StyleSheet.create({
         height: 70
     },
     text: {
-        marginTop: 10,
+        marginVertical: 10,
         alignSelf: 'flex-start',
         marginLeft: screenWidth / 30
     },
@@ -667,4 +663,17 @@ const styles = StyleSheet.create({
     },
 
 })
+const mapStateTOProps = state => {
+    // console.log(state)
+    return {
+        isLoading: state.auth.isLoading,
+        user: state.auth.user,
+        userArr: state.auth.userArr,
+        modelVisible: state.auth.ModelVisible
+    }
+}
+
+export default connect(mapStateTOProps, {
+    modalShow
+})(NotesListShow)
 

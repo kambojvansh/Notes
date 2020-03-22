@@ -7,7 +7,8 @@ import {
     NAME_CHANGED,
     NUMBER_CHANGED,
     LOGIN_USER_FAIL,
-    GETNOTES
+    GETNOTES,
+    MODELSHOW
 } from "./types"
 import firebase from 'react-native-firebase'
 import { Actions } from 'react-native-router-flux'
@@ -128,5 +129,12 @@ export const countOfNotes = (userArr) => {
             }
         }
         dispatch({ type: 'count', payload: count })
+    }
+}
+
+export const modalShow = (task) => {
+    return {
+        type: MODELSHOW,
+        payload: task
     }
 }

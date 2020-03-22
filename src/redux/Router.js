@@ -21,6 +21,7 @@ const RouerComponent = () => {
             <Scene key="root" hideNavBar>
                 <Scene key="auth">
                     <Scene key="login" component={Signin}
+                        initial
                         // renderRightButton={InboxIcon}
                         hideNavBar={true}
                     />
