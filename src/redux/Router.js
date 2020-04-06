@@ -6,7 +6,9 @@ import Deshboard from '../screens/deshboard'
 import SignUp from './signUp'
 import { StyleSheet, View, TouchableOpacity } from "react-native"
 import NotesListShow from '../screens/NotesListShow'
-import addNotes from '../addNotes'
+import addNote from '../screens/addNote'
+import addLocation from '../screens/addLocation'
+import addImage from '../screens/addImage'
 import Icon from 'react-native-vector-icons/Entypo';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -42,9 +44,16 @@ const RouerComponent = () => {
                     <Scene key="notes" component={NotesListShow}
                         hideNavBar={true}
                     />
-                    <Scene key="addNotes" component={addNotes}
+                    <Scene key="addNotes" component={addNote}
                         hideNavBar={true}
                     />
+                    <Scene key="addImage" component={addImage}
+                        hideNavBar={true}
+                    />
+                    <Scene key="addLocation" component={addLocation}
+                        hideNavBar={true}
+                    />
+
                 </Scene>
             </Scene>
         </Router>

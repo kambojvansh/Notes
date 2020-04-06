@@ -6,12 +6,19 @@ import {
     StyleSheet,
     Dimensions,
     Image,
-    Alert
+    Alert,
+    BackHandler,
 } from 'react-native'
 import OptionsMenu from "react-native-options-menu"
 import firebase from 'react-native-firebase'
-import { connect } from 'react-redux';
-import { signOut, getNotes, countOfNotes } from "../redux/actions"
+import { connect } from 'react-redux'
+import {
+    signOut,
+    getNotes,
+    countOfNotes,
+    countOfNotesCompleted,
+    countOfNotesNotCompleted
+} from "../redux/actions"
 import Loading from "../redux/components/loading"
 import { Actions } from 'react-native-router-flux'
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -23,18 +30,16 @@ class Deshboard extends Component {
 
     constructor() {
         super()
+        // this.id = firebase.auth().currentUser.uid !== "" ? firebase.currentUser.uid : this.props.userArr.id
         this.getref = firebase.firestore().collection(firebase.auth().currentUser.uid).orderBy("notesdate", "desc")
     }
     componentDidMount() {
-        // this.props.navigation.setParams({
-        //     title='vansh',
-        // });
-        // console.log(this.props.user.user.uid)
         this.unsubscribe = this.getref.onSnapshot(this.props.getNotes)
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     }
     componentWillUnmount() {
         this.unsubscribe();
-        // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
     logOutUser = () => {
         Alert.alert(
@@ -49,18 +54,35 @@ class Deshboard extends Component {
             }
         );
     }
-    getCount() {
-        // let key, count = 0
-        let isLikes, count = 0
-        for (isLikes in this.props.userArr) {
-            if (this.props.userArr.hasOwnProperty(isLikes)) {
-                count++
+    // getCount() {
+    //     // let key, count = 0
+    //     let Complete, completeNote = 0
+    //     for (Complete == true in this.props.userArr) {
+    //         if (this.props.userArr.hasOwnProperty(isLikes)) {
+    //             completeNote++
+    //         }
+    //     }
+    //     return count
+    // }
+    onBackPress = () => {
+        Alert.alert(
+            'Exit',
+            'Are you sure?',
+            [
+                { text: 'Yes', onPress: () => BackHandler.exitApp() },
+                { text: 'No', onPress: () => console.log('User not exit'), style: 'cancel' },
+            ],
+            {
+                cancelable: true
             }
-        }
-        return count
+        );
+        return true;
     }
     render() {
-        this.props.countOfNotes(this.props.userArr)
+        let { userArr } = this.props
+        this.props.countOfNotes(userArr)
+        this.props.countOfNotesCompleted(userArr)
+        this.props.countOfNotesNotCompleted(userArr)
         return (
 
             <View style={{ flex: 1, backgroundColor: 'lightgray' }}>
@@ -119,7 +141,7 @@ class Deshboard extends Component {
                                 style={styles.imageicon}
                             />
                             <Text style={styles.cardText}>Pending</Text>
-                            <Text style={[styles.cardText, { fontSize: 10 }]}>12 Notes</Text>
+                            <Text style={[styles.cardText, { fontSize: 10, marginBottom: 10 }]}>{this.props.notComplete} Notes</Text>
 
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.cards}>
@@ -128,7 +150,7 @@ class Deshboard extends Component {
                                 style={styles.imageicon}
                             />
                             <Text style={styles.cardText}>Completed</Text>
-                            <Text style={[styles.cardText, { fontSize: 10 }]}>12 Notes</Text>
+                            <Text style={[styles.cardText, { fontSize: 10, marginBottom: 10 }]}>{this.props.complete} Notes</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.cards, { backgroundColor: '#743fb5' }]}
                             onPress={() => Actions.notes()}
@@ -137,9 +159,8 @@ class Deshboard extends Component {
                                 source={require("../../images/all.png")}
                                 style={styles.imageicon}
                             />
-                            <Text style={styles.cardText}>Add Notes</Text>
-                            <Text style={[styles.cardText, { fontSize: 10 }]}>24 Notes</Text>
-
+                            <Text style={styles.cardText}>All Notes</Text>
+                            <Text style={[styles.cardText, { fontSize: 10, marginBottom: 10 }]}>{this.props.count} Notes</Text>
                         </TouchableOpacity>
                     </View>
                     <Text style={{
@@ -160,14 +181,20 @@ class Deshboard extends Component {
                         justifyContent: 'center'
                     }}>
                         <View
-                            style={{ marginLeft: 30 }}
+                            style={{ marginLeft: 30, padding: 10, marginBottom: 10 }}
                         >
-                            <Text
-                                style={{ fontSize: 40 }}
-                            >{this.props.count}</Text>
-                            <Text
-                                style={{ color: 'gray', marginTop: 10 }}
-                            >TOTAL NOTES</Text>
+                            <TouchableOpacity
+                                onPress={() => Actions.notes()}
+                            >
+                                <Text
+                                    style={{ fontSize: 40 }}
+                                >{this.props.count}</Text>
+                                <Text
+                                    style={{ color: 'gray' }}
+                                >TOTAL NOTES</Text>
+
+                            </TouchableOpacity>
+
 
                         </View>
 
@@ -177,16 +204,16 @@ class Deshboard extends Component {
                         flex: 1,
                         backgroundColor: 'white',
                         marginLeft: 1,
-                        justifyContent: 'center'
+                        justifyContent: 'center',
                     }}>
                         <View
-                            style={{ marginLeft: 30 }}
+                            style={{ marginLeft: 30, padding: 10, marginBottom: 10 }}
                         >
                             <Text
                                 style={{ fontSize: 40 }}
-                            >12</Text>
+                            >{this.props.complete}</Text>
                             <Text
-                                style={{ color: 'gray', marginTop: 10 }}
+                                style={{ color: 'gray' }}
                             >COMPLETED NOTES</Text>
 
                         </View>
@@ -208,9 +235,18 @@ class Deshboard extends Component {
                             }}
                         >Pending Notes</Text>
                         <View style={styles.progressBorder}>
-                            <View style={[styles.progressBar, { backgroundColor: '#45a0e6', width: "60%" }]}>
+                            <View style={[styles.progressBar, {
+                                backgroundColor: '#45a0e6',
+                                width: `${parseInt(this.props.notComplete / this.props.count * 100)}%`
+                            }]}>
                             </View>
-                            <Text style={[styles.progressCount, { color: '#45a0e6' }]}>60%</Text>
+                            <Text style={[styles.progressCount, { color: '#45a0e6' }]}>
+                                {this.props.count !== 0 ?
+                                    parseInt(this.props.notComplete / this.props.count * 100) :
+                                    0
+                                }%
+
+                            </Text>
 
                         </View>
 
@@ -225,13 +261,22 @@ class Deshboard extends Component {
                             }}
                         >Completed Notes</Text>
                         <View style={styles.progressBorder}>
-                            <View style={[styles.progressBar, , { backgroundColor: '#b52c09', width: "80%" }]}>
+                            <View style={[styles.progressBar, , {
+                                backgroundColor: '#b52c09',
+                                width: `${parseInt(this.props.complete / this.props.count * 100)}%`
+                            }]}>
                             </View>
-                            <Text style={[styles.progressCount, { color: '#b52c09' }]}>80%</Text>
+                            <Text style={[styles.progressCount, { color: '#b52c09' }]}>
+                                {/* {parseInt(this.props.complete / this.props.count * 100)}% */}
+                                {this.props.count !== 0 ?
+                                    parseInt(this.props.complete / this.props.count * 100) :
+                                    0
+                                }%
+                                </Text>
 
                         </View>
                     </View>
-                    <View>
+                    {/* <View>
                         <Text
                             style={{
                                 color: '#743fb5',
@@ -246,7 +291,7 @@ class Deshboard extends Component {
                             <Text style={[styles.progressCount, { color: '#743fb5' }]}>90%</Text>
 
                         </View>
-                    </View>
+                    </View> */}
 
                 </View>
                 <View>
@@ -271,20 +316,21 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingVertical: 10
 
     },
     imageicon: {
-        height: 70
+        height: 50
         , resizeMode: 'contain',
-        width: 60
+        width: 60,
     },
     cardText: {
         color: 'white'
     },
     progressBar: {
         width: screenWidth / 2,
-        height: screenHeight / 90,
+        height: screenHeight / 70,
         backgroundColor: '#b52c09',
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
@@ -305,7 +351,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     progressCount: {
-        fontSize: 12,
+        fontSize: 10,
         position: 'absolute',
         right: 15,
         fontWeight: 'bold'
@@ -319,13 +365,18 @@ const mapStateTOProps = state => {
         number: state.auth.number,
         user: state.auth.user,
         userArr: state.auth.userArr,
-        count: state.auth.count
+        count: state.auth.count,
+        complete: state.auth.completeNote,
+        notComplete: state.auth.NotCompleteNote,
+        // notComplete: state.auth.completeNote
     }
 }
 
 export default connect(mapStateTOProps, {
     signOut,
     getNotes,
-    countOfNotes
+    countOfNotes,
+    countOfNotesCompleted,
+    countOfNotesNotCompleted
 })(Deshboard)
 // export default

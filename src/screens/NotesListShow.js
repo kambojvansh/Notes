@@ -23,71 +23,15 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const MoreIcon = require("../../images/moreOption.png")
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux';
-import { modalShow } from "../redux/actions"
+import { modalShow, deleteNote, updateNotes } from "../redux/actions"
 
 class NotesListShow extends Component {
 
     constructor() {
         super()
-        // this.time = firebase.firestore.FieldPath('time')
-        this.ref = firebase.firestore().collection(firebase.auth().currentUser.uid)
-        this.getref = firebase.firestore().collection(firebase.auth().currentUser.uid).orderBy("notesdate", "desc")
-        // this.del = firebase.firestore().collection(firebase.auth().currentUser.uid)
-        this.unsubscribe = null;
-        this.likestatus = true
         this.state = {
-            textInput: "",
-            modalVisible: false,
-            DeleteModalVisible: false,
-            downModalVisible: false,
             topButtoVisible: false,
-            islikeComment: false,
-            comment: "",
-            islike: false,
-            userArr: [],
-            arr: [],
-            Notes: '',
-            isLikes: '',
-            key: '',
-            imageSource: '',
-            image: '',
-            images: [],
             downButtoVisible: false
-
-        }
-    }
-
-
-    addComment = (text, like) => {
-
-        if (text == "") {
-            return
-        }
-        this.addPost(like)
-
-    }
-
-
-
-    inputValueUpdate = (val, prop) => {
-        const state = this.state;
-        state[prop] = val;
-        this.setState(state);
-    }
-
-
-
-    signOutUser = async () => {
-        try {
-            await firebase.auth().signOut();
-            this.setState({ ModalVisible: false }, () => {
-                this.props.navigation.navigate('LoginPage')
-            })
-            // alert("Logout")
-        } catch (e) {
-            // console.log(e);
-            this.setState({ error: e })
-            alert(this.state.e)
         }
     }
 
@@ -105,38 +49,7 @@ class NotesListShow extends Component {
         );
     }
     deletItem = ''
-    addPost = (likeStatus) => {
-        this.likestatus = likeStatus
-        this.ref.add({
-            Notes: this.state.textInput,
-            isLikes: this.likestatus,
-            notesdate: new Date().getTime()
-        });
-        this.setState({ textInput: '', modalVisible: false })
-    }
 
-    getCollection = (querySnapshot) => {
-        const userArr = [];
-        querySnapshot.forEach((res) => {
-            const { Notes, isLikes, notesHeading, notesdate, img } = res.data();
-            // const date = res.data().notesdate.Timestamp.toDate()
-            userArr.push({
-                key: res.id,
-                res,
-                Notes,
-                isLikes,
-                notesHeading,
-                notesdate,
-                img
-            });
-            // console.log(userArr)
-        });
-        this.setState({
-            userArr,
-            isLoading: false,
-            // image: this.state.userArr.img
-        });
-    }
 
     //for flat list
     handeldowntab = () => {
@@ -152,19 +65,11 @@ class NotesListShow extends Component {
         this.setState({ topButtoVisible: false, downButtoVisible: true })
     };
     onBackPress = () => {
-        // alert("ksksnckn")
-        Alert.alert(
-            'Exit',
-            'Are you sure?',
-            [
-                { text: 'Yes', onPress: () => BackHandler.exitApp() },
-                { text: 'No', onPress: () => console.log('User not exit'), style: 'cancel' },
-            ],
-            {
-                cancelable: true
-            }
-        );
+        Actions.deshboard()
         return true;
+    }
+    onDeleteNote = (key) => {
+        this.props.deleteNote(key)
     }
 
 
@@ -180,21 +85,20 @@ class NotesListShow extends Component {
         return strTime;
     }
     componentDidMount() {
-        this.unsubscribe = this.getref.onSnapshot(this.getCollection);
-        // BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+        // this.unsubscribe = this.getref.onSnapshot(this.getCollection);
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
 
     }
     componentWillUnmount() {
-        this.unsubscribe();
-        // BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
+        // this.unsubscribe();
+        BackHandler.removeEventListener('hardwareBackPress', this.onBackPress);
     }
-    image = []
     render() {
         this.getCollection
         return (
             <TouchableWithoutFeedback onPress={() => {
                 Keyboard.dismiss
-                this.setState({ modalVisible: false })
+                // this.setState({ modalVisible: false })
 
             }
             } accessible={false}
@@ -267,6 +171,9 @@ class NotesListShow extends Component {
 
                                     heading={item.notesHeading}
                                     islikeComment={item.isLikes}
+                                    // image={item.image !== "" ? "" : "notDone"}
+                                    image={item.image}
+                                    textColor={item.textColor}
                                     date={
 
                                         // today = new Date(),
@@ -274,6 +181,19 @@ class NotesListShow extends Component {
                                             new Date(item.notesdate).toDateString() :
                                             this.formatAMPM(new Date(item.notesdate))
 
+                                    }
+                                    markNoteAsComplete={() => {
+                                        if (item.image !== "") {
+                                            return
+                                        }
+                                        this.props.updateNotes(
+                                            item.notesHeading,
+                                            item.Notes,
+                                            item.textColor,
+                                            item.notesdate,
+                                            item.key
+                                        )
+                                    }
                                     }
 
 
@@ -284,18 +204,9 @@ class NotesListShow extends Component {
                                     }
                                     }
                                     delete={() => {
-
-
-                                        this.setState({ DeleteModalVisible: true, key: item.key })
+                                        this.onDeleteNote(item.key)
                                     }}
-                                    next={(likes) => this.props.navigation.navigate("Display",
-                                        {
-                                            commentPass: item.Notes,
-                                            userkey: item.key,
-                                            like: item.isLikes,
-                                            heading: item.notesHeading,
-                                            image: item.img
-                                        })}
+                                    next={() => { }}
                                 />}
                             keyExtractor={(index, item) => index + item}
                         >
@@ -355,8 +266,101 @@ class NotesListShow extends Component {
                             animationType="fade"
                             transparent={true}
                             visible={this.props.modelVisible}>
-                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.8)' }}>
+                            <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
                                 <View>
+                                    <TouchableOpacity style={[styles.btn, {
+                                        marginBottom: 20,
+                                        position: 'absolute',
+                                        right: 15,
+                                        top: screenHeight / 1.8,
+                                    }]}
+                                        onPress={() => {
+                                            Actions.addLocation()
+                                            this.props.modalShow(false)
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <Text style={styles.modalText}>Add Loaction</Text>
+                                            <View style={styles.imageModel}>
+                                                <Image
+                                                    style={styles.modalImg}
+                                                    source={require('../../images/loaction.png')}
+                                                ></Image>
+
+                                            </View>
+
+                                        </View>
+
+
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.btn, {
+                                        marginBottom: 20,
+                                        position: 'absolute',
+                                        right: 15,
+                                        top: screenHeight / 1.6,
+                                    }]}
+                                        onPress={() => {
+                                            this.props.modalShow(false)
+                                            Actions.addImage()
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <Text style={styles.modalText}>Add Image</Text>
+                                            <View style={styles.imageModel}>
+                                                <Image
+                                                    style={styles.modalImg}
+                                                    source={require('../../images/image.png')}
+                                                ></Image>
+
+                                            </View>
+
+                                        </View>
+
+
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.btn, {
+                                        marginBottom: 20,
+                                        position: 'absolute',
+                                        right: 15,
+                                        top: screenHeight / 1.4,
+                                    }]}
+                                        onPress={() => {
+                                            this.props.modalShow(false)
+                                            Actions.addNotes()
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <Text style={styles.modalText}>Add Note</Text>
+                                            <View style={styles.imageModel}>
+                                                <Image
+                                                    style={styles.modalImg}
+                                                    source={require('../../images/note.png')}
+                                                ></Image>
+
+                                            </View>
+
+                                        </View>
+
+
+                                    </TouchableOpacity>
                                     <TouchableOpacity style={[styles.btn, {
                                         marginBottom: 20,
                                         position: 'absolute',
@@ -365,11 +369,6 @@ class NotesListShow extends Component {
                                     }]}
                                         onPress={() => {
                                             this.props.modalShow(false)
-                                            // this.setState({ modalVisible: true })
-                                            // this.props.navigation.navigate("addNotes",
-                                            //     {
-                                            //         userkey: this.state.userArr.key,
-                                            //     })
                                         }}
                                     >
                                         <Image
@@ -381,83 +380,6 @@ class NotesListShow extends Component {
                             </View>
 
                         </Modal>
-
-                        <TouchableWithoutFeedback onPress={() => {
-                            Keyboard.dismiss
-                            this.setState({ modalVisible: false })
-
-                        }
-                        } accessible={false}
-                            style={{}}>
-                            <Modal
-                                animationType="slide"
-                                transparent={true}
-                                visible={this.state.modalVisible}
-                            >
-                                <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                                    <View style={[{ alignSelf: 'center', position: 'absolute', bottom: 25 }]}>
-                                        <View style={[styles.modal, styles.model
-                                        ]}>
-                                            <View style={{ width: 250 }}>
-                                                <TextInput
-                                                    style={styles.inputtext}
-                                                    onChangeText={text => this.setState({ textInput: text })}
-                                                    placeholder={"Enter Your Notes Here"}
-                                                    placeholderTextColor="#fff"
-                                                    value={this.state.textInput}
-                                                />
-                                                {/* style={styles.inputtext} */}
-                                            </View>
-                                            {/* <View style={[styles.commentContainer]}> */}
-
-                                            <TouchableOpacity style={styles.btn}
-                                                onPress={() => {
-
-                                                    this.addComment(this.state.textInput, this.state.islikeComment)
-                                                }}
-                                            >
-                                                <Image
-                                                    style={[styles.imgModel, {}]}
-                                                    source={require('../../images/add.png')}
-                                                ></Image>
-                                            </TouchableOpacity>
-                                            {/* For Like Button*/}
-                                            <TouchableOpacity style={styles.btn}
-                                                onPress={() => {
-                                                    if (this.state.islikeComment) {
-                                                        this.setState({ islikeComment: false })
-                                                    }
-                                                    else {
-                                                        this.setState({ islikeComment: true })
-                                                    }
-                                                }
-                                                }
-                                            >
-                                                <Image
-                                                    style={styles.imgModel}
-                                                    source={this.state.islikeComment ? require('../../images/isstar.png') : require('../../images/star.png')}
-                                                ></Image>
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.btn}
-                                                onPress={() => {
-                                                    this.setState({ modalVisible: false })
-                                                    // )
-                                                }}
-                                            >
-                                                <Image
-                                                    style={[styles.imgModel, {}]}
-                                                    source={require('../../images/down.png')}
-                                                ></Image>
-                                            </TouchableOpacity>
-
-                                            {/* </View> */}
-                                        </View>
-                                    </View>
-                                </View>
-
-                                {/* </TouchableWithoutFeedback> */}
-                            </Modal>
-                        </TouchableWithoutFeedback>
 
                     </View>
                     <TouchableOpacity style={[styles.btn, {
@@ -497,6 +419,7 @@ export class Comment extends Component {
 
     render() {
         // const likeCount = parseInt(this.props.likes) + parseInt(this.state.likeCount)
+        // console.log(this.props.image)
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <TouchableOpacity
@@ -507,8 +430,27 @@ export class Comment extends Component {
                     <View style={{ margin: 5 }}>
                         {/* <View style={{ backgroundColor: 'red', width: 5 }}></View> */}
                         <View style={styles.commentContainer}>
+
+                            <View
+                                style={{ position: 'absolute', right: 5 }}
+                            >
+                                <OptionsMenu
+                                    button={MoreIcon}
+                                    buttonStyle={{
+                                        width: 15,
+                                        height: 20,
+                                        margin: 7.5,
+                                        resizeMode: "contain"
+                                    }}
+                                    destructiveIndex={1}
+                                    options={["Delete", "Complete"]}
+                                    actions={[this.props.delete, this.props.markNoteAsComplete]}
+                                />
+
+                            </View>
+
                             <View style={{
-                                backgroundColor: 'red',
+                                backgroundColor: this.props.textColor,
                                 width: 8,
                                 borderBottomLeftRadius: 10,
                                 borderTopLeftRadius: 10,
@@ -516,10 +458,25 @@ export class Comment extends Component {
                             <View style={{ paddingRight: 5 }}>
                                 <Text
                                     // numberOfLines={2}
-                                    style={[styles.text, { fontWeight: 'bold', fontSize: 18 }]}>{this.props.heading}</Text>
+                                    style={[styles.text, {
+                                        fontWeight: 'bold',
+                                        fontSize: 18,
+                                        color: this.props.textColor
+                                    }]}>{this.props.heading}</Text>
+                                {this.props.image !== "" && (
+                                    <View style={{ alignSelf: 'center', paddingHorizontal: 10 }}>
+                                        <Image source={{ uri: this.props.image }} style={{
+                                            width: 150,
+                                            height: 200,
+                                        }} />
+                                    </View>
+                                )}
                                 <Text
                                     // numberOfLines={3}
                                     style={styles.text}>{this.props.note}</Text>
+                                {/* <Text
+                                    // numberOfLines={3}
+                                    style={styles.text}>{this.props.image}</Text> */}
                                 <Text
                                     // numberOfLines={1}
                                     style={[styles.text, { color: 'gray' }]}>{this.props.date}</Text>
@@ -576,7 +533,8 @@ const styles = StyleSheet.create({
     text: {
         marginVertical: 10,
         alignSelf: 'flex-start',
-        marginLeft: screenWidth / 30
+        marginLeft: screenWidth / 30,
+        marginRight: 2
     },
     img: {
         height: 20,
@@ -661,6 +619,25 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
     },
+    modalText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginRight: 10
+    },
+    modalImg: {
+        height: 20,
+        width: 20,
+        // resizeMode: 'contain',
+    },
+    imageModel: {
+        height: 40,
+        width: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        borderRadius: 20,
+    }
 
 })
 const mapStateTOProps = state => {
@@ -674,6 +651,8 @@ const mapStateTOProps = state => {
 }
 
 export default connect(mapStateTOProps, {
-    modalShow
+    modalShow,
+    deleteNote,
+    updateNotes
 })(NotesListShow)
 

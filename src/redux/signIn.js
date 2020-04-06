@@ -21,9 +21,17 @@ import {
     OutlinedTextField,
 } from 'react-native-material-textfield';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, logInUser } from "./actions"
+import {
+    emailChanged,
+    passwordChanged,
+    logInUser,
+    onLoginOrRegisterGoogle,
+    onLoginOrRegisterFacebook
+} from "./actions"
 import Loading from "./components/loading"
 import firebase from 'react-native-firebase'
+import { GoogleSignin } from '@react-native-community/google-signin'
+import { LoginButton, AccessToken } from 'react-native-fbsdk'
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
@@ -171,10 +179,28 @@ export class SignIn extends Component {
                             {/* buttons for face book */}
 
                             <View
-                                style={{ flexDirection: 'row' }}
-                            >
-                                <TouchableOpacity
+                                style={{ flexDirection: 'row' }}>
+                                <LoginButton
+                                    style={[styles.btnLink]}
+                                    onLoginFinished={
+                                        (error, result) => {
+                                            if (error) {
+                                                console.log("login has error: " + result.error);
+                                            } else if (result.isCancelled) {
+                                                console.log("login is cancelled.");
+                                            } else {
+                                                AccessToken.getCurrentAccessToken().then(
+                                                    (data) => {
+                                                        console.log(data.accessToken.toString())
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                    onLogoutFinished={() => console.log("logout.")} />
+                                {/* <TouchableOpacity
                                     style={styles.btnLink}
+                                    onPress={() => this.props.onLoginOrRegisterFacebook()}
                                 >
                                     <Image
                                         source={require('../../images/facebook.png')}
@@ -185,9 +211,10 @@ export class SignIn extends Component {
                                         }}
                                     />
                                     <Text style={{ color: '#3498db', fontWeight: 'bold' }}>Facebook</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity
                                     style={[styles.btnLink, { borderColor: 'red' }]}
+                                    onPress={() => this.props.onLoginOrRegisterGoogle()}
                                 >
                                     <Image
                                         source={require('../../images/google.png')}
@@ -274,15 +301,15 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         // backgroundColor: '#45a0e6',
         width: screenWidth / 3.5,
-        height: 50,
+        height: 30,
         borderColor: "#3498db",
         marginTop: 20,
         marginBottom: 20,
-        marginHorizontal: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        marginHorizontal: 5,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: "row"
@@ -298,4 +325,10 @@ const mapStateTOProps = state => {
         isLogin: state.auth.isLogin
     }
 }
-export default connect(mapStateTOProps, { emailChanged, passwordChanged, logInUser })(SignIn)
+export default connect(mapStateTOProps, {
+    emailChanged,
+    passwordChanged,
+    logInUser,
+    onLoginOrRegisterGoogle,
+    onLoginOrRegisterFacebook
+})(SignIn)

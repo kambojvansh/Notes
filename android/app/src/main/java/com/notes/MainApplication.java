@@ -18,6 +18,8 @@ import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 // import com.kishanjvaghela.cardview.RNCardViewPackage;
 // import io.invertase.firebase.RNFirebasePackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,7 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseAuthPackage());
           packages.add(new RNFirebaseFirestorePackage());
           packages.add(new RNFirebaseStoragePackage());
-          // packages.add(new RNCardViewPackage());
+          // packages.add(new RNGoogleSigninPackage());
+          // packages.add(new MapsPackage());
           // packages.add(new AsyncStoragePackage());
           return packages;
           // new AsyncStoragePackage();
@@ -58,6 +61,9 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+    // FacebookSdk.sdkInitialize(this);
+    // FacebookSdk.sdkInitialize(getApplicationContext());
+    // FacebookSdk.sdkInitialize(getApplicationContext()); 
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
   }

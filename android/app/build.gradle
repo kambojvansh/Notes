@@ -182,7 +182,6 @@ android {
 
 dependencies {
     implementation project(':react-native-cardview')
-    implementation project(':react-native-firebase')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
@@ -201,6 +200,11 @@ dependencies {
     // For WebP support, including animated WebP
     implementation 'com.facebook.fresco:animated-webp:2.0.0'
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
+    //maps
+    implementation project(':react-native-maps')
+    // implementation(project(":react-native-google-signin"))
+
+    // implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
 
 
     if (enableHermes) {

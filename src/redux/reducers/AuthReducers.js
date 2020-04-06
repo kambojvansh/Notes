@@ -8,7 +8,11 @@ import {
     NUMBER_CHANGED,
     LOGIN_USER_FAIL,
     GETNOTES,
-    MODELSHOW
+    MODELSHOW,
+    TITLE_CHANGED,
+    NOTE_CHANGE,
+    COLOR_MODEL_SHOW,
+    SELECT_TEXT_COLOR
 } from '../actions/types'
 const INITIAL_STATE = {
     email: '',
@@ -17,9 +21,15 @@ const INITIAL_STATE = {
     isLoading: false,
     name: '',
     number: '',
-    userArr: null,
+    userArr: [{}],
     count: 0,
-    ModelVisible: false
+    ModelVisible: false,
+    note: '',
+    title: '',
+    colorModelVisible: false,
+    textColor: 'black',
+    completeNote: 0,
+    NotCompleteNote: 0
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,6 +38,10 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, email: action.payload }
         case PASSWORD_CHANGED:
             return { ...state, pass: action.payload }
+        case NOTE_CHANGE:
+            return { ...state, note: action.payload }
+        case TITLE_CHANGED:
+            return { ...state, title: action.payload }
         case NAME_CHANGED:
             return { ...state, name: action.payload }
         case NUMBER_CHANGED:
@@ -53,7 +67,7 @@ export default (state = INITIAL_STATE, action) => {
                 isLoading: false
             }
         case LOADING:
-            return { ...state, isLoading: action.payload }
+            return { ...state, isLoading: action.payload, title: '', note: "", textColor: 'black' }
         case GETNOTES:
             return {
                 ...state, userArr: action.payload
@@ -62,9 +76,29 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state, count: action.payload
             }
+        case 'NotCompleteNote':
+            return {
+                ...state, NotCompleteNote: action.payload
+            }
+        case 'completeNote':
+            return {
+                ...state, completeNote: action.payload
+            }
         case MODELSHOW:
             return {
                 ...state, ModelVisible: action.payload
+            }
+        case COLOR_MODEL_SHOW:
+            return {
+                ...state, colorModelVisible: action.payload
+            }
+        case SELECT_TEXT_COLOR:
+            return {
+                ...state, textColor: action.payload
+            }
+        case 'loadingShow':
+            return {
+                ...state, isLoading: action.payload
             }
         default:
             return state

@@ -8,3 +8,7 @@ export const NUMBER_CHANGED = 'number_changed'
 export const LOGIN_USER_FAIL = 'login_user_fail'
 export const GETNOTES = 'getNotes'
 export const MODELSHOW = 'modelShow'
+export const TITLE_CHANGED = 'title_changed'
+export const NOTE_CHANGE = "note_changed"
+export const COLOR_MODEL_SHOW = 'color_model_show'
+export const SELECT_TEXT_COLOR = 'select_text_color'
